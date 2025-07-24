@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'features/Authentication/presentation/pages/login_page.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+
 
 void main() {
-  runApp(const MainApp());
+
+  runApp(MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Initialize QR Event Management!'),
-        ),
-      ),
+    return  MaterialApp(
+        title: 'Flutter Authentication',
+        home: LoginPage(),
     );
   }
 }
