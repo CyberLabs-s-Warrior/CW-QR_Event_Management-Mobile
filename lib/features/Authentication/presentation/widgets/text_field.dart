@@ -23,11 +23,25 @@ class AuthenticationCustomTextField extends StatelessWidget {
     return TextField(
       controller: controller,
       obscureText: obscureText,
+      style: const TextStyle(color: Colors.black),
+      cursorColor: Colors.blue,
+ 
 
       decoration: InputDecoration(
         hintText: hintText,
 
         prefixIcon: Icon(prefixIcon),
+            fillColor: Color(0xFFF5F5F5),
+        filled: true,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFFF5F5F5) ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.grey),
+        ),
+
 
         suffixIcon:
             suffixIcon != null

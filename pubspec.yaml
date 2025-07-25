@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   bloc: ^9.0.0
+  custom_numeric_pad: ^0.0.5
   dartz: ^0.10.1
   equatable: ^2.0.7
   flutter:
@@ -16,7 +17,9 @@ dependencies:
   get_it: ^8.0.3
   hive: ^2.2.3
   http: ^1.4.0
+  iconify_flutter: ^0.0.7
   internet_connection_checker_plus: ^2.7.2
+  pinput: ^5.0.1
 
 dev_dependencies:
   flutter_lints: ^5.0.0
