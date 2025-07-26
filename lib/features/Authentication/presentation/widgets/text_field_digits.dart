@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class AuthenticationCustomTextField extends StatelessWidget {
+class AuthenticationCustomTextFieldDigits extends StatelessWidget {
   final bool obscureText;
   final String hintText;
   final IconData prefixIcon;
@@ -14,7 +14,7 @@ class AuthenticationCustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final ValueChanged<String>? onChanged;
 
-  const AuthenticationCustomTextField({
+  const AuthenticationCustomTextFieldDigits({
     super.key,
     this.obscureText = false,
     required this.hintText,
@@ -40,8 +40,9 @@ class AuthenticationCustomTextField extends StatelessWidget {
           style: const TextStyle(color: Colors.black),
           cursorColor: Colors.blue,
           onChanged: onChanged,
-          keyboardType: keyboardType,
-          inputFormatters: inputFormatters,
+            keyboardType: keyboardType ?? TextInputType.number,
+            inputFormatters: inputFormatters ?? [FilteringTextInputFormatter.digitsOnly],
+
 
           decoration: InputDecoration(
             hintText: hintText,

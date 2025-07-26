@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:qr_event_management/features/Authentication/presentation/widgets/text_field_label.dart';
 
-class AuthenticationCustomTextField extends StatelessWidget {
+class AuthenticationRecoveryPasswordWithLabelValidation extends StatelessWidget {
   final bool obscureText;
   final String hintText;
   final IconData prefixIcon;
   final IconData? suffixIcon;
   final TextEditingController? controller;
-  final TextInputType? keyboardType;
   final VoidCallback? onSuffixIconTap;
-  final List<TextInputFormatter>? inputFormatters;
-  final String? errorText;
-  final String? Function(String?)? validator;
-  final ValueChanged<String>? onChanged;
 
-  const AuthenticationCustomTextField({
+  const AuthenticationRecoveryPasswordWithLabelValidation({
     super.key,
     this.obscureText = false,
     required this.hintText,
@@ -22,11 +17,6 @@ class AuthenticationCustomTextField extends StatelessWidget {
     this.suffixIcon,
     this.controller,
     this.onSuffixIconTap,
-    this.keyboardType,
-    this.inputFormatters,
-    this.errorText,
-    this.validator,
-    this.onChanged
   });
 
   @override
@@ -34,14 +24,13 @@ class AuthenticationCustomTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        AuthenticationCustomTextFieldLabel(text: "Password"),
+        SizedBox(height: 7,),
         TextField(
           controller: controller,
           obscureText: obscureText,
           style: const TextStyle(color: Colors.black),
           cursorColor: Colors.blue,
-          onChanged: onChanged,
-          keyboardType: keyboardType,
-          inputFormatters: inputFormatters,
 
           decoration: InputDecoration(
             hintText: hintText,
@@ -74,14 +63,8 @@ class AuthenticationCustomTextField extends StatelessWidget {
             ),
           ),
         ),
-        if (errorText != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 12.0),
-            child: Text(
-              errorText!,
-              style: const TextStyle(color: Colors.red, fontSize: 12),
-            ),
-          ),
+
+        // Align(alignment: Alignment.centerLeft, child: Text("Must be at least 8 character")),
       ],
     );
   }

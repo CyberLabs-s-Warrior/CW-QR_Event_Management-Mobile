@@ -1,7 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:qr_event_management/core/helper/validation_helper.dart';
+import 'package:qr_event_management/core/provider/validation_provider.dart';
 import 'package:qr_event_management/features/Authentication/presentation/pages/recovery_password_page.dart';
 import 'package:qr_event_management/features/Authentication/presentation/pages/verify_code_page.dart';
+import 'package:qr_event_management/features/Authentication/presentation/widgets/text_field_digits.dart';
 
 import '../widgets/text_field.dart';
 import '../widgets/text_field_label.dart';
@@ -18,6 +23,8 @@ class _LoginPageState extends State<LoginPage>
   bool _isPasswordVisible = true;
   bool _isForgotPasswordWithEmail = true;
   late TabController _tabController;
+
+  // controllers
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _forgotPasswordWithPhoneNumberController =
@@ -25,12 +32,18 @@ class _LoginPageState extends State<LoginPage>
   final TextEditingController _forgotPasswordWithEmailController =
       TextEditingController();
 
+  String? _emailError;
+  String? _passwordError;
+  String? _forgotEmailError;
+  String? _forgotPhoneError;
+
+  // Loading states
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-
-    
   }
 
   @override
@@ -45,80 +58,87 @@ class _LoginPageState extends State<LoginPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.50,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomLeft,
-                end: Alignment.topRight,
-                colors: [Color(0xFF3F7CFF), Color.fromARGB(255, 180, 206, 255)],
-              ),
-            ),
-          ),
-
-          // title
-          SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 75, horizontal: 40),
-              child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 300),
-                child: Text(
-                  _tabController.index == 0
-                      ? 'Kindly Sign in to\ncontinue.'
-                      : "Recover Your\nAccount.",
-                  key: ValueKey(_tabController.index),
-                  style: const TextStyle(
-                    fontSize: 35,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.5,
+      body: Consumer<ValidationProvider>(
+        builder: (context, validationProvider, child) {
+          return Stack(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.50,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomLeft,
+                    end: Alignment.topRight,
+                    colors: [
+                      Color(0xFF3F7CFF),
+                      Color.fromARGB(255, 180, 206, 255),
+                    ],
                   ),
                 ),
               ),
-            ),
-          ),
 
-          Align(
-            alignment: Alignment.bottomCenter,
-
-            child: Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.55,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(28),
-                  topRight: Radius.circular(28),
-                ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildTabBar(),
-
-                    SizedBox(height: 20),
-
-                    Expanded(
-                      child:
-                          _tabController.index == 0
-                              ? _buildSignInTab()
-                              : _buildForgotPasswordTab(),
+              // title
+              SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 75, horizontal: 40),
+                  child: AnimatedSwitcher(
+                    duration: Duration(milliseconds: 300),
+                    child: Text(
+                      _tabController.index == 0
+                          ? 'Kindly Sign in to\ncontinue.'
+                          : "Recover Your\nAccount.",
+                      key: ValueKey(_tabController.index),
+                      style: const TextStyle(
+                        fontSize: 35,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.5,
+                      ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        ],
+
+              Align(
+                alignment: Alignment.bottomCenter,
+
+                child: Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * 0.55,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(28),
+                      topRight: Radius.circular(28),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildTabBar(),
+
+                        SizedBox(height: 20),
+
+                        Expanded(
+                          child:
+                              _tabController.index == 0
+                                  ? _buildSignInTab(validationProvider)
+                                  : _buildForgotPasswordTab(validationProvider),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildSignInTab() {
+  Widget _buildSignInTab(ValidationProvider validationProvider) {
     return Column(
       children: [
         AuthenticationCustomTextFieldLabel(text: "Email"),
@@ -127,6 +147,8 @@ class _LoginPageState extends State<LoginPage>
           controller: _emailController,
           hintText: "Enter your Email",
           prefixIcon: Icons.email_outlined,
+          errorText: validationProvider.emailError,
+          keyboardType: TextInputType.emailAddress,
         ),
 
         SizedBox(height: 10),
@@ -134,9 +156,11 @@ class _LoginPageState extends State<LoginPage>
         AuthenticationCustomTextFieldLabel(text: "Password"),
         SizedBox(height: 8),
         AuthenticationCustomTextField(
+          controller: _passwordController,
           hintText: "Enter your Password",
           prefixIcon: Icons.lock_outline,
           obscureText: _isPasswordVisible,
+          errorText: validationProvider.passwordError,
           onSuffixIconTap: () {
             setState(() {
               _isPasswordVisible = !_isPasswordVisible;
@@ -158,14 +182,32 @@ class _LoginPageState extends State<LoginPage>
                 borderRadius: BorderRadius.circular(24),
               ),
             ),
-            onPressed: () {},
-            child: const Text(
-              "Login",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+            // onPressed: () {},
+            // child: const Text(
+            //   "Login",
+            //   style: TextStyle(
+            //     fontWeight: FontWeight.bold,
+            //     color: Colors.white,
+            //   ),
+            // ),
+            onPressed: _isLoading ? null : _handleLogin,
+            child:
+                _isLoading
+                    ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                    : const Text(
+                      "Send Reset Link",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
           ),
         ),
 
@@ -189,23 +231,42 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  Widget _buildForgotPasswordTab() {
+  Widget _buildForgotPasswordTab(ValidationProvider validationProvider) {
     return Column(
       children: [
+        // _isForgotPasswordWithEmail
+        //     ? AuthenticationCustomTextFieldLabel(text: "Email")
+        //     : AuthenticationCustomTextFieldLabel(text: "Phone Number"),
+        // SizedBox(height: 8),
+        // _isForgotPasswordWithEmail
+        //     ? AuthenticationCustomTextField(
+        //       controller: _forgotPasswordWithEmailController,
+        //       hintText: "Enter your Email",
+        //       prefixIcon: Icons.email_outlined,
+        //     )
+        //     : AuthenticationCustomTextField(
+        //       controller: _forgotPasswordWithPhoneNumberController,
+        //       hintText: "Enter your Phone Number",
+        //       prefixIcon: Icons.phone_outlined,
+        //     ),
         _isForgotPasswordWithEmail
-            ? AuthenticationCustomTextFieldLabel(text: "Email")
-            : AuthenticationCustomTextFieldLabel(text: "Phone Number"),
-        SizedBox(height: 8),
-        _isForgotPasswordWithEmail
+            ? const AuthenticationCustomTextFieldLabel(text: "Email")
+            : const AuthenticationCustomTextFieldLabel(text: "Phone Number"),
+        const SizedBox(height: 8),
+       _isForgotPasswordWithEmail
             ? AuthenticationCustomTextField(
               controller: _forgotPasswordWithEmailController,
               hintText: "Enter your Email",
               prefixIcon: Icons.email_outlined,
+              keyboardType: TextInputType.emailAddress,
+              errorText: validationProvider.emailError,
             )
-            : AuthenticationCustomTextField(
+            : AuthenticationCustomTextFieldDigits(
               controller: _forgotPasswordWithPhoneNumberController,
               hintText: "Enter your Phone Number",
               prefixIcon: Icons.phone_outlined,
+              
+              errorText: validationProvider.phoneError,
             ),
 
         SizedBox(height: 15),
@@ -220,28 +281,46 @@ class _LoginPageState extends State<LoginPage>
                 borderRadius: BorderRadius.circular(24),
               ),
             ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (_) => VerifyCodePage(
-                        isEmail: _isForgotPasswordWithEmail,
-                        emailOrPhoneNumber:
-                            _isForgotPasswordWithEmail
-                                ? _forgotPasswordWithEmailController.text
-                                : _forgotPasswordWithPhoneNumberController.text,
+            // onPressed: () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder:
+            //           (_) => VerifyCodePage(
+            //             isEmail: _isForgotPasswordWithEmail,
+            //             emailOrPhoneNumber:
+            //                 _isForgotPasswordWithEmail
+            //                     ? _forgotPasswordWithEmailController.text
+            //                     : _forgotPasswordWithPhoneNumberController.text,
+            //           ),
+            //     ),
+            //   );
+            // },
+            // child: const Text(
+            //   "Send Reset Link",
+            //   style: TextStyle(
+            //     fontWeight: FontWeight.bold,
+            //     color: Colors.white,
+            //   ),
+            // ),
+            onPressed: _isLoading ? null : _handleForgotPassword,
+            child:
+                _isLoading
+                    ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
                       ),
-                ),
-              );
-            },
-            child: const Text(
-              "Send Reset Link",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+                    )
+                    : const Text(
+                      "Send Reset Link",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
           ),
         ),
 
@@ -321,5 +400,179 @@ class _LoginPageState extends State<LoginPage>
         ],
       ),
     );
+  }
+
+  // // Validate email for login
+  // void _validateEmail() {
+  //   setState(() {
+  //     _emailError = ValidationHelper.validateEmail(_emailController.text);
+  //   });
+  // }
+
+  // // Validate password for login
+  // void _validatePassword() {
+  //   setState(() {
+  //     if (_passwordController.text.isEmpty) {
+  //       _passwordError = 'Password is required';
+  //     } else if (_passwordController.text.length < 6) {
+  //       _passwordError = 'Password must be at least 6 characters';
+  //     } else {
+  //       _passwordError = null;
+  //     }
+  //   });
+  // }
+
+  // Validate forgot password input
+  // void _validateForgotPasswordInput() {
+  //   setState(() {
+  //     if (_isForgotPasswordWithEmail) {
+  //       _forgotEmailError = ValidationHelper.validateEmail(
+  //         _forgotPasswordWithEmailController.text,
+  //       );
+  //     } else {
+  //       _forgotPhoneError = ValidationHelper.validatePhoneNumber(
+  //         _forgotPasswordWithPhoneNumberController.text,
+  //       );
+  //     }
+  //   });
+  // }
+
+  // Handle login
+  // void _handleLogin() {
+  //   _validateEmail();
+  //   _validatePassword();
+
+  //   if (_emailError == null && _passwordError == null) {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+
+  //     // Simulate API call
+  //     Future.delayed(const Duration(seconds: 2), () {
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //           content: Text('Login functionality to be implemented'),
+  //           backgroundColor: Colors.green,
+  //         ),
+  //       );
+  //     });
+  //   }
+  // }
+
+  // // Handle forgot password
+  // void _handleForgotPassword() {
+  //   _validateForgotPasswordInput();
+
+  //   if ((_isForgotPasswordWithEmail && _forgotEmailError == null) ||
+  //       (!_isForgotPasswordWithEmail && _forgotPhoneError == null)) {
+  //     String contactInfo =
+  //         _isForgotPasswordWithEmail
+  //             ? _forgotPasswordWithEmailController.text
+  //             : ValidationHelper.formatPhoneNumber(
+  //               _forgotPasswordWithPhoneNumberController.text,
+  //             );
+
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+
+  //     // Simulate API call
+  //     Future.delayed(const Duration(seconds: 2), () {
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder:
+  //               (_) => VerifyCodePage(
+  //                 isEmail: _isForgotPasswordWithEmail,
+  //                 emailOrPhoneNumber: contactInfo,
+  //               ),
+  //         ),
+  //       );
+  //     });
+  //   }
+  // }
+
+  void _handleLogin() {
+    final validationProvider = context.read<ValidationProvider>();
+
+    // Validate all fields
+    validationProvider.validateEmail(_emailController.text);
+    validationProvider.validatePassword(_passwordController.text);
+
+    if (validationProvider.isFormValid) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      // Simulate API call
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {
+          _isLoading = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+
+          const SnackBar(
+            dismissDirection: DismissDirection.up,
+            content: Text('Login successful!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      });
+    }
+  }
+
+  void _handleForgotPassword() {
+    final validationProvider = context.read<ValidationProvider>();
+
+    if (_isForgotPasswordWithEmail) {
+      validationProvider.validateEmail(_forgotPasswordWithEmailController.text);
+
+      if (validationProvider.emailError == null) {
+        _proceedToVerification(_forgotPasswordWithEmailController.text);
+      }
+    } else {
+      validationProvider.validatePhoneNumber(
+        _forgotPasswordWithPhoneNumberController.text,
+      );
+
+      if (validationProvider.phoneError == null) {
+        String formattedPhone = ValidationHelper.formatPhoneNumber(
+          _forgotPasswordWithPhoneNumberController.text,
+        );
+        _proceedToVerification(formattedPhone);
+      }
+    }
+  }
+
+  void _proceedToVerification(String contactInfo) {
+    setState(() {
+      _isLoading = true;
+    });
+
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        _isLoading = false;
+      });
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder:
+              (_) => VerifyCodePage(
+                isEmail: _isForgotPasswordWithEmail,
+                emailOrPhoneNumber: contactInfo,
+              ),
+        ),
+      );
+    });
   }
 }

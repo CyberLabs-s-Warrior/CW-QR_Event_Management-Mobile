@@ -6,12 +6,17 @@ import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:pinput/pinput.dart';
 import 'package:qr_event_management/features/Authentication/presentation/pages/recovery_password_page.dart';
+import 'package:qr_event_management/features/Authentication/presentation/widgets/back_button.dart';
 
 class VerifyCodePage extends StatefulWidget {
   final bool isEmail;
   final String emailOrPhoneNumber;
 
-  const VerifyCodePage({super.key, required this.isEmail, required this.emailOrPhoneNumber});
+  const VerifyCodePage({
+    super.key,
+    required this.isEmail,
+    required this.emailOrPhoneNumber,
+  });
 
   @override
   State<VerifyCodePage> createState() => _VerifyCodePageState();
@@ -85,13 +90,10 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Iconify(
-            Ic.outline_arrow_back_ios_new,
-            size: 25,
-            color: Colors.black,
-          ),
-          onPressed: () => Navigator.pop(context),
+        leading: AuthenticationCustomBackButton(
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Stack(
@@ -121,14 +123,21 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                       children: [
                         const TextSpan(
                           text:
-                              'Please enter the verification code\nsent to your ',
+                              'Please enter the verification code\nsent to ',
                           style: TextStyle(fontSize: 16, color: Colors.grey),
                         ),
                         TextSpan(
-                          text: widget.isEmail ? 'email.' : 'phone number.',
+                            text: widget.isEmail
+                              ? widget.emailOrPhoneNumber
+                              : '+62 ${widget.emailOrPhoneNumber.substring(3, 6)}-${widget.emailOrPhoneNumber.substring(6, 10)}-${widget.emailOrPhoneNumber.substring(10)}',
                           style: const TextStyle(
                             fontSize: 16,
-                            color: Color.fromARGB(255, 146, 181, 255), // Blue color
+                            color: Color.fromARGB(
+                              255,
+                              146,
+                              181,
+                              255,
+                            ), // Blue color
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -184,8 +193,7 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                             fontSize: 16,
                           ),
                           recognizer:
-                              TapGestureRecognizer()
-                                ..onTap = _resendCode,
+                              TapGestureRecognizer()..onTap = _resendCode,
                         ),
                       ],
                     ),
@@ -283,8 +291,14 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
         if (verificationCode != '2666') {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              dismissDirection: DismissDirection.up,
               content: const Text('Wrong verification code!'),
               backgroundColor: Colors.red,
+              margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).size.height - 100,
+                left: 10,
+                right: 10,
+              ),
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -294,9 +308,24 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
           return;
         }
 
-        
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              dismissDirection: DismissDirection.up,
+              content: const Text('Verified!'),
+              backgroundColor: Color(0xFF3F7CFF),
+              margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).size.height - 100,
+                left: 10,
+                right: 10,
+              ),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
 
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => RecoveryPasswordPage()),
         );
