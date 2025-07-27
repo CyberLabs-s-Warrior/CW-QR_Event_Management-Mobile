@@ -5,8 +5,8 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:pinput/pinput.dart';
-import 'package:qr_event_management/features/Authentication/presentation/pages/recovery_password_page.dart';
-import 'package:qr_event_management/features/Authentication/presentation/widgets/back_button.dart';
+import 'recovery_password_page.dart';
+import '../widgets/back_button.dart';
 
 class VerifyCodePage extends StatefulWidget {
   final bool isEmail;
@@ -122,14 +122,14 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                     TextSpan(
                       children: [
                         const TextSpan(
-                          text:
-                              'Please enter the verification code\nsent to ',
+                          text: 'Please enter the verification code\nsent to ',
                           style: TextStyle(fontSize: 16, color: Colors.grey),
                         ),
                         TextSpan(
-                            text: widget.isEmail
-                              ? widget.emailOrPhoneNumber
-                              : '+62 ${widget.emailOrPhoneNumber.substring(3, 6)}-${widget.emailOrPhoneNumber.substring(6, 10)}-${widget.emailOrPhoneNumber.substring(10)}',
+                          text:
+                              widget.isEmail
+                                  ? widget.emailOrPhoneNumber
+                                  : '+62 ${widget.emailOrPhoneNumber.substring(3, 6)}-${widget.emailOrPhoneNumber.substring(6, 10)}-${widget.emailOrPhoneNumber.substring(10)}',
                           style: const TextStyle(
                             fontSize: 16,
                             color: Color.fromARGB(
@@ -292,7 +292,14 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               dismissDirection: DismissDirection.up,
-              content: const Text('Wrong verification code!'),
+              content: Row(
+                children: [
+                  Iconify(Ic.round_warning, color: Colors.white),
+                  SizedBox(width: 10),
+
+                  Text("Wrong Verification Code", textAlign: TextAlign.start),
+                ],
+              ),
               backgroundColor: Colors.red,
               margin: EdgeInsets.only(
                 bottom: MediaQuery.of(context).size.height - 100,
@@ -309,21 +316,21 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              dismissDirection: DismissDirection.up,
-              content: const Text('Verified!'),
-              backgroundColor: Color(0xFF3F7CFF),
-              margin: EdgeInsets.only(
-                bottom: MediaQuery.of(context).size.height - 100,
-                left: 10,
-                right: 10,
-              ),
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
+          SnackBar(
+            dismissDirection: DismissDirection.up,
+            content: const Text('Verified!'),
+            backgroundColor: Color(0xFF3F7CFF),
+            margin: EdgeInsets.only(
+              bottom: MediaQuery.of(context).size.height - 100,
+              left: 10,
+              right: 10,
             ),
-          );
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
 
         Navigator.pushReplacement(
           context,

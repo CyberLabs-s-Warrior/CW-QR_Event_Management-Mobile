@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qr_event_management/features/Authentication/presentation/widgets/text_field_label.dart';
+import 'text_field_label.dart';
 
 class AuthenticationRecoveryPasswordWithLabelValidation extends StatelessWidget {
   final bool obscureText;

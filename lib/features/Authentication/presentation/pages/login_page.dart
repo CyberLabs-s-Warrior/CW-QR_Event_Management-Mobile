@@ -1,12 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/ic.dart';
+import 'package:iconify_flutter/icons/uiw.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/core/helper/validation_helper.dart';
-import 'package:qr_event_management/core/provider/validation_provider.dart';
-import 'package:qr_event_management/features/Authentication/presentation/pages/recovery_password_page.dart';
-import 'package:qr_event_management/features/Authentication/presentation/pages/verify_code_page.dart';
-import 'package:qr_event_management/features/Authentication/presentation/widgets/text_field_digits.dart';
+import '../../../../core/helper/validation_helper.dart';
+import '../../../../core/provider/validation_provider.dart';
+import 'recovery_password_page.dart';
+import 'verify_code_page.dart';
+import '../widgets/text_field_digits.dart';
 
 import '../widgets/text_field.dart';
 import '../widgets/text_field_label.dart';
@@ -253,7 +256,7 @@ class _LoginPageState extends State<LoginPage>
             ? const AuthenticationCustomTextFieldLabel(text: "Email")
             : const AuthenticationCustomTextFieldLabel(text: "Phone Number"),
         const SizedBox(height: 8),
-       _isForgotPasswordWithEmail
+        _isForgotPasswordWithEmail
             ? AuthenticationCustomTextField(
               controller: _forgotPasswordWithEmailController,
               hintText: "Enter your Email",
@@ -265,7 +268,7 @@ class _LoginPageState extends State<LoginPage>
               controller: _forgotPasswordWithPhoneNumberController,
               hintText: "Enter your Phone Number",
               prefixIcon: Icons.phone_outlined,
-              
+
               errorText: validationProvider.phoneError,
             ),
 
@@ -519,7 +522,6 @@ class _LoginPageState extends State<LoginPage>
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-
           const SnackBar(
             dismissDirection: DismissDirection.up,
             content: Text('Login successful!'),
@@ -562,6 +564,37 @@ class _LoginPageState extends State<LoginPage>
       setState(() {
         _isLoading = false;
       });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).size.height - 100,
+            left: 10,
+            right: 10,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          dismissDirection: DismissDirection.up,
+          content: Row(
+            children: [
+              Iconify(Uiw.verification, color: Colors.white,),
+              SizedBox(width: 10),
+              Text(
+                "Verification Code",
+                style: TextStyle(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.start,
+              ),
+              Text(
+                " has been sent successfully!",
+                textAlign: TextAlign.start,
+              ),
+            ],
+          ),
+          backgroundColor: Colors.blue,
+        ),
+      );
 
       Navigator.push(
         context,

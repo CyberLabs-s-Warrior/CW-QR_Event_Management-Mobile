@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qr_event_management/features/Authentication/presentation/widgets/back_button.dart';
-import 'package:qr_event_management/features/Authentication/presentation/widgets/recovery_password_with_label_validation.dart';
+import '../widgets/back_button.dart';
+import '../widgets/recovery_password_with_label_validation.dart';
 
 class RecoveryPasswordPage extends StatefulWidget {
   const RecoveryPasswordPage({super.key});

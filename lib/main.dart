@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/core/provider/validation_provider.dart';
-import 'package:qr_event_management/injection.dart';
+import 'core/provider/validation_provider.dart';
+import 'injection.dart';
 
 import 'features/Authentication/presentation/pages/login_page.dart';
 
