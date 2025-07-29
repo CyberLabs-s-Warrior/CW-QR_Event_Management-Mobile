@@ -3,10 +3,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
-import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:pinput/pinput.dart';
-import 'recovery_password_page.dart';
+
 import '../widgets/back_button.dart';
+import 'recovery_password_page.dart';
 
 class VerifyCodePage extends StatefulWidget {
   final bool isEmail;

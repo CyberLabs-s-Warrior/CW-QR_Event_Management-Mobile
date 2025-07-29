@@ -1,18 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/uiw.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/helper/validation_helper.dart';
 import '../../../../core/provider/validation_provider.dart';
-import 'recovery_password_page.dart';
-import 'verify_code_page.dart';
-import '../widgets/text_field_digits.dart';
-
 import '../widgets/text_field.dart';
+import '../widgets/text_field_digits.dart';
 import '../widgets/text_field_label.dart';
+import 'verify_code_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
