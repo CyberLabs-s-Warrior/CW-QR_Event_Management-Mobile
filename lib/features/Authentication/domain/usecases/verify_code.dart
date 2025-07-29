@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:qr_event_management/core/error/failure.dart';
-import 'package:qr_event_management/features/Authentication/domain/entities/verify_code.dart';
-import 'package:qr_event_management/features/Authentication/domain/repositories/authentication_repository.dart';
+import '../../../../core/error/failure.dart';
+import '../entities/verify_code.dart';
+import '../repositories/authentication_repository.dart';
 
 class VerifyCode {
   final AuthenticationRepository authenticationRepository;

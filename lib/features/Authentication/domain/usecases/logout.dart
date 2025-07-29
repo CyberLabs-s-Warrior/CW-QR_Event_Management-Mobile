@@ -1,4 +1,4 @@
-import 'package:qr_event_management/features/Authentication/domain/repositories/authentication_repository.dart';
+import '../repositories/authentication_repository.dart';
 
 class Logout {
   final AuthenticationRepository authenticationRepository;

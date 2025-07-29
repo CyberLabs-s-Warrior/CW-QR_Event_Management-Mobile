@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'text_field_label.dart';
 
 class AuthenticationRecoveryPasswordWithLabelValidation extends StatelessWidget {

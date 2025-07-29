@@ -4,7 +4,7 @@ class AuthToken extends Equatable {
   final String token;
   final DateTime expiresAt;
 
-  const AuthToken(this.token, this.expiresAt);
+  const AuthToken({required this.token, required this.expiresAt});
 
   bool get isExpired => DateTime.now().isAfter(expiresAt);
 

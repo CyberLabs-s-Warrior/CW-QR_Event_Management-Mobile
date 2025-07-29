@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'core/provider/validation_provider.dart';
-import 'injection.dart';
 
+import 'core/provider/validation_provider.dart';
 import 'features/Authentication/presentation/pages/login_page.dart';
+import 'injection.dart';
 
 void main() async {
   await init();

@@ -5,7 +5,9 @@ class ForgotPasswordEntities extends Equatable {
   final String method;
   final String destination;
 
-  const ForgotPasswordEntities(this.message, this.method, this.destination);
+  const ForgotPasswordEntities({
+   required this.message, required this.method, required this.destination
+  });
 
   @override
   List<Object?> get props => [message, method, destination];
