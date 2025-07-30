@@ -32,10 +32,10 @@ class _LoginPageState extends State<LoginPage>
   final TextEditingController _forgotPasswordWithEmailController =
       TextEditingController();
 
-  String? _emailError;
-  String? _passwordError;
-  String? _forgotEmailError;
-  String? _forgotPhoneError;
+  // String? _emailError;
+  // String? _passwordError;
+  // String? _forgotEmailError;
+  // String? _forgotPhoneError;
 
   // Loading states
   bool _isLoading = false;

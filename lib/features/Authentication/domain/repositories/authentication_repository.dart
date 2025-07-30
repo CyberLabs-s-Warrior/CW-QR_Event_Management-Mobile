@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/error/failure.dart';
 
-import '../entities/auth_token.dart';
 import '../entities/forgot_password.dart';
 import '../entities/verify_code.dart';
 
