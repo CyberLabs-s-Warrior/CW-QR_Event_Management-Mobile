@@ -18,6 +18,9 @@ class StatusCodeException implements Exception {
 
 class EmptyException implements Exception {
   final String message;
-
-  const EmptyException({required this.message});
+  
+  EmptyException({required this.message});
+  
+  @override
+  String toString() => 'EmptyException: $message';
 }
