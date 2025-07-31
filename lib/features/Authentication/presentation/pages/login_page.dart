@@ -1,11 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/uiw.dart';
 import 'package:provider/provider.dart';
+import 'recovery_password_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/helper/validation_helper.dart';
 import '../../../../core/provider/validation_provider.dart';
+import '../provider/authentication_provider.dart';
 import '../widgets/text_field.dart';
 import '../widgets/text_field_digits.dart';
 import '../widgets/text_field_label.dart';
@@ -38,7 +39,57 @@ class _LoginPageState extends State<LoginPage>
   // String? _forgotPhoneError;
 
   // Loading states
-  bool _isLoading = false;
+  // bool _isLoading = false;
+
+  void _handleLogin() async {
+    print('login is load2');
+    final validationProvider = context.read<ValidationProvider>();
+    final authProvider = context.read<AuthenticationProvider>();
+
+    validationProvider.validateEmail(_emailController.text);
+    validationProvider.validatePassword(_passwordController.text);
+
+    print('login is load3');
+
+    if (validationProvider.isFormValid) {
+      authProvider.signIn(_emailController.text, _passwordController.text);
+    }
+
+    print('login is load4');
+  }
+
+  void _handleForgotPassword() {
+    final validationProvider = context.read<ValidationProvider>();
+    final authProvider = context.read<AuthenticationProvider>();
+
+    if (_isForgotPasswordWithEmail) {
+      validationProvider.validateEmail(_forgotPasswordWithEmailController.text);
+
+      if (validationProvider.emailError == null) {
+        authProvider.sendForgotPassword(
+          isWithEmail: true,
+          email: _forgotPasswordWithEmailController.text,
+        );
+      }
+    } else {
+      validationProvider.validatePhoneNumber(
+        _forgotPasswordWithPhoneNumberController.text,
+      );
+
+      if (validationProvider.phoneError == null) {
+        String formattedPhone = ValidationHelper.formatPhoneNumber(
+          _forgotPasswordWithPhoneNumberController.text,
+        );
+        
+        print('formatted phone: $formattedPhone');
+
+        authProvider.sendForgotPassword(
+          isWithEmail: false,
+          phoneNumber: formattedPhone,
+        );
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -58,8 +109,82 @@ class _LoginPageState extends State<LoginPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<ValidationProvider>(
-        builder: (context, validationProvider, child) {
+      body: Consumer2<ValidationProvider, AuthenticationProvider>(
+        builder: (context, validationProvider, authProvider, child) {
+          // handle login success
+          if (authProvider.authStatus == AuthStatus.success) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              authProvider.resetAuthStatus(); // Reset dulu
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Login Successful!'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => RecoveryPasswordPage()),
+              );
+            });
+          }
+
+          // handle login error
+          if (authProvider.authStatus == AuthStatus.error) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              authProvider.resetAuthStatus(); // Reset dulu
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(authProvider.cleanErrorMessage),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            });
+          }
+
+          // handle forgot password success
+          if (authProvider.forgotPasswordStatus == AuthStatus.success) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              authProvider.resetForgotPasswordStatus(); // Reset dulu
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Verification code sent!'),
+                  backgroundColor: Colors.blue,
+                ),
+              );
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => VerifyCodePage(
+                        isEmail: _isForgotPasswordWithEmail,
+                        emailOrPhoneNumber:
+                            _isForgotPasswordWithEmail
+                                ? _forgotPasswordWithEmailController.text
+                                : _forgotPasswordWithPhoneNumberController.text,
+                      ),
+                ),
+              );
+            });
+          }
+
+          // handle forgot password error
+          if (authProvider.forgotPasswordStatus == AuthStatus.error) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              authProvider.resetForgotPasswordStatus(); // Reset dulu
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(authProvider.cleanErrorMessage),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            });
+          }
           return Stack(
             children: [
               Container(
@@ -123,8 +248,14 @@ class _LoginPageState extends State<LoginPage>
                         Expanded(
                           child:
                               _tabController.index == 0
-                                  ? _buildSignInTab(validationProvider)
-                                  : _buildForgotPasswordTab(validationProvider),
+                                  ? _buildSignInTab(
+                                    validationProvider,
+                                    authProvider,
+                                  )
+                                  : _buildForgotPasswordTab(
+                                    validationProvider,
+                                    authProvider,
+                                  ),
                         ),
                       ],
                     ),
@@ -138,7 +269,10 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  Widget _buildSignInTab(ValidationProvider validationProvider) {
+  Widget _buildSignInTab(
+    ValidationProvider validationProvider,
+    AuthenticationProvider authProvider,
+  ) {
     return Column(
       children: [
         AuthenticationCustomTextFieldLabel(text: "Email"),
@@ -190,9 +324,27 @@ class _LoginPageState extends State<LoginPage>
             //     color: Colors.white,
             //   ),
             // ),
-            onPressed: _isLoading ? null : _handleLogin,
+            // onPressed: () {
+            //   print('wwaww');
+            //   print('login is load2');
+            //   final validationProvider = context.read<ValidationProvider>();
+            //   final authProvider = context.read<AuthenticationProvider>();
+            //   print('login is load3');
+
+            //   if (validationProvider.isFormValid) {
+            //     authProvider.signIn(
+            //       _emailController.text,
+            //       _passwordController.text,
+            //     );
+            //   } else {
+            //     print('form not valid');
+            //   }
+
+            //   print('login is load4');
+            // },
+            onPressed: authProvider.isLoading ? null : _handleLogin,
             child:
-                _isLoading
+                authProvider.isLoading
                     ? const SizedBox(
                       width: 20,
                       height: 20,
@@ -231,7 +383,10 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  Widget _buildForgotPasswordTab(ValidationProvider validationProvider) {
+  Widget _buildForgotPasswordTab(
+    ValidationProvider validationProvider,
+    AuthenticationProvider authProvider,
+  ) {
     return Column(
       children: [
         // _isForgotPasswordWithEmail
@@ -303,9 +458,12 @@ class _LoginPageState extends State<LoginPage>
             //     color: Colors.white,
             //   ),
             // ),
-            onPressed: _isLoading ? null : _handleForgotPassword,
+            onPressed:
+                authProvider.isForgotPasswordLoading
+                    ? null
+                    : _handleForgotPassword,
             child:
-                _isLoading
+                authProvider.isForgotPasswordLoading
                     ? const SizedBox(
                       width: 20,
                       height: 20,
@@ -400,209 +558,5 @@ class _LoginPageState extends State<LoginPage>
         ],
       ),
     );
-  }
-
-  // // Validate email for login
-  // void _validateEmail() {
-  //   setState(() {
-  //     _emailError = ValidationHelper.validateEmail(_emailController.text);
-  //   });
-  // }
-
-  // // Validate password for login
-  // void _validatePassword() {
-  //   setState(() {
-  //     if (_passwordController.text.isEmpty) {
-  //       _passwordError = 'Password is required';
-  //     } else if (_passwordController.text.length < 6) {
-  //       _passwordError = 'Password must be at least 6 characters';
-  //     } else {
-  //       _passwordError = null;
-  //     }
-  //   });
-  // }
-
-  // Validate forgot password input
-  // void _validateForgotPasswordInput() {
-  //   setState(() {
-  //     if (_isForgotPasswordWithEmail) {
-  //       _forgotEmailError = ValidationHelper.validateEmail(
-  //         _forgotPasswordWithEmailController.text,
-  //       );
-  //     } else {
-  //       _forgotPhoneError = ValidationHelper.validatePhoneNumber(
-  //         _forgotPasswordWithPhoneNumberController.text,
-  //       );
-  //     }
-  //   });
-  // }
-
-  // Handle login
-  // void _handleLogin() {
-  //   _validateEmail();
-  //   _validatePassword();
-
-  //   if (_emailError == null && _passwordError == null) {
-  //     setState(() {
-  //       _isLoading = true;
-  //     });
-
-  //     // Simulate API call
-  //     Future.delayed(const Duration(seconds: 2), () {
-  //       setState(() {
-  //         _isLoading = false;
-  //       });
-
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(
-  //           content: Text('Login functionality to be implemented'),
-  //           backgroundColor: Colors.green,
-  //         ),
-  //       );
-  //     });
-  //   }
-  // }
-
-  // // Handle forgot password
-  // void _handleForgotPassword() {
-  //   _validateForgotPasswordInput();
-
-  //   if ((_isForgotPasswordWithEmail && _forgotEmailError == null) ||
-  //       (!_isForgotPasswordWithEmail && _forgotPhoneError == null)) {
-  //     String contactInfo =
-  //         _isForgotPasswordWithEmail
-  //             ? _forgotPasswordWithEmailController.text
-  //             : ValidationHelper.formatPhoneNumber(
-  //               _forgotPasswordWithPhoneNumberController.text,
-  //             );
-
-  //     setState(() {
-  //       _isLoading = true;
-  //     });
-
-  //     // Simulate API call
-  //     Future.delayed(const Duration(seconds: 2), () {
-  //       setState(() {
-  //         _isLoading = false;
-  //       });
-
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder:
-  //               (_) => VerifyCodePage(
-  //                 isEmail: _isForgotPasswordWithEmail,
-  //                 emailOrPhoneNumber: contactInfo,
-  //               ),
-  //         ),
-  //       );
-  //     });
-  //   }
-  // }
-
-  void _handleLogin() {
-    final validationProvider = context.read<ValidationProvider>();
-
-    // Validate all fields
-    validationProvider.validateEmail(_emailController.text);
-    validationProvider.validatePassword(_passwordController.text);
-
-    if (validationProvider.isFormValid) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      // Simulate API call
-      Future.delayed(const Duration(seconds: 2), () {
-        setState(() {
-          _isLoading = false;
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            dismissDirection: DismissDirection.up,
-            content: Text('Login successful!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      });
-    }
-  }
-
-  void _handleForgotPassword() {
-    final validationProvider = context.read<ValidationProvider>();
-
-    if (_isForgotPasswordWithEmail) {
-      validationProvider.validateEmail(_forgotPasswordWithEmailController.text);
-
-      if (validationProvider.emailError == null) {
-        _proceedToVerification(_forgotPasswordWithEmailController.text);
-      }
-    } else {
-      validationProvider.validatePhoneNumber(
-        _forgotPasswordWithPhoneNumberController.text,
-      );
-
-      if (validationProvider.phoneError == null) {
-        String formattedPhone = ValidationHelper.formatPhoneNumber(
-          _forgotPasswordWithPhoneNumberController.text,
-        );
-        _proceedToVerification(formattedPhone);
-      }
-    }
-  }
-
-  void _proceedToVerification(String contactInfo) {
-    setState(() {
-      _isLoading = true;
-    });
-
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        _isLoading = false;
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(
-            bottom: MediaQuery.of(context).size.height - 100,
-            left: 10,
-            right: 10,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          dismissDirection: DismissDirection.up,
-          content: Row(
-            children: [
-              Iconify(Uiw.verification, color: Colors.white,),
-              SizedBox(width: 10),
-              Text(
-                "Verification Code",
-                style: TextStyle(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.start,
-              ),
-              Text(
-                " has been sent successfully!",
-                textAlign: TextAlign.start,
-              ),
-            ],
-          ),
-          backgroundColor: Colors.blue,
-        ),
-      );
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder:
-              (_) => VerifyCodePage(
-                isEmail: _isForgotPasswordWithEmail,
-                emailOrPhoneNumber: contactInfo,
-              ),
-        ),
-      );
-    });
   }
 }
