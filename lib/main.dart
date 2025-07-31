@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'core/provider/validation_provider.dart';
+import 'features/Authentication/presentation/provider/authentication_provider.dart';
+import 'injection.dart' as di;
 import 'features/Authentication/presentation/pages/login_page.dart';
-import 'injection.dart';
 
 void main() async {
-  await init();
-
+  WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
   runApp(MyApp());
 }
 
@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ValidationProvider()),
+        ChangeNotifierProvider(create: (context) => di.myInjection<AuthenticationProvider>()),
       ],
       child: MaterialApp(home: LoginPage()),
     );
