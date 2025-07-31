@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:qr_event_management/features/Authentication/domain/entities/forgot_password.dart';
-import 'package:qr_event_management/features/Authentication/domain/entities/user.dart';
-import 'package:qr_event_management/features/Authentication/domain/entities/verify_code.dart';
-import 'package:qr_event_management/features/Authentication/domain/usecases/forgot_password.dart';
-import 'package:qr_event_management/features/Authentication/domain/usecases/sign_in.dart';
-import 'package:qr_event_management/features/Authentication/domain/usecases/verify_code.dart';
+import '../../domain/entities/forgot_password.dart';
+import '../../domain/entities/user.dart';
+import '../../domain/entities/verify_code.dart';
+import '../../domain/usecases/forgot_password.dart';
+import '../../domain/usecases/sign_in.dart';
+import '../../domain/usecases/verify_code.dart';
 
 enum AuthStatus { initial, loading, success, error }
 
@@ -46,13 +46,36 @@ class AuthenticationProvider extends ChangeNotifier {
       _forgotPasswordStatus == AuthStatus.loading;
   bool get isVerifyCodeLoading => _verifyCodeStatus == AuthStatus.loading;
 
+  String get cleanErrorMessage {
+    if (_errorMessage == null) return 'An error occurred';
+
+    // remop exception class name
+    String cleanMessage = _errorMessage!;
+
+    if (cleanMessage.startsWith('EmptyException: ')) {
+      cleanMessage = cleanMessage.replaceFirst('EmptyException: ', '');
+    }
+    if (cleanMessage.startsWith('GeneralException: ')) {
+      cleanMessage = cleanMessage.replaceFirst('GeneralException: ', '');
+    }
+    if (cleanMessage.startsWith('ServerException: ')) {
+      cleanMessage = cleanMessage.replaceFirst('ServerException: ', '');
+    }
+
+    return cleanMessage;
+  }
+
   Future<void> signIn(String email, String password) async {
     _setAuthStatus(AuthStatus.loading);
 
     final result = await signInUseCase.execute(email, password);
+    print(result);
 
     result.fold(
       (failure) {
+        print(
+          'error message: ${failure.message}, result: ${result}, all failure: $failure',
+        );
         _errorMessage = failure.message;
         _setAuthStatus(AuthStatus.error);
       },
@@ -76,6 +99,7 @@ class AuthenticationProvider extends ChangeNotifier {
       email,
     );
 
+    print(result);
     result.fold(
       (failure) {
         _errorMessage = failure.message;
