@@ -11,26 +11,28 @@ class ValidationHelper {
   static bool isValidPhoneNumber(String phoneNumber) {
     // Remove all non-digit characters
     String cleanPhone = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
-    
+
     // Check for Indonesian phone number patterns
     // Format: 08xxxxxxxx, +628xxxxxxxx, 628xxxxxxxx
     final phoneRegex = RegExp(r'^(8|08|628|\+628)[0-9]{8,12}$');
-    
-    return phoneRegex.hasMatch(cleanPhone) && cleanPhone.length >= 10 && cleanPhone.length <= 15;
+
+    return phoneRegex.hasMatch(cleanPhone) &&
+        cleanPhone.length >= 10 &&
+        cleanPhone.length <= 15;
   }
 
   // Format phone number to standard format
   static String formatPhoneNumber(String phoneNumber) {
     String cleanPhone = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
-    
+
     // Convert to +62 format
     if (cleanPhone.startsWith('08')) {
-      cleanPhone = '628' + cleanPhone.substring(2);
+      cleanPhone = '628${cleanPhone.substring(2)}';
     } else if (cleanPhone.startsWith('8')) {
-      cleanPhone = '62' + cleanPhone;
+      cleanPhone = '62$cleanPhone';
     }
-    
-    return '+$cleanPhone';
+
+    return cleanPhone;
   }
 
   // Email validation message
@@ -56,12 +58,12 @@ class ValidationHelper {
   }
 
   static String? validatePassword(String? password) {
-      if (password == null || password.isEmpty) {
-        return 'Password is required';
-      } else if (password.length < 6) {
-        return 'Password must be at least 6 characters';
-      } else {
-        return null;
-      }
+    if (password == null || password.isEmpty) {
+      return 'Password is required';
+    } else if (password.length < 6) {
+      return 'Password must be at least 6 characters';
+    } else {
+      return null;
+    }
   }
 }
