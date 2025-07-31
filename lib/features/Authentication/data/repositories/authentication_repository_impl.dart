@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
+import '../models/user_model.dart';
 import '../../../../core/error/failure.dart';
 import '../datasources/remote_datasource.dart';
 import '../../domain/entities/forgot_password.dart';
@@ -17,6 +20,8 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
     required this.sharedPreferences,
   });
 
+ 
+
   @override
   Future<Either<Failure, User>> signIn(String email, String password) async {
     try {
@@ -24,20 +29,26 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
           await (Connectivity().checkConnectivity());
 
       if (connectivityResult.contains(ConnectivityResult.none)) {
-        // no available network
         return Left(ConnectionFailure('No available network connection.'));
       } else {
-        final result = await authenticationRemoteDataSource.signIn(
+        final UserModel result = await authenticationRemoteDataSource.signIn(
           email,
           password,
         );
 
-        sharedPreferences.setString("user", result.toString());
+        print('auth-repository-success: ${result}');
 
+        String userJson = jsonEncode(result.toJson());
+        await sharedPreferences.setString("user", userJson);
+
+        final userFromLocal = await sharedPreferences.get('user');
+
+        print('from-shared-preferences: ${userFromLocal}');
         return Right(result);
       }
     } catch (e) {
-      return Left(Failure("Something Wrong"));
+      print(e);
+      return Left(SimpleFailure(e.toString()));
     }
   }
 
@@ -64,7 +75,8 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
         return Right(result);
       }
     } catch (e) {
-      return Left(Failure("Something Wrong"));
+      print(e);
+      return Left(SimpleFailure(e.toString()));
     }
   }
 
@@ -93,7 +105,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
         return Right(result);
       }
     } catch (e) {
-      return Left(Failure("Something Wrong"));
+      return Left(SimpleFailure(e.toString()));
     }
   }
 
