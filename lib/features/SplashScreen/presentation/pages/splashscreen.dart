@@ -34,18 +34,6 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  // force clear untuk testing
-  Future<void> deleteToken() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    await prefs.clear();
-    await prefs.remove('user');
-
-    Navigator.of(
-      context,
-    ).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
-  }
-
   @override
   void initState() {
     super.initState();
