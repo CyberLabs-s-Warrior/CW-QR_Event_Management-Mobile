@@ -196,7 +196,7 @@ class AuthenticationRemoteDataSourceImplementation
         body: jsonEncode({
           "isWithEmail": isWithEmail,
           "new_password": newPassword,
-          "new_password_confirmation": newPassword,
+          "new_password_confirmation": newPasswordConfirmation,
           if (isWithEmail) "email": email else "phone_number": phoneNumber,
         }),
       );
