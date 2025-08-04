@@ -126,23 +126,6 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
               Navigator.of(context, rootNavigator: true).pop();
               authProvider.resetVerifyCodeStatus();
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  dismissDirection: DismissDirection.up,
-                  content: const Text('Successfully, verified!'),
-                  backgroundColor: Color(0xFF3F7CFF),
-                  margin: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).size.height - 100,
-                    left: 10,
-                    right: 10,
-                  ),
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              );
-
               showCustomSnackBar(
                 context: context,
                 message: 'Successfully, verified!',
