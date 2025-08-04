@@ -1,11 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'recovery_password_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/helper/validation_helper.dart';
 import '../../../../core/provider/validation_provider.dart';
+import '../../../Home/presentation/pages/home_page.dart';
 import '../provider/authentication_provider.dart';
 import '../widgets/text_field.dart';
 import '../widgets/text_field_digits.dart';
@@ -80,7 +79,7 @@ class _LoginPageState extends State<LoginPage>
         String formattedPhone = ValidationHelper.formatPhoneNumber(
           _forgotPasswordWithPhoneNumberController.text,
         );
-        
+
         print('formatted phone: $formattedPhone');
 
         authProvider.sendForgotPassword(
@@ -114,7 +113,7 @@ class _LoginPageState extends State<LoginPage>
           // handle login success
           if (authProvider.authStatus == AuthStatus.success) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              authProvider.resetAuthStatus(); // Reset dulu
+              authProvider.resetAuthStatus();
 
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -125,7 +124,7 @@ class _LoginPageState extends State<LoginPage>
 
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => RecoveryPasswordPage()),
+                MaterialPageRoute(builder: (_) => HomePage()),
               );
             });
           }
@@ -133,7 +132,7 @@ class _LoginPageState extends State<LoginPage>
           // handle login error
           if (authProvider.authStatus == AuthStatus.error) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              authProvider.resetAuthStatus(); // Reset dulu
+              authProvider.resetAuthStatus();
 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -147,7 +146,7 @@ class _LoginPageState extends State<LoginPage>
           // handle forgot password success
           if (authProvider.forgotPasswordStatus == AuthStatus.success) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              authProvider.resetForgotPasswordStatus(); // Reset dulu
+              authProvider.resetForgotPasswordStatus();
 
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -175,7 +174,7 @@ class _LoginPageState extends State<LoginPage>
           // handle forgot password error
           if (authProvider.forgotPasswordStatus == AuthStatus.error) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              authProvider.resetForgotPasswordStatus(); // Reset dulu
+              authProvider.resetForgotPasswordStatus();
 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -185,6 +184,7 @@ class _LoginPageState extends State<LoginPage>
               );
             });
           }
+
           return Stack(
             children: [
               Container(
@@ -316,32 +316,6 @@ class _LoginPageState extends State<LoginPage>
                 borderRadius: BorderRadius.circular(24),
               ),
             ),
-            // onPressed: () {},
-            // child: const Text(
-            //   "Login",
-            //   style: TextStyle(
-            //     fontWeight: FontWeight.bold,
-            //     color: Colors.white,
-            //   ),
-            // ),
-            // onPressed: () {
-            //   print('wwaww');
-            //   print('login is load2');
-            //   final validationProvider = context.read<ValidationProvider>();
-            //   final authProvider = context.read<AuthenticationProvider>();
-            //   print('login is load3');
-
-            //   if (validationProvider.isFormValid) {
-            //     authProvider.signIn(
-            //       _emailController.text,
-            //       _passwordController.text,
-            //     );
-            //   } else {
-            //     print('form not valid');
-            //   }
-
-            //   print('login is load4');
-            // },
             onPressed: authProvider.isLoading ? null : _handleLogin,
             child:
                 authProvider.isLoading
@@ -354,7 +328,7 @@ class _LoginPageState extends State<LoginPage>
                       ),
                     )
                     : const Text(
-                      "Send Reset Link",
+                      "Sign In",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -389,21 +363,7 @@ class _LoginPageState extends State<LoginPage>
   ) {
     return Column(
       children: [
-        // _isForgotPasswordWithEmail
-        //     ? AuthenticationCustomTextFieldLabel(text: "Email")
-        //     : AuthenticationCustomTextFieldLabel(text: "Phone Number"),
-        // SizedBox(height: 8),
-        // _isForgotPasswordWithEmail
-        //     ? AuthenticationCustomTextField(
-        //       controller: _forgotPasswordWithEmailController,
-        //       hintText: "Enter your Email",
-        //       prefixIcon: Icons.email_outlined,
-        //     )
-        //     : AuthenticationCustomTextField(
-        //       controller: _forgotPasswordWithPhoneNumberController,
-        //       hintText: "Enter your Phone Number",
-        //       prefixIcon: Icons.phone_outlined,
-        //     ),
+      
         _isForgotPasswordWithEmail
             ? const AuthenticationCustomTextFieldLabel(text: "Email")
             : const AuthenticationCustomTextFieldLabel(text: "Phone Number"),
@@ -423,7 +383,6 @@ class _LoginPageState extends State<LoginPage>
 
               errorText: validationProvider.phoneError,
             ),
-
         SizedBox(height: 15),
         SizedBox(
           width: double.infinity,
@@ -436,28 +395,6 @@ class _LoginPageState extends State<LoginPage>
                 borderRadius: BorderRadius.circular(24),
               ),
             ),
-            // onPressed: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder:
-            //           (_) => VerifyCodePage(
-            //             isEmail: _isForgotPasswordWithEmail,
-            //             emailOrPhoneNumber:
-            //                 _isForgotPasswordWithEmail
-            //                     ? _forgotPasswordWithEmailController.text
-            //                     : _forgotPasswordWithPhoneNumberController.text,
-            //           ),
-            //     ),
-            //   );
-            // },
-            // child: const Text(
-            //   "Send Reset Link",
-            //   style: TextStyle(
-            //     fontWeight: FontWeight.bold,
-            //     color: Colors.white,
-            //   ),
-            // ),
             onPressed:
                 authProvider.isForgotPasswordLoading
                     ? null

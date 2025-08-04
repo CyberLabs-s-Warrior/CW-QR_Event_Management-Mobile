@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import '../../domain/entities/recovery_password.dart';
+import '../../domain/usecases/recovery_password.dart';
+
 import '../../domain/entities/forgot_password.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/entities/verify_code.dart';
 import '../../domain/usecases/forgot_password.dart';
+import '../../domain/usecases/get_user.dart';
+import '../../domain/usecases/logout.dart';
 import '../../domain/usecases/sign_in.dart';
 import '../../domain/usecases/verify_code.dart';
 
@@ -12,21 +17,30 @@ class AuthenticationProvider extends ChangeNotifier {
   final SignIn signInUseCase;
   final ForgotPassword forgotPasswordUseCase;
   final VerifyCode verifyCodeUseCase;
+  final GetUser getUserUseCase;
+  final Logout logoutUseCase;
+  final RecoveryPassword recoveryPasswordUseCase;
 
   AuthenticationProvider({
+    required this.getUserUseCase,
     required this.signInUseCase,
+    required this.logoutUseCase,
     required this.forgotPasswordUseCase,
     required this.verifyCodeUseCase,
+    required this.recoveryPasswordUseCase,
   });
 
-  // state variable
+  // state variable \/ init
   AuthStatus _authStatus = AuthStatus.initial;
   AuthStatus _forgotPasswordStatus = AuthStatus.initial;
   AuthStatus _verifyCodeStatus = AuthStatus.initial;
+  AuthStatus _logoutStatus = AuthStatus.initial;
+  AuthStatus _recoveryPasswordStatus = AuthStatus.initial;
 
   User? _currentUser;
   late ForgotPasswordEntities _forgotPasswordResult;
   late VerifyCodeEntities _verifyCodeResult;
+  late RecoveryPasswordEntity _recoveryPasswordResult;
 
   String? _errorMessage;
 
@@ -34,17 +48,24 @@ class AuthenticationProvider extends ChangeNotifier {
   AuthStatus get authStatus => _authStatus;
   AuthStatus get forgotPasswordStatus => _forgotPasswordStatus;
   AuthStatus get verifyCodeStatus => _verifyCodeStatus;
+  AuthStatus get logoutStatus => _logoutStatus;
+  AuthStatus get recoveryPasswordStatus => _recoveryPasswordStatus;
 
+  // getter data location
   User? get currentUser => _currentUser;
   ForgotPasswordEntities? get forgotPasswordResult => _forgotPasswordResult;
   VerifyCodeEntities? get verifyCodeResult => _verifyCodeResult;
+  RecoveryPasswordEntity? get recoveryPasswordResult => _recoveryPasswordResult;
 
   String? get errorMessage => _errorMessage;
 
+  // getter loading
   bool get isLoading => _authStatus == AuthStatus.loading;
   bool get isForgotPasswordLoading =>
       _forgotPasswordStatus == AuthStatus.loading;
   bool get isVerifyCodeLoading => _verifyCodeStatus == AuthStatus.loading;
+  bool get isRecoveryPasswordLoading =>
+      _recoveryPasswordStatus == AuthStatus.loading;
 
   String get cleanErrorMessage {
     if (_errorMessage == null) return 'An error occurred';
@@ -139,12 +160,77 @@ class AuthenticationProvider extends ChangeNotifier {
     );
   }
 
+  Future<void> getUser() async {
+    _setAuthStatus(AuthStatus.loading);
+
+    final result = await getUserUseCase.execute();
+    result.fold(
+      (failure) {
+        _errorMessage = failure.message;
+        _setAuthStatus(AuthStatus.error);
+      },
+      (user) {
+        _currentUser = user;
+        _setAuthStatus(AuthStatus.success);
+      },
+    );
+  }
+
+  Future<void> logout() async {
+    _logoutStatus = AuthStatus.loading;
+    notifyListeners();
+
+    final result = await logoutUseCase.execute();
+
+    result.fold(
+      (failure) {
+        print('Logout failed : ${failure.message}');
+        _logoutStatus = AuthStatus.error;
+      },
+      (success) {
+        print('Logout successful');
+
+        _currentUser = null;
+        resetAllStatus();
+      },
+    );
+  }
+
+  Future<void> recoveryPassword({
+    required bool isWithEmail,
+    String? phoneNumber,
+    String? email,
+    required String newPassword,
+    required String newPasswordConfirmation,
+  }) async {
+    _setRecoveryPasswordStatus(AuthStatus.loading);
+
+    final result = await recoveryPasswordUseCase.execute(
+      isWithEmail,
+      phoneNumber,
+      email,
+      newPassword,
+      newPasswordConfirmation,
+    );
+
+    result.fold(
+      (failure) {
+        _errorMessage = failure.message;
+        print('recovery-password-in-fold: ${failure.message}');
+        _setRecoveryPasswordStatus(AuthStatus.error);
+      },
+      (result) {
+        _setRecoveryPasswordStatus(AuthStatus.success);
+      },
+    );
+  }
+
+  // reset states
   void clearError() {
     _errorMessage = null;
     notifyListeners();
   }
 
-  // reset states
   void resetAuthStatus() {
     _setAuthStatus(AuthStatus.initial);
   }
@@ -155,6 +241,22 @@ class AuthenticationProvider extends ChangeNotifier {
 
   void resetVerifyCodeStatus() {
     _setVerifyCodeStatus(AuthStatus.initial);
+  }
+
+  void resetLogoutStatus() {
+    _setLogoutStatus(AuthStatus.initial);
+  }
+
+  void resetRecoveryPasswordStatus() {
+    _setRecoveryPasswordStatus(AuthStatus.initial);
+  }
+
+  void resetAllStatus() {
+    resetLogoutStatus();
+    resetAuthStatus();
+    resetForgotPasswordStatus();
+    resetVerifyCodeStatus();
+    resetRecoveryPasswordStatus();
   }
 
   // private mthod
@@ -170,6 +272,16 @@ class AuthenticationProvider extends ChangeNotifier {
 
   void _setVerifyCodeStatus(AuthStatus status) {
     _verifyCodeStatus = status;
+    notifyListeners();
+  }
+
+  void _setLogoutStatus(AuthStatus status) {
+    _logoutStatus = status;
+    notifyListeners();
+  }
+
+  void _setRecoveryPasswordStatus(AuthStatus status) {
+    _recoveryPasswordStatus = status;
     notifyListeners();
   }
 }

@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'text_field_label.dart';
 
-class AuthenticationRecoveryPasswordWithLabelValidation extends StatelessWidget {
+class AuthenticationRecoveryPasswordWithLabelValidation
+    extends StatelessWidget {
   final bool obscureText;
   final String hintText;
   final IconData prefixIcon;
   final IconData? suffixIcon;
   final TextEditingController? controller;
   final VoidCallback? onSuffixIconTap;
+  final String label;
 
   const AuthenticationRecoveryPasswordWithLabelValidation({
     super.key,
@@ -18,6 +20,7 @@ class AuthenticationRecoveryPasswordWithLabelValidation extends StatelessWidget 
     this.suffixIcon,
     this.controller,
     this.onSuffixIconTap,
+    required this.label,
   });
 
   @override
@@ -25,8 +28,8 @@ class AuthenticationRecoveryPasswordWithLabelValidation extends StatelessWidget 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AuthenticationCustomTextFieldLabel(text: "Password"),
-        SizedBox(height: 7,),
+        AuthenticationCustomTextFieldLabel(text: label),
+        SizedBox(height: 7),
         TextField(
           controller: controller,
           obscureText: obscureText,

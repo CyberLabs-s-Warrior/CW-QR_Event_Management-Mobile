@@ -1,7 +1,10 @@
 class GeneralException implements Exception {
   final String message;
 
-  const GeneralException({required this.message});
+   GeneralException({required this.message});
+
+  @override
+  String toString() => message;
 }
 
 class ServerException implements Exception {
@@ -18,9 +21,9 @@ class StatusCodeException implements Exception {
 
 class EmptyException implements Exception {
   final String message;
-  
+
   EmptyException({required this.message});
-  
+
   @override
   String toString() => 'EmptyException: $message';
 }

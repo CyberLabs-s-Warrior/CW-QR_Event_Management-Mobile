@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import '../entities/recovery_password.dart';
 
 import '../../../../core/error/failure.dart';
 import '../entities/forgot_password.dart';
@@ -18,6 +19,14 @@ abstract class AuthenticationRepository {
     String? email,
     String otp,
   );
+  Future<Either<Failure, User>> getUser();
+  Future<Either<Failure, RecoveryPasswordEntity>> recoveryPassword(
+    bool isWithEmail,
+    String? phoneNumber,
+    String? email,
+    String newPassword,
+    String newPasswordConfirmation
+  );
 
-  void logout(String token);
+  Future<Either<Failure, bool>> logout();
 }

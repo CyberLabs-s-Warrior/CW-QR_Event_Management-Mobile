@@ -1,14 +1,15 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failure.dart';
+import '../entities/user.dart';
 import '../repositories/authentication_repository.dart';
 
-class Logout {
+class GetUser {
   final AuthenticationRepository authenticationRepository;
 
-  const Logout(this.authenticationRepository);
+  GetUser(this.authenticationRepository);
 
-  Future<Either<Failure, bool>> execute() {
-    return authenticationRepository.logout();
+  Future<Either<Failure, User>> execute() async {
+    return await authenticationRepository.getUser();
   }
 }

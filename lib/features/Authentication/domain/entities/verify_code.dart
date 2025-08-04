@@ -8,3 +8,4 @@ class VerifyCodeEntities extends Equatable {
   @override
   List<Object?> get props => [message];
 }
+
