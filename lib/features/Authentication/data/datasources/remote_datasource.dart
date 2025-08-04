@@ -203,7 +203,7 @@ class AuthenticationRemoteDataSourceImplementation
       Map<String, dynamic> dataBody = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        return RecoveryPasswordModel.fromJson( dataBody);
+        return RecoveryPasswordModel.fromJson(dataBody);
       } else if (response.statusCode == 404) {
         // print('from-recovery-password 404: ${dataBody['message']}');
         throw EmptyException(message: dataBody['message']);
