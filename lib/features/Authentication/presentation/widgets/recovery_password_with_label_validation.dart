@@ -68,7 +68,17 @@ class AuthenticationRecoveryPasswordWithLabelValidation
           ),
         ),
 
-        // Align(alignment: Alignment.centerLeft, child: Text("Must be at least 8 character")),
+        if (validationMessage != null && validationMessage!.isNotEmpty)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              validationMessage!,
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 12,
+              ),
+            ),
+          ),
       ],
     );
   }
