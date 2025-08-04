@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  // force clear untuk esting
+  // force clear untuk testing
   Future<void> deleteToken() async {
     final prefs = await SharedPreferences.getInstance();
 
