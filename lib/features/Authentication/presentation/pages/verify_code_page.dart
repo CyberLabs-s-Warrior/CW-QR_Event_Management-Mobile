@@ -46,8 +46,6 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
   @override
   void initState() {
     super.initState();
-    print("passing data dari page sebelumnya: ${widget.emailOrPhoneNumber}");
-
     _focusNode.canRequestFocus = false;
 
     // _startCountdown();
