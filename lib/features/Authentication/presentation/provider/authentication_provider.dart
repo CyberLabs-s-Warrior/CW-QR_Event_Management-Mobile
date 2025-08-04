@@ -1,0 +1,287 @@
+import 'package:flutter/material.dart';
+import '../../domain/entities/recovery_password.dart';
+import '../../domain/usecases/recovery_password.dart';
+
+import '../../domain/entities/forgot_password.dart';
+import '../../domain/entities/user.dart';
+import '../../domain/entities/verify_code.dart';
+import '../../domain/usecases/forgot_password.dart';
+import '../../domain/usecases/get_user.dart';
+import '../../domain/usecases/logout.dart';
+import '../../domain/usecases/sign_in.dart';
+import '../../domain/usecases/verify_code.dart';
+
+enum AuthStatus { initial, loading, success, error }
+
+class AuthenticationProvider extends ChangeNotifier {
+  final SignIn signInUseCase;
+  final ForgotPassword forgotPasswordUseCase;
+  final VerifyCode verifyCodeUseCase;
+  final GetUser getUserUseCase;
+  final Logout logoutUseCase;
+  final RecoveryPassword recoveryPasswordUseCase;
+
+  AuthenticationProvider({
+    required this.getUserUseCase,
+    required this.signInUseCase,
+    required this.logoutUseCase,
+    required this.forgotPasswordUseCase,
+    required this.verifyCodeUseCase,
+    required this.recoveryPasswordUseCase,
+  });
+
+  // state variable \/ init
+  AuthStatus _authStatus = AuthStatus.initial;
+  AuthStatus _forgotPasswordStatus = AuthStatus.initial;
+  AuthStatus _verifyCodeStatus = AuthStatus.initial;
+  AuthStatus _logoutStatus = AuthStatus.initial;
+  AuthStatus _recoveryPasswordStatus = AuthStatus.initial;
+
+  User? _currentUser;
+  late ForgotPasswordEntities _forgotPasswordResult;
+  late VerifyCodeEntities _verifyCodeResult;
+  late RecoveryPasswordEntity _recoveryPasswordResult;
+
+  String? _errorMessage;
+
+  // getter
+  AuthStatus get authStatus => _authStatus;
+  AuthStatus get forgotPasswordStatus => _forgotPasswordStatus;
+  AuthStatus get verifyCodeStatus => _verifyCodeStatus;
+  AuthStatus get logoutStatus => _logoutStatus;
+  AuthStatus get recoveryPasswordStatus => _recoveryPasswordStatus;
+
+  // getter data location
+  User? get currentUser => _currentUser;
+  ForgotPasswordEntities? get forgotPasswordResult => _forgotPasswordResult;
+  VerifyCodeEntities? get verifyCodeResult => _verifyCodeResult;
+  RecoveryPasswordEntity? get recoveryPasswordResult => _recoveryPasswordResult;
+
+  String? get errorMessage => _errorMessage;
+
+  // getter loading
+  bool get isLoading => _authStatus == AuthStatus.loading;
+  bool get isForgotPasswordLoading =>
+      _forgotPasswordStatus == AuthStatus.loading;
+  bool get isVerifyCodeLoading => _verifyCodeStatus == AuthStatus.loading;
+  bool get isRecoveryPasswordLoading =>
+      _recoveryPasswordStatus == AuthStatus.loading;
+
+  String get cleanErrorMessage {
+    if (_errorMessage == null) return 'An error occurred';
+
+    // remove exception class name
+    String cleanMessage = _errorMessage!;
+
+    if (cleanMessage.startsWith('EmptyException: ')) {
+      cleanMessage = cleanMessage.replaceFirst('EmptyException: ', '');
+    }
+    if (cleanMessage.startsWith('GeneralException: ')) {
+      cleanMessage = cleanMessage.replaceFirst('GeneralException: ', '');
+    }
+    if (cleanMessage.startsWith('ServerException: ')) {
+      cleanMessage = cleanMessage.replaceFirst('ServerException: ', '');
+    }
+
+    return cleanMessage;
+  }
+
+  Future<void> signIn(String email, String password) async {
+    _setAuthStatus(AuthStatus.loading);
+
+    final result = await signInUseCase.execute(email, password);
+    print(result);
+
+    result.fold(
+      (failure) {
+        print(
+          'error message: ${failure.message}, result: ${result}, all failure: $failure',
+        );
+        _errorMessage = failure.message;
+        _setAuthStatus(AuthStatus.error);
+      },
+      (user) {
+        _currentUser = user;
+        _setAuthStatus(AuthStatus.success);
+      },
+    );
+  }
+
+  Future<void> sendForgotPassword({
+    required bool isWithEmail,
+    String? phoneNumber,
+    String? email,
+  }) async {
+    _setForgotPasswordStatus(AuthStatus.loading);
+
+    final result = await forgotPasswordUseCase.execute(
+      isWithEmail,
+      phoneNumber,
+      email,
+    );
+
+    print(result);
+    result.fold(
+      (failure) {
+        _errorMessage = failure.message;
+        _setForgotPasswordStatus(AuthStatus.error);
+      },
+      (forgotPasswordResult) {
+        _forgotPasswordResult = forgotPasswordResult;
+        _setForgotPasswordStatus(AuthStatus.success);
+      },
+    );
+  }
+
+  Future<void> verifyCode({
+    required bool isWithEmail,
+    String? phoneNumber,
+    String? email,
+    required String otp,
+  }) async {
+    _setVerifyCodeStatus(AuthStatus.loading);
+
+    final result = await verifyCodeUseCase.execute(
+      isWithEmail,
+      phoneNumber,
+      email,
+      otp,
+    );
+
+    result.fold(
+      (failure) {
+        _errorMessage = failure.message;
+        _setVerifyCodeStatus(AuthStatus.error);
+      },
+      (verifyCodeResult) {
+        _verifyCodeResult = verifyCodeResult;
+        _setVerifyCodeStatus(AuthStatus.success);
+      },
+    );
+  }
+
+  Future<void> getUser() async {
+    _setAuthStatus(AuthStatus.loading);
+
+    final result = await getUserUseCase.execute();
+    result.fold(
+      (failure) {
+        _errorMessage = failure.message;
+        _setAuthStatus(AuthStatus.error);
+      },
+      (user) {
+        _currentUser = user;
+        _setAuthStatus(AuthStatus.success);
+      },
+    );
+  }
+
+  Future<void> logout() async {
+    _logoutStatus = AuthStatus.loading;
+    notifyListeners();
+
+    final result = await logoutUseCase.execute();
+
+    result.fold(
+      (failure) {
+        print('Logout failed : ${failure.message}');
+        _logoutStatus = AuthStatus.error;
+      },
+      (success) {
+        print('Logout successful');
+
+        _currentUser = null;
+        resetAllStatus();
+      },
+    );
+  }
+
+  Future<void> recoveryPassword({
+    required bool isWithEmail,
+    String? phoneNumber,
+    String? email,
+    required String newPassword,
+    required String newPasswordConfirmation,
+  }) async {
+    _setRecoveryPasswordStatus(AuthStatus.loading);
+
+    final result = await recoveryPasswordUseCase.execute(
+      isWithEmail,
+      phoneNumber,
+      email,
+      newPassword,
+      newPasswordConfirmation,
+    );
+
+    result.fold(
+      (failure) {
+        _errorMessage = failure.message;
+        print('recovery-password-in-fold: ${failure.message}');
+        _setRecoveryPasswordStatus(AuthStatus.error);
+      },
+      (result) {
+        _setRecoveryPasswordStatus(AuthStatus.success);
+      },
+    );
+  }
+
+  // reset states
+  void clearError() {
+    _errorMessage = null;
+    notifyListeners();
+  }
+
+  void resetAuthStatus() {
+    _setAuthStatus(AuthStatus.initial);
+  }
+
+  void resetForgotPasswordStatus() {
+    _setForgotPasswordStatus(AuthStatus.initial);
+  }
+
+  void resetVerifyCodeStatus() {
+    _setVerifyCodeStatus(AuthStatus.initial);
+  }
+
+  void resetLogoutStatus() {
+    _setLogoutStatus(AuthStatus.initial);
+  }
+
+  void resetRecoveryPasswordStatus() {
+    _setRecoveryPasswordStatus(AuthStatus.initial);
+  }
+
+  void resetAllStatus() {
+    resetLogoutStatus();
+    resetAuthStatus();
+    resetForgotPasswordStatus();
+    resetVerifyCodeStatus();
+    resetRecoveryPasswordStatus();
+  }
+
+  // private method
+  void _setAuthStatus(AuthStatus status) {
+    _authStatus = status;
+    notifyListeners();
+  }
+
+  void _setForgotPasswordStatus(AuthStatus status) {
+    _forgotPasswordStatus = status;
+    notifyListeners();
+  }
+
+  void _setVerifyCodeStatus(AuthStatus status) {
+    _verifyCodeStatus = status;
+    notifyListeners();
+  }
+
+  void _setLogoutStatus(AuthStatus status) {
+    _logoutStatus = status;
+    notifyListeners();
+  }
+
+  void _setRecoveryPasswordStatus(AuthStatus status) {
+    _recoveryPasswordStatus = status;
+    notifyListeners();
+  }
+}
