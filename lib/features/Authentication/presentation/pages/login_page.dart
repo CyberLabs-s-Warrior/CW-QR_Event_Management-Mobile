@@ -22,7 +22,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
-  bool _isPasswordVisible = true;
+  bool _isPasswordVisible = false;
   bool _isForgotPasswordWithEmail = true;
   late TabController _tabController;
 
