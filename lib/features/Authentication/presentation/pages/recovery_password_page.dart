@@ -199,8 +199,8 @@ class _RecoveryPasswordPageState extends State<RecoveryPasswordPage> {
     );
   }
 
-  bool _isNewPasswordVisible = true;
-  bool _isConfirmPasswordVisible = true;
+  bool _isNewPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   @override
   void dispose() {
