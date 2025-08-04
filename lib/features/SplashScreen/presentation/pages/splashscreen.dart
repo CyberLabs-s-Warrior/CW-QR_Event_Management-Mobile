@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../Authentication/domain/entities/user.dart';
 import '../../../Authentication/presentation/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../../../Home/presentation/pages/home_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -15,23 +18,17 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   void checkToken() async {
-    dynamic user;
-    dynamic token;
-    final prefs = await SharedPreferences.getInstance();
-    final userJson = prefs.getString('user');
+    final authProvider = context.read<AuthenticationProvider>();
 
-    if (userJson != null && userJson.isNotEmpty) {
-       user = jsonDecode(userJson);
-       token = user['token'];
-    } else {
-       user = null;
-       token = null;
-    }
+    await authProvider.getUser();
+
+    final user = authProvider.currentUser;
+    final token = authProvider.currentUser?.token;
 
     print("token: $token");
     print("user: $user");
 
-    if (token == null || user == null) {
+    if (token == null) {
       Navigator.of(
         context,
       ).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));

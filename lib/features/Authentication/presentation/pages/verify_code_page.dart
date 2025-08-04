@@ -125,7 +125,7 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context, rootNavigator: true).pop();
               authProvider.resetVerifyCodeStatus();
-
+ 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   dismissDirection: DismissDirection.up,
