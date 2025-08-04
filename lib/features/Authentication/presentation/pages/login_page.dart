@@ -43,20 +43,15 @@ class _LoginPageState extends State<LoginPage>
   // bool _isLoading = false;
 
   void _handleLogin() async {
-    print('login is load2');
     final validationProvider = context.read<ValidationProvider>();
     final authProvider = context.read<AuthenticationProvider>();
 
     validationProvider.validateEmail(_emailController.text);
     validationProvider.validatePassword(_passwordController.text);
 
-    print('login is load3');
-
     if (validationProvider.isFormValid) {
       authProvider.signIn(_emailController.text, _passwordController.text);
     }
-
-    print('login is load4');
   }
 
   void _handleForgotPassword() {
