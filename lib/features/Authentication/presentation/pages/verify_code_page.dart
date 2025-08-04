@@ -48,7 +48,6 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
     super.initState();
     _focusNode.canRequestFocus = false;
 
-    // _startCountdown();
 
     // validasi, listener memastikan biar ga lebih dari 4
     _pinController.addListener(() {
