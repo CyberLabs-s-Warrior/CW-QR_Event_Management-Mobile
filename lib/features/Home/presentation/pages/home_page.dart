@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../SplashScreen/presentation/pages/splashscreen.dart';
- 
+
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,7 +24,6 @@ class _HomePageState extends State<HomePage> {
                 TextButton(
                   onPressed: () async {
                     // action
-                    await authProvider.logout();
 
                     final shouldLogout = await showDialog<bool>(
                       context: context,
@@ -45,11 +44,6 @@ class _HomePageState extends State<HomePage> {
                           ),
                     );
 
-                    // final prefs = await SharedPreferences.getInstance();
-
-                    // // Force clear untuk testing
-                    // await prefs.clear();
-                    // await prefs.remove('user');
 
                     if (shouldLogout == true) {
                       await authProvider.logout();

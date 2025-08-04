@@ -179,7 +179,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
       final userJson = sharedPreferences.getString('user');
       print('User get from local: $userJson');
       if (userJson == null) {
-        return Left(SimpleFailure('No user found in local storage'));
+        return Left(SimpleFailure('No user found.'));
       }
 
       print('from getUser(): $userJson');
