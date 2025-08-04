@@ -49,7 +49,8 @@ Future<void> init() async {
       forgotPasswordUseCase: myInjection(),
       verifyCodeUseCase: myInjection(),
       getUserUseCase: myInjection(),
-      logoutUseCase: myInjection(), recoveryPasswordUseCase: myInjection(),
+      logoutUseCase: myInjection(),
+      recoveryPasswordUseCase: myInjection(),
     ),
   );
 }
