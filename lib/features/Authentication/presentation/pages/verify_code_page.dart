@@ -7,6 +7,8 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_event_management/core/theme/app_colors.dart';
+import 'package:qr_event_management/gen/alert/snack_bar.dart';
 import 'recovery_password_page.dart';
 import '../../../../gen/loading/dialog_screen.dart';
 import '../provider/authentication_provider.dart';
@@ -117,7 +119,7 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               authProvider.resetVerifyCodeStatus();
 
-             showLoadingDialog(context, text: "Verifying...");
+              showLoadingDialog(context, text: "Verifying...");
             });
           }
 
@@ -125,7 +127,7 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context, rootNavigator: true).pop();
               authProvider.resetVerifyCodeStatus();
- 
+
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   dismissDirection: DismissDirection.up,
@@ -142,11 +144,18 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                   ),
                 ),
               );
+
+              showCustomSnackBar(
+                context: context,
+                message: 'Successfully, verified!',
+                color: AppColors.primary,
+              );
               Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                 MaterialPageRoute(
                   builder:
                       (context) => RecoveryPasswordPage(
-                        emailOrPhoneNumber: widget.emailOrPhoneNumber, isWithEmail: widget.isEmail,
+                        emailOrPhoneNumber: widget.emailOrPhoneNumber,
+                        isWithEmail: widget.isEmail,
                       ),
                 ),
                 (route) => route.isFirst,

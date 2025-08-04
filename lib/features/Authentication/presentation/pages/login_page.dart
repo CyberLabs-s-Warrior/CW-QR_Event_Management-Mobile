@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/helper/validation_helper.dart';
 import '../../../../core/provider/validation_provider.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../gen/alert/snack_bar.dart';
 import '../../../Home/presentation/pages/home_page.dart';
 import '../provider/authentication_provider.dart';
 import '../widgets/text_field.dart';
@@ -115,11 +117,10 @@ class _LoginPageState extends State<LoginPage>
             WidgetsBinding.instance.addPostFrameCallback((_) {
               authProvider.resetAuthStatus();
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Login Successful!'),
-                  backgroundColor: Colors.green,
-                ),
+              showCustomSnackBar(
+                context: context,
+                message: 'Login Successful',
+                color: AppColors.success,
               );
 
               Navigator.pushReplacement(
@@ -134,11 +135,10 @@ class _LoginPageState extends State<LoginPage>
             WidgetsBinding.instance.addPostFrameCallback((_) {
               authProvider.resetAuthStatus();
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(authProvider.cleanErrorMessage),
-                  backgroundColor: Colors.red,
-                ),
+              showCustomSnackBar(
+                context: context,
+                message: authProvider.cleanErrorMessage,
+                color: AppColors.error,
               );
             });
           }
@@ -148,11 +148,10 @@ class _LoginPageState extends State<LoginPage>
             WidgetsBinding.instance.addPostFrameCallback((_) {
               authProvider.resetForgotPasswordStatus();
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Verification code sent!'),
-                  backgroundColor: Colors.blue,
-                ),
+              showCustomSnackBar(
+                context: context,
+                message: 'Verification code sent!',
+                color: AppColors.primary,
               );
 
               Navigator.push(
@@ -176,11 +175,10 @@ class _LoginPageState extends State<LoginPage>
             WidgetsBinding.instance.addPostFrameCallback((_) {
               authProvider.resetForgotPasswordStatus();
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(authProvider.cleanErrorMessage),
-                  backgroundColor: Colors.red,
-                ),
+              showCustomSnackBar(
+                context: context,
+                message: authProvider.cleanErrorMessage,
+                color: AppColors.error,
               );
             });
           }
@@ -363,7 +361,6 @@ class _LoginPageState extends State<LoginPage>
   ) {
     return Column(
       children: [
-      
         _isForgotPasswordWithEmail
             ? const AuthenticationCustomTextFieldLabel(text: "Email")
             : const AuthenticationCustomTextFieldLabel(text: "Phone Number"),
