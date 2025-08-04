@@ -244,9 +244,6 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                           submittedPinTheme: submittedPinTheme,
                           showCursor: false,
                           readOnly: true,
-                          // validator: (value) {
-                          //   print('Validator called with value: $value');
-                          // },
                           onChanged: (value) {
                             setState(() {
                               verificationCode = value;
