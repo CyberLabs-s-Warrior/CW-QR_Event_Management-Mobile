@@ -22,8 +22,6 @@ class _SplashScreenState extends State<SplashScreen> {
     final user = authProvider.currentUser;
     final token = authProvider.currentUser?.token;
 
-    print("token: $token");
-    print("user: $user");
 
     if (token == null) {
       Navigator.of(
