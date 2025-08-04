@@ -70,7 +70,7 @@ class AuthenticationProvider extends ChangeNotifier {
   String get cleanErrorMessage {
     if (_errorMessage == null) return 'An error occurred';
 
-    // remop exception class name
+    // remove exception class name
     String cleanMessage = _errorMessage!;
 
     if (cleanMessage.startsWith('EmptyException: ')) {
