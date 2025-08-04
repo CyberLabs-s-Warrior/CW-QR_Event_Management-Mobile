@@ -259,7 +259,7 @@ class AuthenticationProvider extends ChangeNotifier {
     resetRecoveryPasswordStatus();
   }
 
-  // private mthod
+  // private method
   void _setAuthStatus(AuthStatus status) {
     _authStatus = status;
     notifyListeners();
