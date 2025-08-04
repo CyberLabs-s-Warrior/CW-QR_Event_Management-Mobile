@@ -233,7 +233,7 @@ class _RecoveryPasswordPageState extends State<RecoveryPasswordPage> {
     if (_newPasswordController.text != _confirmNewPasswordController.text) {
       showCustomSnackBar(
         context: context,
-        message: 'Password do not match',
+        message: 'Passwords do not match',
         color: AppColors.warning,
       );
       return;
