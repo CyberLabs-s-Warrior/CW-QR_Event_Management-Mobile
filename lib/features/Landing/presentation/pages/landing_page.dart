@@ -5,11 +5,9 @@ import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/ri.dart';
 import 'package:qr_event_management/core/theme/app_colors.dart';
 import 'package:qr_event_management/features/Landing/presentation/widgets/event_landing_head.dart';
-import 'package:qr_event_management/features/Landing/presentation/widgets/home_landing_head.dart';
 import 'package:qr_event_management/features/Landing/presentation/pages/event_page.dart';
 import 'package:qr_event_management/features/Landing/presentation/widgets/home_view.dart';
 
-import 'home_page.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -73,11 +71,15 @@ class _LandingPageState extends State<LandingPage>
             IndexedStack(
               index: _tabController.index,
               children: [
+                // Tab 1: Home
+
                 HomeView(
                   borderRadiusAnimation: _borderRadiusAnimation,
                   tabController: _tabController,
                   homeScrollController: _homeScrollController,
                 ),
+                // Tab 2: Events
+
                 Column(
                   children: [
                     AnimatedBuilder(

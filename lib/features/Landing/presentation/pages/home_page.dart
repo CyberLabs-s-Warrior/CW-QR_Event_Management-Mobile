@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:iconify_flutter/icons/ic.dart';
@@ -25,9 +26,9 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             homeAlert(),
-            SizedBox(height: 15),
+            Gap(15),
             eventOverview(),
-            SizedBox(height: 15),
+            Gap(15),
             eventHistory(),
           ],
         ),

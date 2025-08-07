@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (token == null || user == null) {
       Navigator.of(
         context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
+      ).pushReplacement(MaterialPageRoute(builder: (_) => LandingPage()));
     } else {
       Navigator.of(
         context,
