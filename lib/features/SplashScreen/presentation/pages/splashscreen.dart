@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_event_management/features/Landing/presentation/pages/landing_page.dart';
 import '../../../Authentication/presentation/pages/login_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
-import '../../../Home/presentation/pages/home_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -23,14 +22,14 @@ class _SplashScreenState extends State<SplashScreen> {
     final token = authProvider.currentUser?.token;
 
 
-    if (token == null) {
+    if (token == null || user == null) {
       Navigator.of(
         context,
       ).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
     } else {
       Navigator.of(
         context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => HomePage()));
+      ).pushReplacement(MaterialPageRoute(builder: (_) => LandingPage()));
     }
   }
 
