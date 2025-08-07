@@ -20,9 +20,14 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ValidationProvider()),
-        ChangeNotifierProvider(create: (context) => di.myInjection<AuthenticationProvider>()),
+        ChangeNotifierProvider(
+          create: (context) => di.myInjection<AuthenticationProvider>(),
+        ),
       ],
-      child: MaterialApp(home: SplashScreen()),
+      child: MaterialApp(
+        home: SplashScreen(),
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }

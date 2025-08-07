@@ -1,12 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_event_management/features/Landing/presentation/pages/landing_page.dart';
 
 import '../../../../core/helper/validation_helper.dart';
 import '../../../../core/provider/validation_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../gen/alert/snack_bar.dart';
-import '../../../Home/presentation/pages/home_page.dart';
+import '../../../Landing/presentation/pages/home_page.dart';
 import '../provider/authentication_provider.dart';
 import '../widgets/text_field.dart';
 import '../widgets/text_field_digits.dart';
@@ -120,7 +121,7 @@ class _LoginPageState extends State<LoginPage>
 
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => HomePage()),
+                MaterialPageRoute(builder: (_) => LandingPage()),
               );
             });
           }
@@ -286,7 +287,7 @@ class _LoginPageState extends State<LoginPage>
           controller: _passwordController,
           hintText: "Enter your Password",
           prefixIcon: Icons.lock_outline,
-          obscureText: _isPasswordVisible,
+          obscureText: !_isPasswordVisible,
           errorText: validationProvider.passwordError,
           onSuffixIconTap: () {
             setState(() {

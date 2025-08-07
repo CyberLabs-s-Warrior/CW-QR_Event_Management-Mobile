@@ -36,6 +36,7 @@ class AuthenticationProvider extends ChangeNotifier {
   AuthStatus _verifyCodeStatus = AuthStatus.initial;
   AuthStatus _logoutStatus = AuthStatus.initial;
   AuthStatus _recoveryPasswordStatus = AuthStatus.initial;
+  AuthStatus _getUserStatus = AuthStatus.initial;
 
   User? _currentUser;
   late ForgotPasswordEntities _forgotPasswordResult;
@@ -50,6 +51,7 @@ class AuthenticationProvider extends ChangeNotifier {
   AuthStatus get verifyCodeStatus => _verifyCodeStatus;
   AuthStatus get logoutStatus => _logoutStatus;
   AuthStatus get recoveryPasswordStatus => _recoveryPasswordStatus;
+  AuthStatus get getUserStatus => _getUserStatus;
 
   // getter data location
   User? get currentUser => _currentUser;
@@ -66,6 +68,7 @@ class AuthenticationProvider extends ChangeNotifier {
   bool get isVerifyCodeLoading => _verifyCodeStatus == AuthStatus.loading;
   bool get isRecoveryPasswordLoading =>
       _recoveryPasswordStatus == AuthStatus.loading;
+  bool get isGetUserStatus => _getUserStatus == AuthStatus.loading;
 
   String get cleanErrorMessage {
     if (_errorMessage == null) return 'An error occurred';
@@ -161,17 +164,17 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> getUser() async {
-    _setAuthStatus(AuthStatus.loading);
+    _setGetUserStatus(AuthStatus.loading);
 
     final result = await getUserUseCase.execute();
     result.fold(
       (failure) {
         _errorMessage = failure.message;
-        _setAuthStatus(AuthStatus.error);
+        _setGetUserStatus(AuthStatus.error);
       },
       (user) {
         _currentUser = user;
-        _setAuthStatus(AuthStatus.success);
+        _setGetUserStatus(AuthStatus.success);
       },
     );
   }
@@ -251,12 +254,17 @@ class AuthenticationProvider extends ChangeNotifier {
     _setRecoveryPasswordStatus(AuthStatus.initial);
   }
 
+  void resetGetUserStatus() {
+    _setGetUserStatus(AuthStatus.initial);
+  }
+
   void resetAllStatus() {
     resetLogoutStatus();
     resetAuthStatus();
     resetForgotPasswordStatus();
     resetVerifyCodeStatus();
     resetRecoveryPasswordStatus();
+    resetGetUserStatus();
   }
 
   // private method
@@ -282,6 +290,11 @@ class AuthenticationProvider extends ChangeNotifier {
 
   void _setRecoveryPasswordStatus(AuthStatus status) {
     _recoveryPasswordStatus = status;
+    notifyListeners();
+  }
+
+  void _setGetUserStatus(AuthStatus status) {
+    _getUserStatus = status;
     notifyListeners();
   }
 }

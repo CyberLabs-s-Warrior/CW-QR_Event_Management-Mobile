@@ -48,7 +48,6 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
         // }
 
         final userFromLocal = sharedPreferences.get('user');
-
         final tokenFromLocal = sharedPreferences.get('auth_data');
 
         print("from-shared-preferences-auth_data: $tokenFromLocal");
@@ -197,7 +196,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
     String? phoneNumber,
     String? email,
     String newPassword,
-    String newPasswordConfirmation
+    String newPasswordConfirmation,
   ) async {
     try {
       final List<ConnectivityResult> connectivityResult =
@@ -213,7 +212,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
           phoneNumber,
           email,
           newPassword,
-          newPasswordConfirmation
+          newPasswordConfirmation,
         );
 
         print("from-recovery-password-result-in-repo-impl: $result");
@@ -226,6 +225,4 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
       return Left(SimpleFailure(e.toString()));
     }
   }
-
-
 }

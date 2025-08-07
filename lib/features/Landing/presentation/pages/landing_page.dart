@@ -1,0 +1,253 @@
+import 'package:flutter/material.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/ic.dart';
+import 'package:iconify_flutter/icons/material_symbols.dart';
+import 'package:iconify_flutter/icons/ri.dart';
+import 'package:qr_event_management/core/theme/app_colors.dart';
+import 'package:qr_event_management/features/Landing/presentation/widgets/event_landing_head.dart';
+import 'package:qr_event_management/features/Landing/presentation/widgets/home_landing_head.dart';
+import 'package:qr_event_management/features/Landing/presentation/pages/event_page.dart';
+import 'package:qr_event_management/features/Landing/presentation/widgets/home_view.dart';
+
+import 'home_page.dart';
+
+class LandingPage extends StatefulWidget {
+  const LandingPage({super.key});
+
+  @override
+  State<LandingPage> createState() => _LandingPageState();
+}
+
+class _LandingPageState extends State<LandingPage>
+    with TickerProviderStateMixin {
+  late TabController _tabController;
+  late ScrollController _homeScrollController;
+  late AnimationController _borderRadiusController;
+  late Animation<double> _borderRadiusAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      setState(() {});
+    });
+    _homeScrollController = ScrollController();
+
+    _borderRadiusController = AnimationController(
+      vsync: this,
+      // duration: const Duration(milliseconds: 200),
+    );
+
+    _borderRadiusAnimation = Tween<double>(begin: 0.0, end: 30.0).animate(
+      CurvedAnimation(parent: _borderRadiusController, curve: Curves.easeInOut),
+    );
+
+    _homeScrollController.addListener(_onHomeScroll);
+  }
+
+  void _onHomeScroll() {
+    const double scrollThreshold = 100.0;
+    if (_homeScrollController.hasClients) {
+      double scrollOffset = _homeScrollController.offset;
+      double progress = (scrollOffset / scrollThreshold).clamp(0.0, 1.0);
+      _borderRadiusController.animateTo(progress);
+    }
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _homeScrollController.dispose();
+    _borderRadiusController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.backgroundPage,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            IndexedStack(
+              index: _tabController.index,
+              children: [
+                HomeView(
+                  borderRadiusAnimation: _borderRadiusAnimation,
+                  tabController: _tabController,
+                  homeScrollController: _homeScrollController,
+                ),
+                Column(
+                  children: [
+                    AnimatedBuilder(
+                      animation: _borderRadiusAnimation,
+                      builder: (context, child) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(
+                                _borderRadiusAnimation.value,
+                              ),
+                              bottomRight: Radius.circular(
+                                _borderRadiusAnimation.value,
+                              ),
+                            ),
+                            border:
+                                _borderRadiusAnimation.value > 0
+                                    ? Border(
+                                      bottom: BorderSide(
+                                        width: 2,
+                                        color: AppColors.primaryLight,
+                                      ),
+                                    )
+                                    : null,
+                          ),
+                          child: EventLandingHead(
+                            tabIndex: _tabController.index,
+                          ),
+                        );
+                      },
+                    ),
+                    Expanded(
+                      child: EventLandingPage(
+                        tabIndex: _tabController.index,
+                        scrollController: _homeScrollController,
+                      ),
+                    ),
+                  ],
+                ),
+                // Tab 3: Settings
+                Container(
+                  alignment: Alignment.center,
+                  child: Text('Settings Page'),
+                ),
+              ],
+            ),
+
+            _buildTabBar(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabBar() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(color: AppColors.secondary, blurRadius: 30.0),
+            ],
+            color: Color(0xFFDDE9FF),
+            borderRadius: BorderRadius.circular(25),
+          ),
+          child: TabBar(
+            controller: _tabController,
+            padding: EdgeInsets.all(4),
+            indicator: BoxDecoration(
+              color: AppColors.third,
+              borderRadius: BorderRadius.circular(25),
+            ),
+            labelStyle: TextStyle(fontWeight: FontWeight.bold),
+            unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
+            indicatorSize: TabBarIndicatorSize.tab,
+            dividerColor: Colors.transparent,
+            unselectedLabelColor: Color(0xFF3F7CFF),
+            labelColor: Colors.white,
+            onTap: (value) {
+              setState(() {});
+            },
+            tabs: [
+              Tab(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Iconify(
+                    MaterialSymbols.home_rounded,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+              Tab(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Iconify(Ri.calendar_2_fill, color: AppColors.primary),
+                ),
+              ),
+              Tab(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Iconify(Ri.settings_fill, color: AppColors.primary),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+Widget topProfile() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+
+            child: Container(
+              clipBehavior: Clip.antiAlias,
+
+              decoration: BoxDecoration(),
+              height: 70,
+              width: 70,
+              child: Image.network(
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSMUi9wHqia_68xlAU7vP3E3sxn5K0KS-nUvBZk5jSJ54p8FPnw20uYV5yxNgF59DZoqc&usqp=CAU',
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          SizedBox(width: 15),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                "Welcome!",
+                textAlign: TextAlign.start,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              Text(
+                "Nabil Dzikrika",
+                textAlign: TextAlign.start,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+              ),
+            ],
+          ),
+        ],
+      ),
+      Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(217, 217, 217, 1000),
+              ),
+              child: Iconify(Ic.baseline_notifications),
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
+}
