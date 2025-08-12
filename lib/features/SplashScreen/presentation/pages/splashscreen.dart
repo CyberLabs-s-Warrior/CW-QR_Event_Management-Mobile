@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/features/Landing/presentation/pages/landing_page.dart';
-import '../../../Authentication/presentation/pages/login_page.dart';
+import '../../../Landing/presentation/pages/landing_page.dart';
 
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 

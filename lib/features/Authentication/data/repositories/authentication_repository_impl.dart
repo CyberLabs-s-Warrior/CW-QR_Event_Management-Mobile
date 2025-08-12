@@ -180,7 +180,6 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
       if (userJson == null) {
         return Left(SimpleFailure('No user found.'));
       }
-
       print('from getUser(): $userJson');
       final userModel = UserModel.fromJson(jsonDecode(userJson));
       return Right(userModel);

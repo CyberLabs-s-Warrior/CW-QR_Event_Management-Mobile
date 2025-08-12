@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import '../../domain/entities/recovery_password.dart';
-import '../../domain/usecases/recovery_password.dart';
 
 import '../../domain/entities/forgot_password.dart';
+import '../../domain/entities/recovery_password.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/entities/verify_code.dart';
 import '../../domain/usecases/forgot_password.dart';
 import '../../domain/usecases/get_user.dart';
 import '../../domain/usecases/logout.dart';
+import '../../domain/usecases/recovery_password.dart';
 import '../../domain/usecases/sign_in.dart';
 import '../../domain/usecases/verify_code.dart';
 

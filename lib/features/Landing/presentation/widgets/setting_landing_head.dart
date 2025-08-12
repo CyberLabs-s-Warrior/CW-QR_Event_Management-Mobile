@@ -1,17 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/ic.dart';
+import 'package:flutter/widgets.dart';
+import 'package:qr_event_management/core/theme/app_colors.dart';
 
-class HomeLandingHead extends StatefulWidget {
+class SettingLandingHead extends StatefulWidget {
   final int tabIndex;
 
-  const HomeLandingHead({super.key, required this.tabIndex});
+  const SettingLandingHead({super.key, required this.tabIndex});
 
   @override
-  State<HomeLandingHead> createState() => _HomeLandingHeadState();
+  State<SettingLandingHead> createState() => _SettingLandingHeadState();
 }
 
-class _HomeLandingHeadState extends State<HomeLandingHead> {
+class _SettingLandingHeadState extends State<SettingLandingHead> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,7 +21,7 @@ class _HomeLandingHeadState extends State<HomeLandingHead> {
         bottom: 20.0,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -45,30 +44,24 @@ class _HomeLandingHeadState extends State<HomeLandingHead> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    "Welcome!",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
-                  Text(
                     "Nabil Dzikrika",
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      height: 1,
+                    ),
+                  ),
+                  Text(
+                    "nabildzikrika@gmail.com",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: AppColors.grey,
+                    ),
                   ),
                 ],
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(50),
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(217, 217, 217, 1000),
-                  ),
-                  child: Iconify(Ic.baseline_notifications),
-                ),
               ),
             ],
           ),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/ri.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
-import 'package:qr_event_management/features/Landing/presentation/widgets/event_landing_head.dart';
-import 'package:qr_event_management/features/Landing/presentation/pages/event_page.dart';
-import 'package:qr_event_management/features/Landing/presentation/widgets/home_view.dart';
-
+import 'package:qr_event_management/features/Landing/presentation/pages/setting_page.dart';
+import 'package:qr_event_management/features/Landing/presentation/widgets/event_view.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../widgets/home_view.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -72,59 +72,19 @@ class _LandingPageState extends State<LandingPage>
               index: _tabController.index,
               children: [
                 // Tab 1: Home
-
                 HomeView(
                   borderRadiusAnimation: _borderRadiusAnimation,
                   tabController: _tabController,
                   homeScrollController: _homeScrollController,
                 ),
                 // Tab 2: Events
-
-                Column(
-                  children: [
-                    AnimatedBuilder(
-                      animation: _borderRadiusAnimation,
-                      builder: (context, child) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(
-                                _borderRadiusAnimation.value,
-                              ),
-                              bottomRight: Radius.circular(
-                                _borderRadiusAnimation.value,
-                              ),
-                            ),
-                            border:
-                                _borderRadiusAnimation.value > 0
-                                    ? Border(
-                                      bottom: BorderSide(
-                                        width: 2,
-                                        color: AppColors.primaryLight,
-                                      ),
-                                    )
-                                    : null,
-                          ),
-                          child: EventLandingHead(
-                            tabIndex: _tabController.index,
-                          ),
-                        );
-                      },
-                    ),
-                    Expanded(
-                      child: EventLandingPage(
-                        tabIndex: _tabController.index,
-                        scrollController: _homeScrollController,
-                      ),
-                    ),
-                  ],
+                EventView(
+                  borderRadiusAnimation: _borderRadiusAnimation,
+                  tabController: _tabController,
+                  homeScrollController: _homeScrollController,
                 ),
                 // Tab 3: Settings
-                Container(
-                  alignment: Alignment.center,
-                  child: Text('Settings Page'),
-                ),
+                SettingView(borderRadiusAnimation: _borderRadiusAnimation, tabController: _tabController),
               ],
             ),
 
@@ -195,6 +155,44 @@ class _LandingPageState extends State<LandingPage>
 }
 
 
+
+class SettingGroupHead extends StatelessWidget {
+  final List<Widget> children;
+  final String title;
+
+  const SettingGroupHead({
+    super.key,
+    required this.children,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppColors.grey,
+              ),
+            ),
+          ],
+        ),
+        Gap(5),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(children: children),
+        ),
+        Gap(10)
+      ],
+    );
+  }
+}
 
 Widget topProfile() {
   return Row(
