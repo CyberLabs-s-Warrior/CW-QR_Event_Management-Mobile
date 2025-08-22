@@ -42,7 +42,7 @@ class AuthenticationRemoteDataSourceImplementation
   @override
   Future<UserModel> signIn(email, password) async {
     final response = await client.post(
-      Uri.parse("${Constant.api}/user/sign-in"),
+      Uri.parse(Constant.endpoint("/user/sign-in")),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({"email": email, "password": password}),
     );
@@ -91,7 +91,7 @@ class AuthenticationRemoteDataSourceImplementation
     String? email,
   ) async {
     final response = await client.post(
-      Uri.parse("${Constant.api}/user/send-code"),
+      Uri.parse(Constant.endpoint("/user/send-code")),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         "isWithEmail": isWithEmail,
@@ -125,7 +125,7 @@ class AuthenticationRemoteDataSourceImplementation
     String otp,
   ) async {
     final response = await client.post(
-      Uri.parse("${Constant.api}/user/verify-code"),
+      Uri.parse(Constant.endpoint('/user/verify-code')),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         "isWithEmail": isWithEmail,
@@ -157,7 +157,7 @@ class AuthenticationRemoteDataSourceImplementation
   Future<void> logout(String token) async {
     try {
       final response = await client.post(
-        Uri.parse("${Constant.api}/user/sign-out"),
+        Uri.parse(Constant.endpoint('/user/sign-out')),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -188,7 +188,7 @@ class AuthenticationRemoteDataSourceImplementation
   ) async {
     try {
       final response = await client.put(
-        Uri.parse("${Constant.api}/user/recovery-password"),
+        Uri.parse(Constant.endpoint('/user/recovery-password')),
         headers: {
           'Content-Type': 'application/json',
           "Accept": "application/json",

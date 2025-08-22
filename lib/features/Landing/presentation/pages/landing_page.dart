@@ -4,10 +4,10 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/ri.dart';
-import 'package:qr_event_management/features/Landing/presentation/pages/setting_page.dart';
-import 'package:qr_event_management/features/Landing/presentation/widgets/event_view.dart';
+import '../../../Setting/presentation/pages/setting_page.dart';
+import '../../../LandingEvent/presentation/widgets/event_view.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../widgets/home_view.dart';
+import '../../../Home/presentation/widgets/home_view.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -34,7 +34,7 @@ class _LandingPageState extends State<LandingPage>
 
     _borderRadiusController = AnimationController(
       vsync: this,
-      // duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
     );
 
     _borderRadiusAnimation = Tween<double>(begin: 0.0, end: 30.0).animate(
@@ -46,10 +46,15 @@ class _LandingPageState extends State<LandingPage>
 
   void _onHomeScroll() {
     const double scrollThreshold = 100.0;
-    if (_homeScrollController.hasClients) {
-      double scrollOffset = _homeScrollController.offset;
-      double progress = (scrollOffset / scrollThreshold).clamp(0.0, 1.0);
-      _borderRadiusController.animateTo(progress);
+    if (!_homeScrollController.hasClients) return;
+
+    final double progress = (_homeScrollController.offset / scrollThreshold)
+        .clamp(0.0, 1.0);
+
+    // Daripada animateTo (memicu animasi tiap scroll & butuh duration),
+    // langsung set value agar sinkron dengan posisi scroll.
+    if (_borderRadiusController.value != progress) {
+      _borderRadiusController.value = progress;
     }
   }
 
@@ -79,12 +84,13 @@ class _LandingPageState extends State<LandingPage>
                 ),
                 // Tab 2: Events
                 EventView(
-                  borderRadiusAnimation: _borderRadiusAnimation,
                   tabController: _tabController,
-                  homeScrollController: _homeScrollController,
                 ),
                 // Tab 3: Settings
-                SettingView(borderRadiusAnimation: _borderRadiusAnimation, tabController: _tabController),
+                SettingView(
+                  borderRadiusAnimation: _borderRadiusAnimation,
+                  tabController: _tabController,
+                ),
               ],
             ),
 
@@ -96,6 +102,7 @@ class _LandingPageState extends State<LandingPage>
   }
 
   Widget _buildTabBar() {
+    
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
@@ -154,8 +161,6 @@ class _LandingPageState extends State<LandingPage>
   }
 }
 
-
-
 class SettingGroupHead extends StatelessWidget {
   final List<Widget> children;
   final String title;
@@ -188,7 +193,7 @@ class SettingGroupHead extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Column(children: children),
         ),
-        Gap(10)
+        Gap(10),
       ],
     );
   }

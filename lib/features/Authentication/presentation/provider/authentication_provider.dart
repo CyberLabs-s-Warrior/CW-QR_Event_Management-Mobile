@@ -14,6 +14,8 @@ import '../../domain/usecases/verify_code.dart';
 enum AuthStatus { initial, loading, success, error }
 
 class AuthenticationProvider extends ChangeNotifier {
+  // logout
+
   final SignIn signInUseCase;
   final ForgotPassword forgotPasswordUseCase;
   final VerifyCode verifyCodeUseCase;
@@ -193,10 +195,14 @@ class AuthenticationProvider extends ChangeNotifier {
       (success) {
         print('Logout successful');
 
-        _currentUser = null;
         resetAllStatus();
       },
     );
+  }
+
+  void resetState() { 
+    _currentUser = null;
+    notifyListeners();
   }
 
   Future<void> recoveryPassword({

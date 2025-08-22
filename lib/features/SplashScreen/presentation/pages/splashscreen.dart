@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../Authentication/presentation/pages/login_page.dart';
 import '../../../Landing/presentation/pages/landing_page.dart';
 
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
@@ -24,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (token == null || user == null) {
       Navigator.of(
         context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => LandingPage()));
+      ).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
     } else {
       Navigator.of(
         context,

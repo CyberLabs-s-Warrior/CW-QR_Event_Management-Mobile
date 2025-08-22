@@ -6,13 +6,11 @@ import '../widgets/event_tab_view_past.dart';
 import '../widgets/event_tab_view_upcoming.dart';
 
 class EventLandingPage extends StatefulWidget {
-  final ScrollController scrollController;
 
   final int tabIndex;
 
   const EventLandingPage({
     super.key,
-    required this.scrollController,
     required this.tabIndex,
   });
 

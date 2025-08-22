@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'event_landing_card.dart';
-import '../../../../gen/scroll/scroll_to_up_button.dart';
 
-class EventTabViewPast extends StatefulWidget {
-  const EventTabViewPast({super.key});
+import '../../../../gen/scroll/scroll_to_up_button.dart';
+import 'event_landing_card.dart';
+
+class EventTabViewUpcoming extends StatefulWidget {
+  const EventTabViewUpcoming({super.key});
 
   @override
-  State<EventTabViewPast> createState() => _EventTabViewPastState();
+  State<EventTabViewUpcoming> createState() => _EventTabViewUpcomingState();
 }
 
-class _EventTabViewPastState extends State<EventTabViewPast> {
+class _EventTabViewUpcomingState extends State<EventTabViewUpcoming> {
   late ScrollController _scrollController;
   bool _showBackToTop = false;
 

@@ -2,15 +2,16 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
-import '../models/recovery_password.dart';
-import '../models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../../core/error/failure.dart';
-import '../datasources/remote_datasource.dart';
 import '../../domain/entities/forgot_password.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/entities/verify_code.dart';
 import '../../domain/repositories/authentication_repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../datasources/remote_datasource.dart';
+import '../models/recovery_password.dart';
+import '../models/user_model.dart';
 
 class AuthenticationRepositoryImpl extends AuthenticationRepository {
   final AuthenticationRemoteDataSource authenticationRemoteDataSource;
@@ -163,6 +164,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   Future<Either<Failure, bool>> _clearLocalData() async {
     try {
       await sharedPreferences.remove("user");
+      await sharedPreferences.remove("home_summary");
       await sharedPreferences.clear();
       return Right(true);
     } catch (e) {

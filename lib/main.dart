@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_event_management/features/Home/presentation/provider/home_provider.dart';
 
+import 'core/provider/network_status_provider.dart';
 import 'core/provider/validation_provider.dart';
 import 'features/Authentication/presentation/provider/authentication_provider.dart';
 import 'features/SplashScreen/presentation/pages/splashscreen.dart';
@@ -23,6 +25,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => di.myInjection<AuthenticationProvider>(),
         ),
+        ChangeNotifierProvider(create: (_) => NetworkStatusProvider()),
+        ChangeNotifierProvider(create: (_) => di.myInjection<HomeProvider>()),
       ],
       child: MaterialApp(
         home: SplashScreen(),

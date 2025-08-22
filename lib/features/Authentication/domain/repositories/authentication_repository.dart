@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import '../entities/recovery_password.dart';
 
 import '../../../../core/error/failure.dart';
 import '../entities/forgot_password.dart';
+import '../entities/recovery_password.dart';
 import '../entities/user.dart';
 import '../entities/verify_code.dart';
 
