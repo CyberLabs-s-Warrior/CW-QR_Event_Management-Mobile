@@ -1,0 +1,103 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../Authentication/presentation/provider/authentication_provider.dart';
+
+class SettingLandingHead extends StatefulWidget {
+  final int tabIndex;
+
+  const SettingLandingHead({super.key, required this.tabIndex});
+
+  @override
+  State<SettingLandingHead> createState() => _SettingLandingHeadState();
+}
+
+class _SettingLandingHeadState extends State<SettingLandingHead> {
+  @override
+  Widget build(BuildContext context) {
+    final authProvider = context.read<AuthenticationProvider>();
+
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 20.0,
+        left: 20.0,
+        right: 20,
+        bottom: 20.0,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSMUi9wHqia_68xlAU7vP3E3sxn5K0KS-nUvBZk5jSJ54p8FPnw20uYV5yxNgF59DZoqc&usqp=CAU",
+                    width: 70,
+                    height: 70,
+                    fit: BoxFit.cover,
+                    placeholder:
+                        (context, url) => Container(
+                          height: 70,
+                          width: 70,
+                          decoration: BoxDecoration(color: AppColors.secondary),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                              strokeWidth: 10,
+                            ),
+                          ),
+                        ),
+                    errorWidget:
+                        (context, url, error) => Container(
+                          height: 70,
+                          width: 70,
+                          decoration: BoxDecoration(color: AppColors.secondary),
+                          child: Center(
+                            child: Icon(
+                              Icons.broken_image,
+                              color: AppColors.primary,
+                              size: 35
+                            ),
+                          ),
+                        ),
+                  ),
+                ),
+                SizedBox(width: 15),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        authProvider.currentUser?.name ?? '',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          height: 1,
+                        ),
+                      ),
+                      Text(
+                        authProvider.currentUser?.email ?? '',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: AppColors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
-import '../../domain/entities/recovery_password.dart';
-import '../../domain/usecases/recovery_password.dart';
 
+import '../../../../core/error/clean_error_message_cleaner.dart';
 import '../../domain/entities/forgot_password.dart';
+import '../../domain/entities/recovery_password.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/entities/verify_code.dart';
 import '../../domain/usecases/forgot_password.dart';
 import '../../domain/usecases/get_user.dart';
 import '../../domain/usecases/logout.dart';
+import '../../domain/usecases/recovery_password.dart';
+import '../../domain/usecases/refresh_token.dart';
 import '../../domain/usecases/sign_in.dart';
 import '../../domain/usecases/verify_code.dart';
 
 enum AuthStatus { initial, loading, success, error }
 
 class AuthenticationProvider extends ChangeNotifier {
+  // logout
+
   final SignIn signInUseCase;
   final ForgotPassword forgotPasswordUseCase;
   final VerifyCode verifyCodeUseCase;
   final GetUser getUserUseCase;
   final Logout logoutUseCase;
   final RecoveryPassword recoveryPasswordUseCase;
+  final RefreshToken refreshTokenUsecase;
 
   AuthenticationProvider({
     required this.getUserUseCase,
@@ -28,6 +33,7 @@ class AuthenticationProvider extends ChangeNotifier {
     required this.forgotPasswordUseCase,
     required this.verifyCodeUseCase,
     required this.recoveryPasswordUseCase,
+    required this.refreshTokenUsecase,
   });
 
   // state variable \/ init
@@ -36,6 +42,8 @@ class AuthenticationProvider extends ChangeNotifier {
   AuthStatus _verifyCodeStatus = AuthStatus.initial;
   AuthStatus _logoutStatus = AuthStatus.initial;
   AuthStatus _recoveryPasswordStatus = AuthStatus.initial;
+  AuthStatus _getUserStatus = AuthStatus.initial;
+  AuthStatus _refreshTokenStatus = AuthStatus.initial;
 
   User? _currentUser;
   late ForgotPasswordEntities _forgotPasswordResult;
@@ -50,6 +58,8 @@ class AuthenticationProvider extends ChangeNotifier {
   AuthStatus get verifyCodeStatus => _verifyCodeStatus;
   AuthStatus get logoutStatus => _logoutStatus;
   AuthStatus get recoveryPasswordStatus => _recoveryPasswordStatus;
+  AuthStatus get getUserStatus => _getUserStatus;
+  AuthStatus get refreshTokenStatus => _refreshTokenStatus;
 
   // getter data location
   User? get currentUser => _currentUser;
@@ -66,25 +76,10 @@ class AuthenticationProvider extends ChangeNotifier {
   bool get isVerifyCodeLoading => _verifyCodeStatus == AuthStatus.loading;
   bool get isRecoveryPasswordLoading =>
       _recoveryPasswordStatus == AuthStatus.loading;
+  bool get isGetUserStatus => _getUserStatus == AuthStatus.loading;
+  bool get isRefreshTokenStatus => _refreshTokenStatus == AuthStatus.loading;
 
-  String get cleanErrorMessage {
-    if (_errorMessage == null) return 'An error occurred';
-
-    // remove exception class name
-    String cleanMessage = _errorMessage!;
-
-    if (cleanMessage.startsWith('EmptyException: ')) {
-      cleanMessage = cleanMessage.replaceFirst('EmptyException: ', '');
-    }
-    if (cleanMessage.startsWith('GeneralException: ')) {
-      cleanMessage = cleanMessage.replaceFirst('GeneralException: ', '');
-    }
-    if (cleanMessage.startsWith('ServerException: ')) {
-      cleanMessage = cleanMessage.replaceFirst('ServerException: ', '');
-    }
-
-    return cleanMessage;
-  }
+  String get cleanErrorMessage => _errorMessage.cleanErrorMessage;
 
   Future<void> signIn(String email, String password) async {
     _setAuthStatus(AuthStatus.loading);
@@ -161,17 +156,17 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> getUser() async {
-    _setAuthStatus(AuthStatus.loading);
+    _setGetUserStatus(AuthStatus.loading);
 
     final result = await getUserUseCase.execute();
     result.fold(
       (failure) {
         _errorMessage = failure.message;
-        _setAuthStatus(AuthStatus.error);
+        _setGetUserStatus(AuthStatus.error);
       },
       (user) {
         _currentUser = user;
-        _setAuthStatus(AuthStatus.success);
+        _setGetUserStatus(AuthStatus.success);
       },
     );
   }
@@ -190,10 +185,32 @@ class AuthenticationProvider extends ChangeNotifier {
       (success) {
         print('Logout successful');
 
-        _currentUser = null;
         resetAllStatus();
       },
     );
+  }
+
+  Future<void> refreshToken() async {
+    _setRefreshTokenStatus(AuthStatus.loading);
+
+    final result = await refreshTokenUsecase.execute();
+
+    result.fold(
+      (failure) {
+        print('Logout failed : ${failure.message}');
+        _setRefreshTokenStatus(AuthStatus.error);
+      },
+      (success) {
+        print('logout successful');
+
+        _setRefreshTokenStatus(AuthStatus.error);
+      },
+    );
+  }
+
+  void resetState() {
+    _currentUser = null;
+    notifyListeners();
   }
 
   Future<void> recoveryPassword({
@@ -251,12 +268,22 @@ class AuthenticationProvider extends ChangeNotifier {
     _setRecoveryPasswordStatus(AuthStatus.initial);
   }
 
+  void resetGetUserStatus() {
+    _setGetUserStatus(AuthStatus.initial);
+  }
+
+  void resetRefreshToken() {
+    _setRefreshTokenStatus(AuthStatus.initial);
+  }
+
   void resetAllStatus() {
     resetLogoutStatus();
     resetAuthStatus();
     resetForgotPasswordStatus();
     resetVerifyCodeStatus();
     resetRecoveryPasswordStatus();
+    resetGetUserStatus();
+    resetRefreshToken();
   }
 
   // private method
@@ -282,6 +309,16 @@ class AuthenticationProvider extends ChangeNotifier {
 
   void _setRecoveryPasswordStatus(AuthStatus status) {
     _recoveryPasswordStatus = status;
+    notifyListeners();
+  }
+
+  void _setGetUserStatus(AuthStatus status) {
+    _getUserStatus = status;
+    notifyListeners();
+  }
+
+  void _setRefreshTokenStatus(AuthStatus status) {
+    _refreshTokenStatus = status;
     notifyListeners();
   }
 }

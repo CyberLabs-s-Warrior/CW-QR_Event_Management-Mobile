@@ -1,12 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/helper/validation_helper.dart';
 import '../../../../core/provider/validation_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../gen/alert/snack_bar.dart';
-import '../../../Home/presentation/pages/home_page.dart';
+import '../../../Landing/presentation/pages/landing_page.dart';
 import '../provider/authentication_provider.dart';
 import '../widgets/text_field.dart';
 import '../widgets/text_field_digits.dart';
@@ -120,7 +121,7 @@ class _LoginPageState extends State<LoginPage>
 
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => HomePage()),
+                MaterialPageRoute(builder: (_) => LandingPage()),
               );
             });
           }
@@ -278,15 +279,15 @@ class _LoginPageState extends State<LoginPage>
           keyboardType: TextInputType.emailAddress,
         ),
 
-        SizedBox(height: 10),
+        Gap(10),
 
         AuthenticationCustomTextFieldLabel(text: "Password"),
-        SizedBox(height: 8),
+        Gap(8),
         AuthenticationCustomTextField(
           controller: _passwordController,
           hintText: "Enter your Password",
           prefixIcon: Icons.lock_outline,
-          obscureText: _isPasswordVisible,
+          obscureText: !_isPasswordVisible,
           errorText: validationProvider.passwordError,
           onSuffixIconTap: () {
             setState(() {
@@ -297,7 +298,7 @@ class _LoginPageState extends State<LoginPage>
               _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
         ),
 
-        SizedBox(height: 15),
+        Gap(15),
         SizedBox(
           width: double.infinity,
 
@@ -330,7 +331,7 @@ class _LoginPageState extends State<LoginPage>
           ),
         ),
 
-        SizedBox(height: 15),
+        Gap(15),
 
         Text.rich(
           TextSpan(

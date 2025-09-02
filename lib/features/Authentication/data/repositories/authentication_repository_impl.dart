@@ -2,15 +2,16 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
-import '../models/recovery_password.dart';
-import '../models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../../core/error/failure.dart';
-import '../datasources/remote_datasource.dart';
 import '../../domain/entities/forgot_password.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/entities/verify_code.dart';
 import '../../domain/repositories/authentication_repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../datasources/remote_datasource.dart';
+import '../models/recovery_password.dart';
+import '../models/user_model.dart';
 
 class AuthenticationRepositoryImpl extends AuthenticationRepository {
   final AuthenticationRemoteDataSource authenticationRemoteDataSource;
@@ -48,7 +49,6 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
         // }
 
         final userFromLocal = sharedPreferences.get('user');
-
         final tokenFromLocal = sharedPreferences.get('auth_data');
 
         print("from-shared-preferences-auth_data: $tokenFromLocal");
@@ -164,6 +164,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   Future<Either<Failure, bool>> _clearLocalData() async {
     try {
       await sharedPreferences.remove("user");
+      await sharedPreferences.remove("home_summary");
       await sharedPreferences.clear();
       return Right(true);
     } catch (e) {
@@ -181,7 +182,6 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
       if (userJson == null) {
         return Left(SimpleFailure('No user found.'));
       }
-
       print('from getUser(): $userJson');
       final userModel = UserModel.fromJson(jsonDecode(userJson));
       return Right(userModel);
@@ -197,7 +197,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
     String? phoneNumber,
     String? email,
     String newPassword,
-    String newPasswordConfirmation
+    String newPasswordConfirmation,
   ) async {
     try {
       final List<ConnectivityResult> connectivityResult =
@@ -213,7 +213,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
           phoneNumber,
           email,
           newPassword,
-          newPasswordConfirmation
+          newPasswordConfirmation,
         );
 
         print("from-recovery-password-result-in-repo-impl: $result");
@@ -227,5 +227,39 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, bool>> refreshToken() async {
+    try {
+      final List<ConnectivityResult> connectivityResult =
+          await (Connectivity().checkConnectivity());
 
+      if (connectivityResult.contains(ConnectivityResult.none)) {
+        print(
+          'No connection found, clearing local data without logout endpoint',
+        );
+
+        return _clearLocalData();
+      } else {
+        final userResult = await getUser();
+
+        return userResult.fold(
+          (failure) {
+            // no user found, just clear local data
+            print('No user found for logout, clearing local data');
+            return Right(false);
+          },
+          (user) async {
+            // user found, logout from server first
+            if (user.token.isNotEmpty) {
+              await authenticationRemoteDataSource.refreshToken(user!.token);
+            }
+            return Right(true);
+          },
+        );
+      }
+    } catch (e) {
+      print('Logout Error: $e');
+      return Left(GeneralFailure('$e'));
+    }
+  }
 }

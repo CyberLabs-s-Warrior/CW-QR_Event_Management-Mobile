@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import 'login_page.dart';
-import '../provider/authentication_provider.dart';
 import '../../../../gen/alert/snack_bar.dart';
 import '../../../../gen/loading/dialog_screen.dart';
-
+import '../provider/authentication_provider.dart';
 import '../widgets/back_button.dart';
 import '../widgets/recovery_password_with_label_validation.dart';
+import 'login_page.dart';
 
 class RecoveryPasswordPage extends StatefulWidget {
   final bool isWithEmail;
@@ -52,11 +52,11 @@ class _RecoveryPasswordPageState extends State<RecoveryPasswordPage> {
                 context: context,
                 message: "Password Recovered Successful!",
               );
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (_) => LoginPage()),
-              (route) => false,
-            );
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => LoginPage()),
+                (route) => false,
+              );
             });
           }
 
@@ -125,10 +125,11 @@ class _RecoveryPasswordPageState extends State<RecoveryPasswordPage> {
                     hintText: "Enter new password",
                     prefixIcon: Icons.lock_outline,
                     controller: _newPasswordController,
-                    obscureText: _isNewPasswordVisible,
-                    suffixIcon: _isNewPasswordVisible
-                        ? Icons.visibility
-                        : Icons.visibility_off,
+                    obscureText: !_isNewPasswordVisible,
+                    suffixIcon:
+                        _isNewPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                     onSuffixIconTap: () {
                       setState(() {
                         _isNewPasswordVisible = !_isNewPasswordVisible;
@@ -141,10 +142,11 @@ class _RecoveryPasswordPageState extends State<RecoveryPasswordPage> {
                     hintText: "Confirm new password",
                     prefixIcon: Icons.lock_outline,
                     controller: _confirmNewPasswordController,
-                    obscureText: _isConfirmPasswordVisible,
-                    suffixIcon: _isConfirmPasswordVisible
-                        ? Icons.visibility
-                        : Icons.visibility_off,
+                    obscureText: !_isConfirmPasswordVisible,
+                    suffixIcon:
+                        _isConfirmPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                     onSuffixIconTap: () {
                       setState(() {
                         _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
@@ -166,27 +168,27 @@ class _RecoveryPasswordPageState extends State<RecoveryPasswordPage> {
                       ),
                       onPressed:
                           authProvider.recoveryPasswordStatus ==
-                              AuthStatus.loading
-                          ? null
-                          : _resetPassword,
+                                  AuthStatus.loading
+                              ? null
+                              : _resetPassword,
                       child:
                           authProvider.recoveryPasswordStatus ==
-                              AuthStatus.loading
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
+                                  AuthStatus.loading
+                              ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                              : const Text(
+                                "Reset Password",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
-                            )
-                          : const Text(
-                              "Reset Password",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -246,6 +248,5 @@ class _RecoveryPasswordPageState extends State<RecoveryPasswordPage> {
       newPassword: _newPasswordController.text,
       newPasswordConfirmation: _confirmNewPasswordController.text,
     );
-
   }
 }

@@ -5,9 +5,9 @@ class User extends Equatable {
   final String name;
   final String email;
   final String phoneNumber;
-  final String role;
   final String createdAt;
   final String updatedAt;
+  final String role;
   final String token;
   final String expiresAt;
 
@@ -25,6 +25,7 @@ class User extends Equatable {
 
   @override
   List<Object?> get props => [
+    id,
     name,
     email,
     createdAt,

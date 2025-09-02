@@ -7,13 +7,13 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
-import 'package:qr_event_management/gen/alert/snack_bar.dart';
-import 'recovery_password_page.dart';
+
+import '../../../../core/theme/app_colors.dart';
+import '../../../../gen/alert/snack_bar.dart';
 import '../../../../gen/loading/dialog_screen.dart';
 import '../provider/authentication_provider.dart';
-
 import '../widgets/back_button.dart';
+import 'recovery_password_page.dart';
 
 class VerifyCodePage extends StatefulWidget {
   final bool isEmail;

@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import '../models/recovery_password.dart';
 
 import '../../../../core/constant/constant.dart';
 import '../../../../core/error/exceptions.dart';
 import '../models/forgot_password_model.dart';
+import '../models/recovery_password.dart';
 import '../models/user_model.dart';
 import '../models/verify_code_model.dart';
 
@@ -31,6 +31,8 @@ abstract class AuthenticationRemoteDataSource {
   );
 
   Future<void> logout(String token);
+
+  Future<void> refreshToken(String token);
 }
 
 class AuthenticationRemoteDataSourceImplementation
@@ -42,7 +44,7 @@ class AuthenticationRemoteDataSourceImplementation
   @override
   Future<UserModel> signIn(email, password) async {
     final response = await client.post(
-      Uri.parse("${Constant.api}/user/sign-in"),
+      Uri.parse(Constant.endpoint("/user/sign-in")),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({"email": email, "password": password}),
     );
@@ -91,7 +93,7 @@ class AuthenticationRemoteDataSourceImplementation
     String? email,
   ) async {
     final response = await client.post(
-      Uri.parse("${Constant.api}/user/send-code"),
+      Uri.parse(Constant.endpoint("/user/send-code")),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         "isWithEmail": isWithEmail,
@@ -125,7 +127,7 @@ class AuthenticationRemoteDataSourceImplementation
     String otp,
   ) async {
     final response = await client.post(
-      Uri.parse("${Constant.api}/user/verify-code"),
+      Uri.parse(Constant.endpoint('/user/verify-code')),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         "isWithEmail": isWithEmail,
@@ -157,7 +159,7 @@ class AuthenticationRemoteDataSourceImplementation
   Future<void> logout(String token) async {
     try {
       final response = await client.post(
-        Uri.parse("${Constant.api}/user/sign-out"),
+        Uri.parse(Constant.endpoint('/user/sign-out')),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -188,7 +190,7 @@ class AuthenticationRemoteDataSourceImplementation
   ) async {
     try {
       final response = await client.put(
-        Uri.parse("${Constant.api}/user/recovery-password"),
+        Uri.parse(Constant.endpoint('/user/recovery-password')),
         headers: {
           'Content-Type': 'application/json',
           "Accept": "application/json",
@@ -219,6 +221,24 @@ class AuthenticationRemoteDataSourceImplementation
       throw GeneralException(
         message: "Cannot Recovery Password ${e.toString()}",
       );
+    }
+  }
+
+  @override
+  Future<void> refreshToken(String token) async {
+    try {
+      final response = await client.get(
+        Uri.parse(Constant.endpoint('/user/refresh-token')),
+        headers: {"Content-Type": "application/json", "Authorization": ""},
+      );
+
+      if (response.statusCode == 200) {
+        // print('Success Refreshed');
+      } else {
+        // print('Logout failed on server, but will clear local data anywayy');
+      }
+    } catch (e) {
+      throw GeneralException(message: e.toString());
     }
   }
 }
