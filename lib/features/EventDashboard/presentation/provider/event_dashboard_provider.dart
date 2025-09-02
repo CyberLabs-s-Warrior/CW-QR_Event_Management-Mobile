@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:qr_event_management/core/constant/enum_status.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/event_entity.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/usecases/get_event_by_id_usecase.dart';
+import '../../../../core/constant/enum_status.dart';
+import '../../domain/entities/event_entity.dart';
+import '../../domain/usecases/get_event_by_id_usecase.dart';
 import '../../../../core/error/clean_error_message_cleaner.dart';
 
 class EventDashboardProvider extends ChangeNotifier {

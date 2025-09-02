@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
-import 'package:qr_event_management/core/controller/inner_tab_controller.dart';
-import 'package:qr_event_management/core/scope/landing_tabs_scope.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
+import '../../../../core/controller/inner_tab_controller.dart';
+import '../../../../core/scope/landing_tabs_scope.dart';
+import '../../../../core/theme/app_colors.dart';
 import 'package:qr_event_management/features/Home/presentation/provider/home_provider.dart'
     show HomeStatus, HomeProvider;
 import 'package:qr_event_management/features/Home/presentation/widgets/home_event_history_item.dart';

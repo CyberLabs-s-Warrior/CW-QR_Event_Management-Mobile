@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
-import 'package:qr_event_management/features/Home/presentation/provider/home_provider.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../provider/home_provider.dart';
 
 Widget eventOverview({required HomeProvider homeProvider}) {
   return Container(

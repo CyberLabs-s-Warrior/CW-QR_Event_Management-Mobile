@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors.dart';
 
 import '../../../../widgets/text_fields.dart';
 import '../../../Authentication/presentation/widgets/back_button.dart';

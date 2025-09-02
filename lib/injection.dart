@@ -1,10 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
-import 'package:qr_event_management/features/EventDashboard/data/datasources/event_dashboard_remote_datasource.dart';
-import 'package:qr_event_management/features/EventDashboard/data/repositories/event_dashboard_repository_implementation.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/repositories/event_dashboard_repository.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/usecases/get_event_by_id_usecase.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
+import 'features/EventDashboard/data/datasources/event_dashboard_remote_datasource.dart';
+import 'features/EventDashboard/data/repositories/event_dashboard_repository_implementation.dart';
+import 'features/EventDashboard/domain/repositories/event_dashboard_repository.dart';
+import 'features/EventDashboard/domain/usecases/get_event_by_id_usecase.dart';
+import 'features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'features/Authentication/data/datasources/remote_datasource.dart';

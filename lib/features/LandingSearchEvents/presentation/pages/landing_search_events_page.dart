@@ -3,10 +3,8 @@ import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/core/provider/network_status_provider.dart';
-import 'package:qr_event_management/gen/loading/wave_loading.dart';
-import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-
+import '../../../../core/provider/network_status_provider.dart';
+import '../../../../gen/loading/wave_loading.dart';
 import '../../../../core/constant/enum_status.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';

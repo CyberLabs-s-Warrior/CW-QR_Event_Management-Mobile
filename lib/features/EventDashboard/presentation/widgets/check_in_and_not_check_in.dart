@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class CheckInAndNotCheckIn extends StatelessWidget {
   const CheckInAndNotCheckIn({

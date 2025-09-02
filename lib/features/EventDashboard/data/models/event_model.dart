@@ -1,4 +1,4 @@
-import 'package:qr_event_management/features/EventDashboard/domain/entities/event_entity.dart';
+import '../../domain/entities/event_entity.dart';
 
 class EventModel extends EventEntity {
   const EventModel({

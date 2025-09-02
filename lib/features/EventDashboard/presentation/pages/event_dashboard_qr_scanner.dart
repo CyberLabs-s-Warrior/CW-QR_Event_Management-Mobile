@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
-import 'package:qr_event_management/widgets/general_back_button.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../widgets/general_back_button.dart';
 
 class QRViewTest extends StatefulWidget {
   const QRViewTest({super.key});

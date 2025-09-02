@@ -1,9 +1,9 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
-import 'package:qr_event_management/core/error/failure.dart';
-import 'package:qr_event_management/features/EventDashboard/data/datasources/event_dashboard_remote_datasource.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/event_entity.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/repositories/event_dashboard_repository.dart';
+import '../../../../core/error/failure.dart';
+import '../datasources/event_dashboard_remote_datasource.dart';
+import '../../domain/entities/event_entity.dart';
+import '../../domain/repositories/event_dashboard_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EventDashboardRepositoryImplementation

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:qr_event_management/core/constant/constant.dart';
-import 'package:qr_event_management/core/error/exceptions.dart';
+import '../../../../core/constant/constant.dart';
+import '../../../../core/error/exceptions.dart';
 
 abstract class ChangePasswordRemoteDatasource {
   Future<String> changePassword({required String token, required int userId});

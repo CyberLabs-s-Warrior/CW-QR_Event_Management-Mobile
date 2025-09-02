@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/features/Home/presentation/widgets/home_alert.dart';
-import 'package:qr_event_management/features/Home/presentation/widgets/home_event_history.dart';
-import 'package:qr_event_management/features/Home/presentation/widgets/home_event_overview.dart';
-import 'package:qr_event_management/gen/loading/wave_loading.dart';
+import '../widgets/home_alert.dart';
+import '../widgets/home_event_history.dart';
+import '../widgets/home_event_overview.dart';
+import '../../../../gen/loading/wave_loading.dart';
 import '../../../../widgets/connection_container.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../provider/home_provider.dart';

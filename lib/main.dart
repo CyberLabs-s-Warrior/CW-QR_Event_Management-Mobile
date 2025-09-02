@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
+import 'features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
 
 import 'core/provider/network_status_provider.dart';
 import 'core/provider/validation_provider.dart';

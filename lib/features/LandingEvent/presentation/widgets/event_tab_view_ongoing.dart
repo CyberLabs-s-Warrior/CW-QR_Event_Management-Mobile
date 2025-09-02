@@ -3,9 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/gen/loading/wave_loading.dart';
-import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-
+import '../../../../gen/loading/wave_loading.dart';
 import '../../../../core/constant/enum_status.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../gen/scroll/scroll_to_up_button.dart';

@@ -4,7 +4,7 @@ import 'package:iconify_flutter/icons/octicon.dart';
 import 'package:iconify_flutter/icons/ri.dart';
 import 'package:iconify_flutter/icons/uil.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/features/Setting/presentation/widgets/setting_group_head.dart';
+import '../widgets/setting_group_head.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../gen/alert/snack_bar.dart';

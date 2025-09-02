@@ -1,9 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/features/User/presentation/pages/profile_data_page.dart';
-
 import '../../../../core/theme/app_colors.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 

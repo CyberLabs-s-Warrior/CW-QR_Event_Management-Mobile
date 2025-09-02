@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/pages/event_dashboard_page.dart';
-import 'package:qr_event_management/gen/loading/wave_loading.dart';
+import '../../../../gen/loading/wave_loading.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constant/enum_status.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../provider/landing_event_provider.dart';
-import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../../../gen/scroll/scroll_to_up_button.dart';
 import 'event_landing_card.dart';
@@ -51,18 +48,6 @@ class _EventTabViewPastState extends State<EventTabViewPast> {
         _showBackToTop = false;
       });
     }
-  }
-
-  Future<void> _onRefresh() async {
-    final authProvider = context.read<AuthenticationProvider>();
-
-    final landingEventProvider = context.read<LandingEventProvider>();
-    await landingEventProvider.getEventPast(
-      token: authProvider.currentUser!.token,
-      userId: authProvider.currentUser!.id,
-    );
-
-    print('success loaded');
   }
 
   @override
