@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/features/Home/presentation/provider/home_provider.dart';
+import '../../../Home/presentation/provider/home_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../../../SplashScreen/presentation/pages/splashscreen.dart';
@@ -17,16 +17,28 @@ void logout(context) async {
     context: context,
     builder:
         (context) => AlertDialog(
+          backgroundColor: AppColors.backgroundPage,
+
           title: Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
           content: Text('Are you sure want to logout?'),
           actions: [
             TextButton(
+              style: ButtonStyle(
+                foregroundColor: WidgetStateProperty.all(AppColors.grey2),
+                backgroundColor: WidgetStateProperty.all(AppColors.grey1),
+              ),
+
               onPressed: () => Navigator.pop(context, false),
-              child: Text('Cancel', style: TextStyle(color: AppColors.grey2)),
+              child: Text('Cancel'),
             ),
             TextButton(
+              style: ButtonStyle(
+                foregroundColor: WidgetStateProperty.all(AppColors.red),
+                backgroundColor: WidgetStateProperty.all(AppColors.redLight),
+              ),
+
               onPressed: () => Navigator.pop(context, true),
-              child: Text("Logout", style: TextStyle(color: AppColors.primary)),
+              child: Text("Logout"),
             ),
           ],
         ),
@@ -42,6 +54,20 @@ void logout(context) async {
       MaterialPageRoute(builder: (_) => SplashScreen()),
       (route) => false,
     );
-
   }
+}
+
+void logoutEasy(context) async {
+  final authProvider = Provider.of<AuthenticationProvider>(
+    context,
+    listen: false,
+  );
+
+  final homeProvider = Provider.of<HomeProvider>(context, listen: false);
+
+  await authProvider.logout();
+
+  authProvider.resetState();
+  homeProvider.resetState();
+  homeProvider.stopAutoRefresh();
 }

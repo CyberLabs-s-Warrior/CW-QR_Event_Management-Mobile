@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../Authentication/presentation/pages/login_page.dart';
-import '../../../Landing/presentation/pages/landing_page.dart';
+import 'package:qr_event_management/core/theme/app_colors.dart';
 
+import '../../../Authentication/presentation/pages/login_page.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
+import '../../../Landing/presentation/func/logout.dart';
+import '../../../Landing/presentation/func/refresh_token.dart';
+import '../../../Landing/presentation/pages/landing_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -21,12 +24,15 @@ class _SplashScreenState extends State<SplashScreen> {
     final user = authProvider.currentUser;
     final token = authProvider.currentUser?.token;
 
-
     if (token == null || user == null) {
+       logoutEasy(context);
+
       Navigator.of(
         context,
       ).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
     } else {
+      refreshToken(context);
+
       Navigator.of(
         context,
       ).pushReplacement(MaterialPageRoute(builder: (_) => LandingPage()));
@@ -44,6 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.secondary,
       body: Center(
         child: Image.asset(
           'assets/images/logo/cyberlabs.png',

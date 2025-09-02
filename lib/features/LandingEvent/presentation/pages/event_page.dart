@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/controller/inner_tab_controller.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../widgets/event_tab_view_ongoing.dart';
 import '../widgets/event_tab_view_past.dart';
 import '../widgets/event_tab_view_upcoming.dart';
 
 class EventLandingPage extends StatefulWidget {
-
   final int tabIndex;
 
-  const EventLandingPage({
-    super.key,
-    required this.tabIndex,
-  });
+  const EventLandingPage({super.key, required this.tabIndex});
 
   @override
   State<EventLandingPage> createState() => _EventLandingPageState();
@@ -22,7 +19,28 @@ class _EventLandingPageState extends State<EventLandingPage>
     with TickerProviderStateMixin {
   int _selectedTab = 0;
 
+  late final VoidCallback _eventTabListener = () {
+    if (!mounted) return;
+    setState(() {
+      _selectedTab = eventInnerTabIndex.value;
+    });
+  };
+
   final List<String> _tabs = ['Upcoming', 'Ongoing', 'Past'];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedTab = eventInnerTabIndex.value;
+    eventInnerTabIndex.addListener(_eventTabListener);
+  }
+
+  @override
+  void dispose() {
+    eventInnerTabIndex.removeListener(_eventTabListener);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +79,9 @@ class _EventLandingPageState extends State<EventLandingPage>
                         setState(() {
                           _selectedTab = index;
                         });
+
+                        // keep notifier in sync when user taps
+                        eventInnerTabIndex.value = index;
                       },
                       child: Text(_tabs[index]),
                     ),
@@ -92,6 +113,3 @@ class _EventLandingPageState extends State<EventLandingPage>
     }
   }
 }
-
-
-

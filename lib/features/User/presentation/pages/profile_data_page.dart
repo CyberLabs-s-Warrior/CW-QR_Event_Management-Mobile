@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:qr_event_management/features/Authentication/presentation/widgets/back_button.dart';
-import 'package:qr_event_management/widgets/text_fields.dart';
+import 'package:qr_event_management/core/theme/app_colors.dart';
+
+import '../../../../widgets/text_fields.dart';
+import '../../../Authentication/presentation/widgets/back_button.dart';
 
 class ProfileDataPage extends StatefulWidget {
   const ProfileDataPage({super.key});
@@ -14,23 +17,25 @@ class _ProfileDataPageState extends State<ProfileDataPage> {
   final TextEditingController _nameController = TextEditingController(
     text: "Nabil Dzikrika",
   );
-  final TextEditingController _emailController= TextEditingController(
+  final TextEditingController _emailController = TextEditingController(
     text: "nabildzikrika@gmail.com",
   );
   final TextEditingController _phoneNumberController = TextEditingController(
     text: "+62 878-1403-7811",
   );
-  final TextEditingController _roleController= TextEditingController(
+  final TextEditingController _roleController = TextEditingController(
     text: "Administrator",
   );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Your Profile Data', style: TextStyle(fontWeight: FontWeight.bold),),
+        title: Text(
+          'Your Profile Data',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: AuthenticationCustomBackButton(
@@ -47,11 +52,37 @@ class _ProfileDataPageState extends State<ProfileDataPage> {
               Center(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(9999),
-                  child: Image.network(
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSMUi9wHqia_68xlAU7vP3E3sxn5K0KS-nUvBZk5jSJ54p8FPnw20uYV5yxNgF59DZoqc&usqp=CAU',
-                    fit: BoxFit.cover,
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSMUi9wHqia_68xlAU7vP3E3sxn5K0KS-nUvBZk5jSJ54p8FPnw20uYV5yxNgF59DZoqc&usqp=CAU",
                     width: 200,
                     height: 200,
+                    fit: BoxFit.cover,
+                    placeholder:
+                        (context, url) => Container(
+                          height: 200,
+                          width: 200,
+                          decoration: BoxDecoration(color: AppColors.secondary),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                              strokeWidth: 10,
+                            ),
+                          ),
+                        ),
+                    errorWidget:
+                        (context, url, error) => Container(
+                          height: 200,
+                          width: 200,
+                          decoration: BoxDecoration(color: AppColors.secondary),
+                          child: Center(
+                            child: Icon(
+                              Icons.broken_image,
+                              color: AppColors.primary,
+                              size: 100,
+                            ),
+                          ),
+                        ),
                   ),
                 ),
               ),
@@ -90,28 +121,3 @@ class _ProfileDataPageState extends State<ProfileDataPage> {
     );
   }
 }
-
-// class ProfileDataItem extends StatelessWidget {
-//   final String text;
-//   final Color? textColor;
-//   final String icon;
-
-//   const ProfileDataItem({
-//     super.key, required this.text, required this.icon, this.textColor,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       children: [
-//         Iconify(icon, size: 25),
-//         Gap(10),
-//         Text(
-//           text,
-//           style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600, color: textColor ?? Colors.black),
-//         ),
-//       ],
-//     );
-//   }
-// }

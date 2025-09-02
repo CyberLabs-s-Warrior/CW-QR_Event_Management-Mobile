@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/helper/validation_helper.dart';
@@ -278,10 +279,10 @@ class _LoginPageState extends State<LoginPage>
           keyboardType: TextInputType.emailAddress,
         ),
 
-        SizedBox(height: 10),
+        Gap(10),
 
         AuthenticationCustomTextFieldLabel(text: "Password"),
-        SizedBox(height: 8),
+        Gap(8),
         AuthenticationCustomTextField(
           controller: _passwordController,
           hintText: "Enter your Password",
@@ -297,7 +298,7 @@ class _LoginPageState extends State<LoginPage>
               _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
         ),
 
-        SizedBox(height: 15),
+        Gap(15),
         SizedBox(
           width: double.infinity,
 
@@ -330,7 +331,7 @@ class _LoginPageState extends State<LoginPage>
           ),
         ),
 
-        SizedBox(height: 15),
+        Gap(15),
 
         Text.rich(
           TextSpan(

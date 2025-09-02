@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
-import 'package:qr_event_management/features/Authentication/presentation/widgets/back_button.dart';
-import 'package:qr_event_management/features/Authentication/presentation/widgets/text_field.dart';
-import 'package:qr_event_management/features/Authentication/presentation/widgets/text_field_label.dart';
+import 'package:lottie/lottie.dart';
+
+import '../../../../core/theme/app_colors.dart';
+import '../../../Authentication/presentation/widgets/back_button.dart';
+import '../../../Authentication/presentation/widgets/text_field.dart';
+import '../../../Authentication/presentation/widgets/text_field_label.dart';
 
 class ChangePasswordInProfilePage extends StatefulWidget {
   const ChangePasswordInProfilePage({super.key});
@@ -28,82 +29,94 @@ class _ChangePasswordInProfilePageState
             Navigator.pop(context);
           },
         ),
+        title: Text(
+          'Change Password',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Gap(20),
-              Center(
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Text(
-                      'Change Password',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Gap(20),
+                    Lottie.asset(
+                      'assets/lottie/change_password_nabildzr.json',
+                      width: 200,
                     ),
-                    Gap(5),
-                    Text(
-                      'Confirm your password & New \nPassword',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18),
+                    Gap(20),
+                    AuthenticationCustomTextFieldLabel(
+                      text: "Current Password",
+                    ),
+                    SizedBox(height: 8),
+                    AuthenticationCustomTextField(
+                      hintText: "Enter your Current Password",
+                      prefixIcon: Icons.lock_outline,
+                    ),
+                    Gap(15),
+                    AuthenticationCustomTextFieldLabel(text: "New Password"),
+                    SizedBox(height: 8),
+                    AuthenticationCustomTextField(
+                      hintText: "Enter your New Password",
+                      prefixIcon: Icons.lock_outline,
+                    ),
+                    Gap(15),
+                    AuthenticationCustomTextFieldLabel(
+                      text: "New Password Confirmation",
+                    ),
+                    SizedBox(height: 8),
+                    AuthenticationCustomTextField(
+                      hintText: "Enter your New Password Confirmation",
+                      prefixIcon: Icons.lock_outline,
                     ),
                   ],
                 ),
               ),
-              Gap(15),
-              AuthenticationCustomTextFieldLabel(text: "Current Password"),
-              SizedBox(height: 8),
-              AuthenticationCustomTextField(
-                hintText: "Enter your Current Password",
-                prefixIcon: Icons.lock_outline,
-              ),
-              Gap(15),
-              AuthenticationCustomTextFieldLabel(text: "New Password"),
-              SizedBox(height: 8),
-              AuthenticationCustomTextField(
-                hintText: "Enter your New Password",
-                prefixIcon: Icons.lock_outline,
-              ),
-              Gap(15),
-              AuthenticationCustomTextFieldLabel(text: "New Password Confirmation"),
-              SizedBox(height: 8),
-              AuthenticationCustomTextField(
-                hintText: "Enter your New Password Confirmation",
-                prefixIcon: Icons.lock_outline,
-              ),
-
-
-              
-              Spacer(),
-              SizedBox(
-                width: double.infinity,
-
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.white,
-                    minimumSize: Size(100, 55),
-                  ),
-                  onPressed: () {
-                    print('changing my passwordr...');
-                  },
-                  child: const Text(
-                    'Change my password',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFCED4FF),
+            ),
+        
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    
+                    left: 20.0,
+                    right: 20.0,
+                    bottom: 20.0
+                    
+                    ),
+                  child: SizedBox(
+                    width: double.infinity,
+                        
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: AppColors.white,
+                        minimumSize: Size(100, 55),
+                      ),
+                      onPressed: () {
+                        print('changing my passwordr...');
+                      },
+                      child: const Text(
+                        'Change my password',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFCED4FF),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

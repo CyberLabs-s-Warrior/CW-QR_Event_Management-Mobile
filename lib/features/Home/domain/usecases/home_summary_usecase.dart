@@ -1,7 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:qr_event_management/core/error/failure.dart';
-import 'package:qr_event_management/features/Home/domain/entities/HomeSummaryEntity.dart';
-import 'package:qr_event_management/features/Home/domain/repositories/home_repository.dart';
+
+import '../../../../core/error/failure.dart';
+import '../entities/HomeSummaryEntity.dart';
+import '../repositories/home_repository.dart';
 
 class HomeSummaryUsecase {
   final HomeRepository homeRepository;

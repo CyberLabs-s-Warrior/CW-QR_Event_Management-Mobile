@@ -226,4 +226,40 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
       return Left(SimpleFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, bool>> refreshToken() async {
+    try {
+      final List<ConnectivityResult> connectivityResult =
+          await (Connectivity().checkConnectivity());
+
+      if (connectivityResult.contains(ConnectivityResult.none)) {
+        print(
+          'No connection found, clearing local data without logout endpoint',
+        );
+
+        return _clearLocalData();
+      } else {
+        final userResult = await getUser();
+
+        return userResult.fold(
+          (failure) {
+            // no user found, just clear local data
+            print('No user found for logout, clearing local data');
+            return Right(false);
+          },
+          (user) async {
+            // user found, logout from server first
+            if (user.token.isNotEmpty) {
+              await authenticationRemoteDataSource.refreshToken(user!.token);
+            }
+            return Right(true);
+          },
+        );
+      }
+    } catch (e) {
+      print('Logout Error: $e');
+      return Left(GeneralFailure('$e'));
+    }
+  }
 }

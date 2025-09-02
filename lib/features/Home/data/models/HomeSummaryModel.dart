@@ -1,4 +1,4 @@
-import 'package:qr_event_management/features/Home/domain/entities/HomeSummaryEntity.dart';
+import '../../domain/entities/HomeSummaryEntity.dart';
 
 class HomeSummaryModel extends HomeSummaryEntity {
   const HomeSummaryModel({

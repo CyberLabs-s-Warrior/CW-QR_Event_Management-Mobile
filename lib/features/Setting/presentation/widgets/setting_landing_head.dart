@@ -1,7 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/features/Authentication/presentation/provider/authentication_provider.dart';
+import 'package:qr_event_management/features/User/presentation/pages/profile_data_page.dart';
+
 import '../../../../core/theme/app_colors.dart';
+import '../../../Authentication/presentation/provider/authentication_provider.dart';
 
 class SettingLandingHead extends StatefulWidget {
   final int tabIndex;
@@ -15,9 +19,7 @@ class SettingLandingHead extends StatefulWidget {
 class _SettingLandingHeadState extends State<SettingLandingHead> {
   @override
   Widget build(BuildContext context) {
-
     final authProvider = context.read<AuthenticationProvider>();
-
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -34,15 +36,37 @@ class _SettingLandingHeadState extends State<SettingLandingHead> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(50),
-                  child: Container(
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(),
-                    height: 70,
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSMUi9wHqia_68xlAU7vP3E3sxn5K0KS-nUvBZk5jSJ54p8FPnw20uYV5yxNgF59DZoqc&usqp=CAU",
                     width: 70,
-                    child: Image.network(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSMUi9wHqia_68xlAU7vP3E3sxn5K0KS-nUvBZk5jSJ54p8FPnw20uYV5yxNgF59DZoqc&usqp=CAU',
-                      fit: BoxFit.cover,
-                    ),
+                    height: 70,
+                    fit: BoxFit.cover,
+                    placeholder:
+                        (context, url) => Container(
+                          height: 70,
+                          width: 70,
+                          decoration: BoxDecoration(color: AppColors.secondary),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                              strokeWidth: 10,
+                            ),
+                          ),
+                        ),
+                    errorWidget:
+                        (context, url, error) => Container(
+                          height: 70,
+                          width: 70,
+                          decoration: BoxDecoration(color: AppColors.secondary),
+                          child: Center(
+                            child: Icon(
+                              Icons.broken_image,
+                              color: AppColors.primary,
+                              size: 35
+                            ),
+                          ),
+                        ),
                   ),
                 ),
                 SizedBox(width: 15),
@@ -61,7 +85,7 @@ class _SettingLandingHeadState extends State<SettingLandingHead> {
                         ),
                       ),
                       Text(
-                     authProvider.currentUser?.email ?? '',
+                        authProvider.currentUser?.email ?? '',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,

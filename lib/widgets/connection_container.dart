@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/ri.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/core/provider/network_status_provider.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
+
+import '../core/provider/network_status_provider.dart';
+import '../core/theme/app_colors.dart';
 
 class ConnectionContainer extends StatelessWidget {
   final bool? top;
@@ -41,13 +44,13 @@ class ConnectionContainer extends StatelessWidget {
                       horizontal: 16,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: AppColors.warning,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.warning, color: AppColors.grey1, size: 20,),
+                        Iconify(Ri.error_warning_fill, color: AppColors.grey1, size: 20,),
                         Gap(13),
                         Expanded(
                           child: const Text(

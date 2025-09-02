@@ -1,12 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
-import 'package:qr_event_management/features/Home/data/datasources/home_local_datasource.dart';
-import 'package:qr_event_management/features/Home/data/datasources/home_remote_datasource.dart';
-import 'package:qr_event_management/features/Home/data/datasources/home_remote_datasource_implementation.dart';
-import 'package:qr_event_management/features/Home/data/repositories/home_repository_implementation.dart';
-import 'package:qr_event_management/features/Home/domain/repositories/home_repository.dart';
-import 'package:qr_event_management/features/Home/domain/usecases/home_summary_usecase.dart';
-import 'package:qr_event_management/features/Home/presentation/provider/home_provider.dart';
+import 'package:qr_event_management/features/EventDashboard/data/datasources/event_dashboard_remote_datasource.dart';
+import 'package:qr_event_management/features/EventDashboard/data/repositories/event_dashboard_repository_implementation.dart';
+import 'package:qr_event_management/features/EventDashboard/domain/repositories/event_dashboard_repository.dart';
+import 'package:qr_event_management/features/EventDashboard/domain/usecases/get_event_by_id_usecase.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'features/Authentication/data/datasources/remote_datasource.dart';
@@ -16,38 +14,118 @@ import 'features/Authentication/domain/usecases/forgot_password.dart';
 import 'features/Authentication/domain/usecases/get_user.dart';
 import 'features/Authentication/domain/usecases/logout.dart';
 import 'features/Authentication/domain/usecases/recovery_password.dart';
+import 'features/Authentication/domain/usecases/refresh_token.dart';
 import 'features/Authentication/domain/usecases/sign_in.dart';
 import 'features/Authentication/domain/usecases/verify_code.dart';
 import 'features/Authentication/presentation/provider/authentication_provider.dart';
+import 'features/Home/data/datasources/home_local_datasource.dart';
+import 'features/Home/data/datasources/home_remote_datasource.dart';
+import 'features/Home/data/datasources/home_remote_datasource_implementation.dart';
+import 'features/Home/data/repositories/home_repository_implementation.dart';
+import 'features/Home/domain/repositories/home_repository.dart';
+import 'features/Home/domain/usecases/home_event_history_usecase.dart';
+import 'features/Home/domain/usecases/home_summary_usecase.dart';
+import 'features/Home/presentation/provider/home_provider.dart';
+import 'features/LandingEvent/data/datasources/landing_event_local_datasource.dart';
+import 'features/LandingEvent/data/datasources/landing_event_remote_datasource.dart';
+import 'features/LandingEvent/data/datasources/landing_event_remote_datasource_implementation.dart';
+import 'features/LandingEvent/data/repositories/landing_event_repository_impl.dart';
+import 'features/LandingEvent/domain/repositories/landing_event_repository.dart';
+import 'features/LandingEvent/domain/usecases/event_ongoing_usecase.dart';
+import 'features/LandingEvent/domain/usecases/event_past_usecase.dart';
+import 'features/LandingEvent/domain/usecases/event_upcoming_usecase.dart';
+import 'features/LandingEvent/presentation/provider/landing_event_provider.dart';
+import 'features/LandingSearchEvents/data/datasources/search_events_local_datasource.dart';
+import 'features/LandingSearchEvents/data/datasources/search_events_remote_datasource.dart';
+import 'features/LandingSearchEvents/data/repositories/search_events_repository_impl.dart';
+import 'features/LandingSearchEvents/domain/repositories/search_events_repository.dart';
+import 'features/LandingSearchEvents/domain/usecases/search_events_usecase.dart';
+import 'features/LandingSearchEvents/presentation/provider/search_event_provider.dart';
 
 final GetIt myInjection = GetIt.instance;
 
 Future<void> init() async {
-  // External dependencies
+  //! External dependencies
   final sharedPreferences = await SharedPreferences.getInstance();
   myInjection.registerLazySingleton(() => sharedPreferences);
   myInjection.registerLazySingleton(() => http.Client());
 
-  // Data sources
+  //
+  //
+  //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+  //
+  // GGGAAAPPP
+  //
+  //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+  //
+  //
+
+  //! Data sources
+  //? AUTHORIZATION
   myInjection.registerLazySingleton<AuthenticationRemoteDataSource>(
-    //auth
+    // * AUTH
     () => AuthenticationRemoteDataSourceImplementation(client: myInjection()),
   );
+
+  //? LANDING HOME
   myInjection.registerLazySingleton<HomeRemoteDatasource>(
-    //home
-    () => HomeRemoteDatasourceImplementation(
-      client: myInjection(),
-    ),
+    // * LANDING HOME
+    () => HomeRemoteDatasourceImplementation(client: myInjection()),
   );
   myInjection.registerLazySingleton<HomeLocalDatasource>(
-    // home
+    // * LANDING HOME
     () =>
         HomeLocalDatasourceImplementation(sharedPreferences: sharedPreferences),
   );
 
-  // Repository
+  // ? LANDING EVENT
+  myInjection.registerLazySingleton<LandingEventRemoteDataSource>(
+    // * LANDING EVENT
+    () => LandingEventRemoteDatasourceImplementation(client: myInjection()),
+  );
+
+  myInjection.registerLazySingleton<LandingEventLocalDatasource>(
+    // * LANDING EVENT
+    () => LandingEventLocalDatasourceImplementation(
+      sharedPreferences: sharedPreferences,
+    ),
+  );
+
+  // ? SEARCH EVENT
+
+  myInjection.registerLazySingleton<SearchEventsRemoteDatasource>(
+    // * SEARCH EVENT
+    () => SearchEventsRemoteDatasourceImplementation(client: myInjection()),
+  );
+
+  myInjection.registerLazySingleton<SearchEventsLocalDatasource>(
+    // * SEARCH EVENT
+    () => SearchEventsLocalDatasourceImplementation(
+      client: myInjection(),
+      sharedPreferences: sharedPreferences,
+    ),
+  );
+
+  // ? EVENT DASHBOARD
+
+  myInjection.registerLazySingleton<EventDashboardRemoteDatasource>(
+    // * EVENT DASHBOARD
+    () => EventDashboardRemoteDatasourceImplementation(client: myInjection()),
+  );
+
+  //
+  //
+  //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+  //
+  // GGGAAAPPP
+  //
+  //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+  //
+  //
+
+  //! Repository
   myInjection.registerLazySingleton<AuthenticationRepository>(
-    // auth
+    //* AUTH
     () => AuthenticationRepositoryImpl(
       authenticationRemoteDataSource: myInjection(),
       sharedPreferences: sharedPreferences,
@@ -55,7 +133,7 @@ Future<void> init() async {
   );
 
   myInjection.registerLazySingleton<HomeRepository>(
-    // home
+    // * LANDING HOME
     () => HomeRepositoryImplementation(
       homeRemoteDatasource: myInjection(),
       homeLocalDatasource: myInjection(),
@@ -63,16 +141,94 @@ Future<void> init() async {
     ),
   );
 
-  // Use Cases
+  // ? SEARCH EVENT
+
+  myInjection.registerLazySingleton<LandingEventRepository>(
+    // * SEARCH EVENT
+    () => LandingEventRepositoryImplementation(
+      sharedPreferences,
+      landingEventLocalDatasource: myInjection(),
+      landingEventRemoteDataSource: myInjection(),
+    ),
+  );
+
+  myInjection.registerLazySingleton<SearchEventsRepository>(
+    // * SEARCH EVENT
+    () => SearchEventsRepositoryImplementation(
+      searchEventsLocalDatasource: myInjection(),
+      searchEventsRemoteDatasource: myInjection(),
+      sharedPreferences: sharedPreferences,
+    ),
+  );
+
+  // ? EVENT DASHBOARD
+
+  myInjection.registerLazySingleton<EventDashboardRepository>(
+    // * EVENT DASHBOARD
+    () => EventDashboardRepositoryImplementation(
+      sharedPreferences: sharedPreferences,
+      eventDashboardRemoteDatasource: myInjection(),
+    ),
+  );
+
+  //
+  //
+  //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+  //
+  // GGGAAAPPP
+  //
+  //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+  //
+  //
+
+  //! Use Cases
+  // * AUTH
   myInjection.registerLazySingleton(() => SignIn(myInjection()));
   myInjection.registerLazySingleton(() => ForgotPassword(myInjection()));
   myInjection.registerLazySingleton(() => VerifyCode(myInjection()));
   myInjection.registerLazySingleton(() => GetUser(myInjection()));
   myInjection.registerLazySingleton(() => Logout(myInjection()));
   myInjection.registerLazySingleton(() => RecoveryPassword(myInjection()));
-  myInjection.registerLazySingleton(() => HomeSummaryUsecase(myInjection()));
+  myInjection.registerLazySingleton(() => RefreshToken(myInjection()));
 
-  // Providers
+  // * LANDING HOME
+  myInjection.registerLazySingleton(() => HomeSummaryUsecase(myInjection()));
+  myInjection.registerLazySingleton(
+    () => HomeEventHistoryUsecase(myInjection()),
+  );
+
+  // * LANDING EVENT
+  myInjection.registerLazySingleton(
+    () => LandingEventOngoingUsecase(myInjection()),
+  );
+  myInjection.registerLazySingleton(
+    () => LandingEventPastUsecase(myInjection()),
+  );
+  myInjection.registerLazySingleton(
+    () => LandingEventUpcomingUsecase(myInjection()),
+  );
+
+  // * SEARCH EVENT
+  myInjection.registerLazySingleton(() => SearchEventsUsecase(myInjection()));
+  
+  // * EVENT DASHBOARD
+  myInjection.registerLazySingleton(() => GetEventByIdUsecase(myInjection()));
+
+  //
+  //
+  //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+  //
+  // GGGAAAPPP
+  //
+  //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
+  //
+  //
+
+  //! Providers
+
+  // ? NOT IMPORTANT
+
+  // * AUTH
   myInjection.registerFactory(
     () => AuthenticationProvider(
       signInUseCase: myInjection(),
@@ -81,10 +237,34 @@ Future<void> init() async {
       getUserUseCase: myInjection(),
       logoutUseCase: myInjection(),
       recoveryPasswordUseCase: myInjection(),
+      refreshTokenUsecase: myInjection(),
     ),
   );
 
+  // * LANDING HOME
   myInjection.registerFactory(
-    () => HomeProvider(homeSummaryUsecase: myInjection()),
+    () => HomeProvider(
+      homeSummaryUsecase: myInjection(),
+      homeEventHistoryUsecase: myInjection(),
+    ),
+  );
+
+  // * LANDING EVENT
+  myInjection.registerFactory(
+    () => LandingEventProvider(
+      landingEventUpcomingUsecase: myInjection(),
+      landingEventPastUsecase: myInjection(),
+      landingEventOngoingUsecase: myInjection(),
+    ),
+  );
+
+  // * SEARCH EVENT
+  myInjection.registerFactory(
+    () => SearchEventsProvider(searchEventUsecase: myInjection()),
+  );
+  
+  // * EVENT DASHBOARD
+  myInjection.registerFactory(
+    () => EventDashboardProvider(getEventByIdUsecase: myInjection()),
   );
 }

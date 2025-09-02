@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
+
 import '../../../../core/theme/app_colors.dart';
 class SettingItem extends StatelessWidget {
   final String icon;

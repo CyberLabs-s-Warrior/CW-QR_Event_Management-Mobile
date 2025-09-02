@@ -4,17 +4,18 @@ import 'package:iconify_flutter/icons/octicon.dart';
 import 'package:iconify_flutter/icons/ri.dart';
 import 'package:iconify_flutter/icons/uil.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/features/ChangePasswordInProfile/presentation/pages/change_password_in_profile.dart';
-import 'package:qr_event_management/features/User/presentation/pages/account_details_page.dart';
-import 'package:qr_event_management/features/User/presentation/pages/profile_data_page.dart';
+import 'package:qr_event_management/features/Setting/presentation/widgets/setting_group_head.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import '../../../Authentication/presentation/provider/authentication_provider.dart';
-import '../../../Landing/presentation/func/logout.dart';
-import '../../../Landing/presentation/pages/landing_page.dart';
-import '../widgets/setting_item.dart';
-import '../widgets/setting_landing_head.dart';
 import '../../../../gen/alert/snack_bar.dart';
 import '../../../../gen/loading/dialog_screen.dart';
+import '../../../Authentication/presentation/provider/authentication_provider.dart';
+import '../../../ChangePasswordInProfile/presentation/pages/change_password_in_profile.dart';
+import '../../../Landing/presentation/func/logout.dart';
+import '../../../User/presentation/pages/account_details_page.dart';
+import '../../../User/presentation/pages/profile_data_page.dart';
+import '../widgets/setting_item.dart';
+import '../widgets/setting_landing_head.dart';
 
 class SettingView extends StatelessWidget {
   const SettingView({

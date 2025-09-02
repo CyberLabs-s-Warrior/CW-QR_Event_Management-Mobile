@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import 'login_page.dart';
-import '../provider/authentication_provider.dart';
 import '../../../../gen/alert/snack_bar.dart';
 import '../../../../gen/loading/dialog_screen.dart';
-
+import '../provider/authentication_provider.dart';
 import '../widgets/back_button.dart';
 import '../widgets/recovery_password_with_label_validation.dart';
+import 'login_page.dart';
 
 class RecoveryPasswordPage extends StatefulWidget {
   final bool isWithEmail;

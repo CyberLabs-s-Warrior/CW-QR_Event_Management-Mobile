@@ -31,6 +31,8 @@ abstract class AuthenticationRemoteDataSource {
   );
 
   Future<void> logout(String token);
+
+  Future<void> refreshToken(String token);
 }
 
 class AuthenticationRemoteDataSourceImplementation
@@ -219,6 +221,24 @@ class AuthenticationRemoteDataSourceImplementation
       throw GeneralException(
         message: "Cannot Recovery Password ${e.toString()}",
       );
+    }
+  }
+
+  @override
+  Future<void> refreshToken(String token) async {
+    try {
+      final response = await client.get(
+        Uri.parse(Constant.endpoint('/user/refresh-token')),
+        headers: {"Content-Type": "application/json", "Authorization": ""},
+      );
+
+      if (response.statusCode == 200) {
+        // print('Success Refreshed');
+      } else {
+        // print('Logout failed on server, but will clear local data anywayy');
+      }
+    } catch (e) {
+      throw GeneralException(message: e.toString());
     }
   }
 }

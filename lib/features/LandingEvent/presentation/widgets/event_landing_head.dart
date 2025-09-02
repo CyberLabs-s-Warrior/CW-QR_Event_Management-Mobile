@@ -3,6 +3,9 @@ import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
+
+import '../../../LandingSearchEvents/presentation/pages/landing_search_events_page.dart';
 
 class EventLandingHead extends StatelessWidget {
   final int tabIndex;
@@ -32,9 +35,17 @@ class EventLandingHead extends StatelessWidget {
           ),
           Row(
             children: [
-              CustomHeadIconButton(iconify: Iconify(Ic.round_bookmark_added)),
+              // CustomHeadIconButton(
+              //   iconify: Iconify(Ic.round_bookmark_added),
+              //   onTap: () {},
+              // ),
               Gap(10),
-              CustomHeadIconButton(iconify: Iconify(MaterialSymbols.search_rounded)),
+              CustomHeadIconButton(
+                iconify: Iconify(MaterialSymbols.search_rounded),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (_) => LandingSearchEventsPage()));
+                },
+              ),
             ],
           ),
         ],
@@ -45,19 +56,27 @@ class EventLandingHead extends StatelessWidget {
 
 class CustomHeadIconButton extends StatelessWidget {
   final Iconify iconify;
+  final VoidCallback onTap;
 
-  const CustomHeadIconButton({super.key, required this.iconify});
+  const CustomHeadIconButton({
+    super.key,
+    required this.iconify,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(50),
-      child: Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(217, 217, 217, 1000),
+    return ZoomTapAnimation(
+      onTap: onTap,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(50),
+        child: Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(217, 217, 217, 1000),
+          ),
+          child: iconify,
         ),
-        child: iconify,
       ),
     );
   }

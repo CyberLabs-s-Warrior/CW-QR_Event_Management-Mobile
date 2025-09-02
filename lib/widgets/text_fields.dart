@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
+
+import '../core/theme/app_colors.dart';
 
 class GeneralTextField extends StatelessWidget {
   final bool obscureText;
