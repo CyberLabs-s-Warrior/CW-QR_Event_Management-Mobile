@@ -89,7 +89,7 @@ class EventLandingCard extends StatelessWidget {
                                 height: 200,
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: AppColors.secondary,
+                                  color: AppColors.primaryLight,
                                 ),
                                 child: Center(
                                   child: CircularProgressIndicator(
@@ -103,7 +103,7 @@ class EventLandingCard extends StatelessWidget {
                                 height: 200,
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: AppColors.secondary,
+                                  color: AppColors.primaryLight,
                                 ),
                                 child: Center(
                                   child: Icon(

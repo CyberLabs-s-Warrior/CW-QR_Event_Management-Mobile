@@ -8,7 +8,7 @@ Positioned scrollToUpButton({required ScrollController scrollController}) {
     right: 10,
     bottom: 50,
     child: FloatingActionButton(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: AppColors.primary,
       elevation: 0,
       splashColor: Colors.amberAccent,
       mini: true,
@@ -21,7 +21,7 @@ Positioned scrollToUpButton({required ScrollController scrollController}) {
       },
       child: Iconify(
         MaterialSymbols.keyboard_double_arrow_up,
-        color: AppColors.primary,
+        color: AppColors.secondary,
       ),
     ),
   );

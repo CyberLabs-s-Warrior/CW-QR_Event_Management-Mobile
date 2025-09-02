@@ -111,11 +111,12 @@ class _EventTabViewPastState extends State<EventTabViewPast> {
                         : (landingEventProvider.landingEventPast?.isEmpty ??
                             true)
                         ? const Center(child: Text('No event history yet'))
-                        : ListView.separated(
+                        : ListView.builder(
+                          controller: _scrollController,
                           shrinkWrap: true,
                           itemCount:
                               landingEventProvider.landingEventPast!.length,
-                          separatorBuilder: (_, __) => const Gap(0),
+                           physics: const AlwaysScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             final event =
                                 landingEventProvider.landingEventPast![index];
