@@ -1,5 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b9d6af0f-72a1-4bef-8ca9-e341eb94c58c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/constant/constant.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/constant/constant.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/constant/enum_status.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/constant/enum_status.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/provider/validation_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/provider/validation_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/ChangePasswordInProfile/data/datasources/change_password_remote_datasource.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/ChangePasswordInProfile/data/datasources/change_password_remote_datasource.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/ChangePasswordInProfile/domain/repositories/change_password_in_profile_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/ChangePasswordInProfile/domain/repositories/change_password_in_profile_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/ChangePasswordInProfile/domain/usecases/change_password_usecase.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/ChangePasswordInProfile/domain/usecases/change_password_usecase.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/ChangePasswordInProfile/presentation/pages/change_password_in_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/ChangePasswordInProfile/presentation/pages/change_password_in_profile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/Home/presentation/pages/home_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/Home/presentation/pages/home_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/Home/presentation/widgets/home_event_history.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/Home/presentation/widgets/home_event_history.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/Home/presentation/widgets/home_event_overview.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/Home/presentation/widgets/home_event_overview.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/LandingEvent/data/datasources/landing_event_remote_datasource_implementation.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/LandingEvent/data/datasources/landing_event_remote_datasource_implementation.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/LandingEvent/data/models/event_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/LandingEvent/data/models/event_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/LandingEvent/data/repositories/landing_event_repository_impl.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/LandingEvent/data/repositories/landing_event_repository_impl.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/LandingEvent/domain/entities/event_entities.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/LandingEvent/domain/repositories/landing_event_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/LandingEvent/domain/repositories/landing_event_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/LandingEvent/domain/usecases/event_ongoing_usecase.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/LandingEvent/domain/usecases/event_ongoing_usecase.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/LandingEvent/domain/usecases/event_past_usecase.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/LandingEvent/domain/usecases/event_past_usecase.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/LandingEvent/domain/usecases/event_upcoming_usecase.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/LandingEvent/domain/usecases/event_upcoming_usecase.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/LandingEvent/presentation/provider/landing_event_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/LandingEvent/presentation/provider/landing_event_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/LandingEvent/presentation/widgets/event_tab_view_ongoing.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/LandingEvent/presentation/widgets/event_tab_view_ongoing.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/LandingEvent/presentation/widgets/event_tab_view_past.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/LandingEvent/presentation/widgets/event_tab_view_past.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/LandingEvent/presentation/widgets/event_tab_view_upcoming.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/LandingEvent/presentation/widgets/event_tab_view_upcoming.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/injection.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/injection.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/qr_event_management.iml" beforeDir="false" afterPath="$PROJECT_DIR$/qr_event_management.iml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
   <component name="FileEditorManager">
     <leaf>
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
@@ -13,24 +53,93 @@
       </file>
     </leaf>
   </component>
-  <component name="ToolWindowManager">
-    <editor active="true" />
-    <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-    </layout>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {}
+}</component>
+  <component name="GitHubPullRequestState">{
+  &quot;prStates&quot;: [
+    {
+      &quot;id&quot;: {
+        &quot;id&quot;: &quot;PR_kwDOPGspDs6meRH0&quot;,
+        &quot;number&quot;: 3
+      },
+      &quot;lastSeen&quot;: 1756908207035
+    }
+  ]
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/CyberLabs-s-Warrior/CW-QR_Event_Management-Mobile.git&quot;,
+    &quot;accountId&quot;: &quot;32126567-bd16-4719-91e2-58b2a716c6b9&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="32Bx77Opsyrrtcga2JtLLu2QRFn" />
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
-    </navigator>
+    <navigator currentView="ProjectPane" proportions="" version="1" />
     <panes>
       <pane id="ProjectPane">
         <option name="show-excluded-files" value="false" />
       </pane>
     </panes>
   </component>
-  <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="dart.analysis.tool.window.force.activate" value="true" />
-    <property name="show.migrate.to.gradle.popup" value="false" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Flutter.main.dart.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "code.cleanup.on.save": "true",
+    "com.google.services.firebase.aqiPopupShown": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "landingpage",
+    "io.flutter.reload.alreadyRun": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/flutter_projects/cyberlabs/event_management_system/qr_event_management",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "show.migrate.to.gradle.popup": "false"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b9d6af0f-72a1-4bef-8ca9-e341eb94c58c" name="Changes" comment="" />
+      <created>1756907596322</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1756907596322</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <editor active="true" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

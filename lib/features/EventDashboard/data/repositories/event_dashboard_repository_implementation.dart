@@ -1,10 +1,11 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../../core/error/failure.dart';
-import '../datasources/event_dashboard_remote_datasource.dart';
 import '../../domain/entities/event_entity.dart';
 import '../../domain/repositories/event_dashboard_repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../datasources/event_dashboard_remote_datasource.dart';
 
 class EventDashboardRepositoryImplementation
     implements EventDashboardRepository {

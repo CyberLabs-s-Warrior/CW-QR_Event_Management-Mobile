@@ -7,10 +7,19 @@ class ChangePasswordUsecase {
 
   ChangePasswordUsecase(this.changePasswordInProfileRepository);
 
-  Future<Either<Failure, String>> execute(token, userId) async {
+  Future<Either<Failure, String>> execute( {
+    required String token,
+    required int userId,
+    required String currentPassword,
+    required String newPassword,
+    required String newPasswordConfirmation,
+  }) async {
     return await changePasswordInProfileRepository.changePassword(
       token,
       userId,
+      currentPassword,
+      newPassword,
+      newPasswordConfirmation,
     );
   }
 }

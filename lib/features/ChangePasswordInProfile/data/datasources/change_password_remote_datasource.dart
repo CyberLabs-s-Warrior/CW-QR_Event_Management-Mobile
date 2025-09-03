@@ -5,7 +5,13 @@ import '../../../../core/constant/constant.dart';
 import '../../../../core/error/exceptions.dart';
 
 abstract class ChangePasswordRemoteDatasource {
-  Future<String> changePassword({required String token, required int userId});
+  Future<String> changePassword({
+    required String token,
+    required int userId,
+    required String currentPassword,
+    required String newPassword,
+    required String newPasswordConfirmation,
+  });
 }
 
 class ChangePasswordRemoteDataSourceImplementation
@@ -18,6 +24,9 @@ class ChangePasswordRemoteDataSourceImplementation
   Future<String> changePassword({
     required String token,
     required int userId,
+    required String currentPassword,
+    required String newPassword,
+    required String newPasswordConfirmation,
   }) async {
     final response = await client.put(
       Uri.parse(Constant.endpoint('/user/$userId/change-password')),
@@ -25,6 +34,11 @@ class ChangePasswordRemoteDataSourceImplementation
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
+      body: jsonEncode({
+        'current_password': currentPassword,
+        'new_password': newPassword,
+        'new_password_confirmation': newPasswordConfirmation,
+      }),
     );
 
     print('from change-password response: $response');
@@ -36,12 +50,12 @@ class ChangePasswordRemoteDataSourceImplementation
     } else if (response.statusCode == 400) {
       final Map<String, dynamic> body = jsonDecode(response.body);
 
-      throw GeneralException(message: body['error']);
+      return body['error'];
     } else {
       final Map<String, dynamic> body = jsonDecode(response.body);
 
       print('from change-password error: $body');
-      throw ServerException(message: 'Something Error');
+      return body['error'];
     }
   }
 }

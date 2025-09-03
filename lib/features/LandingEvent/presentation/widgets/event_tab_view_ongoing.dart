@@ -3,9 +3,10 @@ import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:provider/provider.dart';
-import '../../../../gen/loading/wave_loading.dart';
+
 import '../../../../core/constant/enum_status.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../gen/loading/wave_loading.dart';
 import '../../../../gen/scroll/scroll_to_up_button.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../provider/landing_event_provider.dart';
@@ -84,30 +85,26 @@ class _EventTabViewOngoingState extends State<EventTabViewOngoing> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(9999),
                                 child: Container(
-                                  padding: EdgeInsets.all(35),
+                                  padding: EdgeInsets.all(25),
                                   decoration: BoxDecoration(
                                     color: AppColors.secondary,
                                   ),
                                   child: Iconify(
                                     Bi.calendar2_date_fill,
-                                    size: 35,
+                                    size: 50,
                                     color: AppColors.primary,
                                   ),
                                 ),
                               ),
                               Gap(25),
-                              SizedBox(
-                                width: 250,
-                                child: Text(
-                                  landingEventProvider.cleanErrorMessage,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    
-                                  
-                                  ),
-                                  textAlign: TextAlign.center,
+                              Text(
+                                "Something went wrong, please\ntry again later",
+
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
+                                textAlign: TextAlign.center,
                               ),
                               Gap(100),
                             ],

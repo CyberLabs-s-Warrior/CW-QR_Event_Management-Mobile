@@ -1,9 +1,10 @@
 class Constant {
   static String api =
-      "https://engineers-contrary-pages-intellectual.trycloudflare.com/api";
+      "https://scholarship-disposal-alex-liabilities.trycloudflare.com/api";
   static String domain =
-      "https://engineers-contrary-pages-intellectual.trycloudflare.com";
+      "https://scholarship-disposal-alex-liabilities.trycloudflare.com";
+
   static String endpoint(final String destination) {
-    return "https://engineers-contrary-pages-intellectual.trycloudflare.com/api$destination";
+    return "https://scholarship-disposal-alex-liabilities.trycloudflare.com/api$destination";
   }
 }

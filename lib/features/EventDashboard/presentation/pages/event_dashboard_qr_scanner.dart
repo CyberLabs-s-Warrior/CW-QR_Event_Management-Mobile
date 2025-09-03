@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../widgets/general_back_button.dart';
 

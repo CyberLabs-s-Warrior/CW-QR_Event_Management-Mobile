@@ -1,5 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'features/ChangePasswordInProfile/data/datasources/change_password_remote_datasource.dart';
+import 'features/ChangePasswordInProfile/data/repositories/change_password_in_profile_repository_implementation.dart';
+import 'features/ChangePasswordInProfile/domain/repositories/change_password_in_profile_repository.dart';
+import 'features/ChangePasswordInProfile/domain/usecases/change_password_usecase.dart';
+import 'features/ChangePasswordInProfile/presentation/provider/change_password_provider.dart';
 import 'features/EventDashboard/data/datasources/event_dashboard_remote_datasource.dart';
 import 'features/EventDashboard/data/repositories/event_dashboard_repository_implementation.dart';
 import 'features/EventDashboard/domain/repositories/event_dashboard_repository.dart';
@@ -113,6 +118,13 @@ Future<void> init() async {
     () => EventDashboardRemoteDatasourceImplementation(client: myInjection()),
   );
 
+  // ? CHANGE PASSWORD
+
+  myInjection.registerLazySingleton<ChangePasswordRemoteDatasource>(
+    // * CHANGE PASSWORD
+    () => ChangePasswordRemoteDataSourceImplementation(client: myInjection()),
+  );
+
   //
   //
   //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
@@ -171,6 +183,15 @@ Future<void> init() async {
     ),
   );
 
+  // ? CHANGE PASSWORD
+
+  myInjection.registerLazySingleton<ChangePasswordInProfileRepository>(
+    // * CHANGE PASSWORD
+    () => ChangePasswordInProfileRepositoryImplementation(
+      changePasswordRemoteDatasource: myInjection(),
+    ),
+  );
+
   //
   //
   //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
@@ -210,9 +231,12 @@ Future<void> init() async {
 
   // * SEARCH EVENT
   myInjection.registerLazySingleton(() => SearchEventsUsecase(myInjection()));
-  
+
   // * EVENT DASHBOARD
   myInjection.registerLazySingleton(() => GetEventByIdUsecase(myInjection()));
+
+  // * CHANGE PASSWORD
+  myInjection.registerLazySingleton(() => ChangePasswordUsecase(myInjection()));
 
   //
   //
@@ -262,9 +286,14 @@ Future<void> init() async {
   myInjection.registerFactory(
     () => SearchEventsProvider(searchEventUsecase: myInjection()),
   );
-  
+
   // * EVENT DASHBOARD
   myInjection.registerFactory(
     () => EventDashboardProvider(getEventByIdUsecase: myInjection()),
+  );
+
+  // * CHANGE PASSWORD
+  myInjection.registerFactory(
+    () => ChangePasswordProvider(changePasswordUsecase: myInjection()),
   );
 }

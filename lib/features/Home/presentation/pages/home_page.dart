@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
-import '../widgets/home_alert.dart';
-import '../widgets/home_event_history.dart';
-import '../widgets/home_event_overview.dart';
+
 import '../../../../gen/loading/wave_loading.dart';
 import '../../../../widgets/connection_container.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../provider/home_provider.dart';
+import '../widgets/home_alert.dart';
+import '../widgets/home_event_history.dart';
+import '../widgets/home_event_overview.dart';
 
 class HomePage extends StatefulWidget {
   final int tabIndex;
@@ -67,7 +68,10 @@ class _HomePageState extends State<HomePage> {
             color: Theme.of(context).primaryColor,
             child:
                 homeProvider.homeSummaryStatus == HomeStatus.loading
-                    ? WaveLoading()
+                    ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [WaveLoading(), Gap(50)],
+                    )
                     : SingleChildScrollView(
                       controller: widget.scrollController,
                       physics: const AlwaysScrollableScrollPhysics(),

@@ -3,13 +3,13 @@ import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:provider/provider.dart';
-import '../../../../gen/loading/wave_loading.dart';
-import '../../../../core/theme/app_colors.dart';
+
 import '../../../../core/constant/enum_status.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../gen/loading/wave_loading.dart';
+import '../../../../gen/scroll/scroll_to_up_button.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../provider/landing_event_provider.dart';
-
-import '../../../../gen/scroll/scroll_to_up_button.dart';
 import 'event_landing_card.dart';
 
 class EventTabViewPast extends StatefulWidget {
@@ -98,11 +98,13 @@ class _EventTabViewPastState extends State<EventTabViewPast> {
                               ),
                               Gap(25),
                               Text(
-                                landingEventProvider.cleanErrorMessage,
+                                "Something went wrong, please\ntry again later",
+
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
+                                textAlign: TextAlign.center,
                               ),
                               Gap(100),
                             ],
@@ -116,7 +118,7 @@ class _EventTabViewPastState extends State<EventTabViewPast> {
                           shrinkWrap: true,
                           itemCount:
                               landingEventProvider.landingEventPast!.length,
-                           physics: const AlwaysScrollableScrollPhysics(),
+                          physics: const AlwaysScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             final event =
                                 landingEventProvider.landingEventPast![index];
