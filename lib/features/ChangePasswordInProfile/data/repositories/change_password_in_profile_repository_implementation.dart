@@ -40,7 +40,7 @@ class ChangePasswordInProfileRepositoryImplementation
 
         print('from change-password result: $result');
 
-        return Right(jsonDecode(result));
+        return Right(result);
       }
     } catch (e) {
       return Left(GeneralFailure(e.toString()));
