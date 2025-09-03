@@ -43,7 +43,7 @@ class ChangePasswordInProfileRepositoryImplementation
         return Right(jsonDecode(result));
       }
     } catch (e) {
-      throw Left(GeneralFailure(e.toString()));
+      return Left(GeneralFailure(e.toString()));
     }
   }
 }
