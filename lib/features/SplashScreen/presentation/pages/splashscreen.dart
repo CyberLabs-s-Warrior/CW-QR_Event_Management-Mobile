@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/provider/network_status_provider.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../Authentication/presentation/pages/login_page.dart';
@@ -21,17 +22,26 @@ class _SplashScreenState extends State<SplashScreen> {
 
     await authProvider.getUser();
 
-    final user = authProvider.currentUser;
-    final token = authProvider.currentUser?.token;
+    final token = authProvider.authorization?.token;
 
-    if (token == null || user == null) {
-       logoutEasy(context);
+    if (token == null) {
+      logoutEasy(context);
 
       Navigator.of(
         context,
       ).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
     } else {
       refreshToken(context);
+
+      final isOnline = context.select<NetworkStatusProvider, bool>(
+        (p) => p.isOnline,
+      );
+
+      if (isOnline) {
+        await authProvider.getUserFromApi(
+          token: authProvider.authorization!.token,
+        );
+      }
 
       Navigator.of(
         context,

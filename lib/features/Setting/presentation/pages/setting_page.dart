@@ -4,6 +4,8 @@ import 'package:iconify_flutter/icons/octicon.dart';
 import 'package:iconify_flutter/icons/ri.dart';
 import 'package:iconify_flutter/icons/uil.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/provider/network_status_provider.dart';
+import '../../../../gen/alert/toastification.dart';
 import '../widgets/setting_group_head.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -49,12 +51,14 @@ class SettingView extends StatelessWidget {
       });
     }
 
+    final isOnline = context.select<NetworkStatusProvider, bool>(
+      (p) => p.isOnline,
+    );
+
     return Column(
       children: [
         Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
+          decoration: BoxDecoration(color: Colors.white),
           child: SettingLandingHead(tabIndex: _tabController.index),
         ),
         Expanded(
@@ -92,12 +96,24 @@ class SettingView extends StatelessWidget {
                       icon: Octicon.pencil_24,
                       title: 'Account Details',
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => AccountDetailsPage(),
-                          ),
-                        );
+                        if (!isOnline) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            showCustomToast(
+                              context: context,
+                              message: 'No Connection Available!',
+                              backgroundColor: AppColors.warning,
+                              foregroundColor: AppColors.white,
+                              primaryColor: AppColors.white,
+                            );
+                          });
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => AccountDetailsPage(),
+                            ),
+                          );
+                        }
                       },
                     ),
                     SettingItem(
@@ -105,12 +121,24 @@ class SettingView extends StatelessWidget {
                       title: 'Change Password',
                       isLast: true,
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => ChangePasswordInProfilePage(),
-                          ),
-                        );
+                        if (!isOnline) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            showCustomToast(
+                              context: context,
+                              message: 'No Connection Available!',
+                              backgroundColor: AppColors.warning,
+                              foregroundColor: AppColors.white,
+                              primaryColor: AppColors.white,
+                            );
+                          });
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ChangePasswordInProfilePage(),
+                            ),
+                          );
+                        }
                       },
                     ),
                   ],

@@ -3,10 +3,11 @@ import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/provider/network_status_provider.dart';
-import '../../../../gen/loading/wave_loading.dart';
+
 import '../../../../core/constant/enum_status.dart';
+import '../../../../core/provider/network_status_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../gen/loading/wave_loading.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../../../Authentication/presentation/widgets/back_button.dart';
 import '../provider/search_event_provider.dart';
@@ -32,8 +33,8 @@ class _LandingSearchEventsPageState extends State<LandingSearchEventsPage> {
     searchProvider.searchEvents(
       '',
 
-      token: user.currentUser!.token,
-      userId: user.currentUser!.id,
+      token: user.authorization!.token,
+      userId: user.userProfile!.id,
     );
   }
 
@@ -77,8 +78,8 @@ class _LandingSearchEventsPageState extends State<LandingSearchEventsPage> {
                     onChanged: (value) {
                       searchProvider.searchEvents(
                         value,
-                        token: authProvider.currentUser!.token,
-                        userId: authProvider.currentUser!.id,
+                        token: authProvider.authorization!.token,
+                        userId: authProvider.userProfile!.id,
                       );
                     },
                     decoration: InputDecoration(

@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import '../entities/authorization_entity.dart';
 
 import '../../../../core/error/failure.dart';
 import '../entities/forgot_password.dart';
@@ -7,7 +8,7 @@ import '../entities/user.dart';
 import '../entities/verify_code.dart';
 
 abstract class AuthenticationRepository {
-  Future<Either<Failure, User>> signIn(String email, String password);
+  Future<Either<Failure, AuthorizationEntity>> signIn(String email, String password);
   Future<Either<Failure, ForgotPasswordEntities>> forgotPassword(
     bool isWithEmail,
     String? phoneNumber,
@@ -19,7 +20,9 @@ abstract class AuthenticationRepository {
     String? email,
     String otp,
   );
+
   Future<Either<Failure, User>> getUser();
+  Future<Either<Failure, User>> getUserFromApi(String token);
   Future<Either<Failure, RecoveryPasswordEntity>> recoveryPassword(
     bool isWithEmail,
     String? phoneNumber,

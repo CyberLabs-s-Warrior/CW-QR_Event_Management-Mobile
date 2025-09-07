@@ -1,5 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'features/Authentication/domain/usecases/get_user_from_api.dart';
+import 'features/User/data/datasources/user_remote_datasource.dart';
+import 'features/User/data/repositories/user_repository_implementation.dart';
+import 'features/User/domain/repositories/user_repository.dart';
+import 'features/User/domain/usecases/edit_profile_usecase.dart';
+import 'features/User/presentation/provider/user_provider.dart';
 import 'features/ChangePasswordInProfile/data/datasources/change_password_remote_datasource.dart';
 import 'features/ChangePasswordInProfile/data/repositories/change_password_in_profile_repository_implementation.dart';
 import 'features/ChangePasswordInProfile/domain/repositories/change_password_in_profile_repository.dart';
@@ -125,6 +131,13 @@ Future<void> init() async {
     () => ChangePasswordRemoteDataSourceImplementation(client: myInjection()),
   );
 
+  // ? USER
+
+  myInjection.registerLazySingleton<UserRemoteDatasource>(
+    // * CHANGE PASSWORD
+    () => UserRemoteDatasourceImplementation(client: myInjection()),
+  );
+
   //
   //
   //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
@@ -192,6 +205,16 @@ Future<void> init() async {
     ),
   );
 
+  // ? USER
+
+  myInjection.registerLazySingleton<UserRepository>(
+    // * CHANGE PASSWORD
+    () => UserRepositoryImplementation(
+      sharedPreferences: sharedPreferences,
+      userRemoteDatasource: myInjection(),
+    ),
+  );
+
   //
   //
   //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
@@ -211,6 +234,7 @@ Future<void> init() async {
   myInjection.registerLazySingleton(() => Logout(myInjection()));
   myInjection.registerLazySingleton(() => RecoveryPassword(myInjection()));
   myInjection.registerLazySingleton(() => RefreshToken(myInjection()));
+  myInjection.registerLazySingleton(() => GetUserFromApi(myInjection()));
 
   // * LANDING HOME
   myInjection.registerLazySingleton(() => HomeSummaryUsecase(myInjection()));
@@ -238,6 +262,9 @@ Future<void> init() async {
   // * CHANGE PASSWORD
   myInjection.registerLazySingleton(() => ChangePasswordUsecase(myInjection()));
 
+  // * USER
+  myInjection.registerLazySingleton(() => EditProfileUsecase(myInjection()));
+
   //
   //
   //-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//-//
@@ -262,6 +289,7 @@ Future<void> init() async {
       logoutUseCase: myInjection(),
       recoveryPasswordUseCase: myInjection(),
       refreshTokenUsecase: myInjection(),
+      getUserFromApiUsecase: myInjection(),
     ),
   );
 
@@ -295,5 +323,10 @@ Future<void> init() async {
   // * CHANGE PASSWORD
   myInjection.registerFactory(
     () => ChangePasswordProvider(changePasswordUsecase: myInjection()),
+  );
+
+  // * CHANGE PASSWORD
+  myInjection.registerFactory(
+    () => UserProvider(editProfileUsecase: myInjection()),
   );
 }

@@ -1,6 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/helper/convert_to_formatted_phone.dart';
+import '../../../Authentication/presentation/provider/authentication_provider.dart';
+import '../../../../gen/loading/wave_loading.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../widgets/text_fields.dart';
@@ -26,6 +30,24 @@ class _ProfileDataPageState extends State<ProfileDataPage> {
   final TextEditingController _roleController = TextEditingController(
     text: "Administrator",
   );
+
+  @override
+  void initState() {
+    super.initState();
+
+    final authProvider = context.read<AuthenticationProvider>();
+
+    final token = authProvider.authorization!.token;
+
+    authProvider.getUserFromApi(token: token);
+
+    _nameController.text = authProvider.userProfile?.name ?? '';
+    _emailController.text = authProvider.userProfile?.email ?? '';
+    _phoneNumberController.text = convertToFormattedPhone(
+      authProvider.userProfile?.phoneNumber ?? '',
+    );
+    _roleController.text = authProvider.userProfile?.role ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,32 +109,47 @@ class _ProfileDataPageState extends State<ProfileDataPage> {
                 ),
               ),
               Gap(40),
-              GeneralTextField(
-                controller: _nameController,
-                hintText: 'Nabil Dzikrika',
-                prefixIcon: Icons.verified_user_outlined,
-                readOnly: true,
-              ),
-              Gap(20),
-              GeneralTextField(
-                controller: _emailController,
-                hintText: 'Nabil Dzikrika',
-                prefixIcon: Icons.email_outlined,
-                readOnly: true,
-              ),
-              Gap(20),
-              GeneralTextField(
-                controller: _phoneNumberController,
-                hintText: 'Nabil Dzikrika',
-                prefixIcon: Icons.phone_outlined,
-                readOnly: true,
-              ),
-              Gap(20),
-              GeneralTextField(
-                controller: _roleController,
-                hintText: 'Nabil Dzikrika',
-                prefixIcon: Icons.supervised_user_circle_outlined,
-                readOnly: true,
+              Consumer<AuthenticationProvider>(
+                builder: (context, authProvider, child) {
+                  if (authProvider.getUserFromApiStatus == AuthStatus.loading) {
+                    return WaveLoading();
+                  } else if (authProvider.getUserFromApiStatus ==
+                      AuthStatus.error) {
+                    return Center(child: WaveLoading());
+                  } else {
+                    return Column(
+                      children: [
+                        GeneralTextField(
+                          controller: _nameController,
+                          hintText: 'Nabil Dzikrika',
+                          prefixIcon: Icons.verified_user_outlined,
+                          readOnly: true,
+                        ),
+                        Gap(20),
+                        GeneralTextField(
+                          controller: _emailController,
+                          hintText: 'Nabil Dzikrika',
+                          prefixIcon: Icons.email_outlined,
+                          readOnly: true,
+                        ),
+                        Gap(20),
+                        GeneralTextField(
+                          controller: _phoneNumberController,
+                          hintText: 'Nabil Dzikrika',
+                          prefixIcon: Icons.phone_outlined,
+                          readOnly: true,
+                        ),
+                        Gap(20),
+                        GeneralTextField(
+                          controller: _roleController,
+                          hintText: 'Nabil Dzikrika',
+                          prefixIcon: Icons.supervised_user_circle_outlined,
+                          readOnly: true,
+                        ),
+                      ],
+                    );
+                  }
+                },
               ),
             ],
           ),

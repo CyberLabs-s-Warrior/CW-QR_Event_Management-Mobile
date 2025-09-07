@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
+import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failure.dart';
 import '../datasources/change_password_remote_datasource.dart';
 import '../../domain/repositories/change_password_in_profile_repository.dart';
@@ -42,7 +43,16 @@ class ChangePasswordInProfileRepositoryImplementation
 
         return Right(result);
       }
+    } on ValidationException catch (e) {
+      String errorMessage = "Validation failed";
+
+      if (e.errorEntity.newPasswordErrors.isNotEmpty) {
+        errorMessage = e.errorEntity.newPasswordErrors.join('. ');
+      }
+
+      return Left(ValidationFailure(errorMessage, e.errorEntity));
     } catch (e) {
+      print("from change-password repo impl: $e");
       return Left(GeneralFailure(e.toString()));
     }
   }

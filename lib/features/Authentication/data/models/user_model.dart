@@ -22,9 +22,9 @@ class UserModel extends User {
       createdAt: data['created_at'],
       updatedAt: data['updated_at'],
       role: data['role'],
-      phoneNumber: data['phone_number'],
-      token: data['token'],
-      expiresAt: data['expires_at'],
+      phoneNumber: data['phone_number'] ?? '',
+      token: data['token'] ?? '',
+      expiresAt: data['expires_at'] ?? '',
     );
   }
 

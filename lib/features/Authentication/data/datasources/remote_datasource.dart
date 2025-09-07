@@ -4,13 +4,14 @@ import 'package:http/http.dart' as http;
 
 import '../../../../core/constant/constant.dart';
 import '../../../../core/error/exceptions.dart';
+import '../models/authorization_model.dart';
 import '../models/forgot_password_model.dart';
 import '../models/recovery_password.dart';
 import '../models/user_model.dart';
 import '../models/verify_code_model.dart';
 
 abstract class AuthenticationRemoteDataSource {
-  Future<UserModel> signIn(String email, String password);
+  Future<AuthorizationModel> signIn(String email, String password);
   Future<ForgotPasswordModel> forgotPassword(
     bool isWithEmail,
     String? phoneNumber,
@@ -32,6 +33,8 @@ abstract class AuthenticationRemoteDataSource {
 
   Future<void> logout(String token);
 
+  Future<UserModel> getUserFromApi(String token);
+
   Future<void> refreshToken(String token);
 }
 
@@ -42,7 +45,7 @@ class AuthenticationRemoteDataSourceImplementation
   AuthenticationRemoteDataSourceImplementation({required this.client});
 
   @override
-  Future<UserModel> signIn(email, password) async {
+  Future<AuthorizationModel> signIn(email, password) async {
     final response = await client.post(
       Uri.parse(Constant.endpoint("/user/sign-in")),
       headers: {'Content-Type': 'application/json'},
@@ -54,27 +57,14 @@ class AuthenticationRemoteDataSourceImplementation
     if (response.statusCode == 200) {
       Map<String, dynamic> dataBody = jsonDecode(response.body);
 
-      List<dynamic> dataArray = dataBody['data'];
-
-      // Map<String, dynamic> data = dataBody['data'][0] ?? {};
-
-      Map<String, dynamic> userData = dataArray[0];
-
-      String token = dataBody['token'];
-      String expiresAt = dataBody['expires_at'];
-
-      print("Original user data: $userData");
-      print("Token: $token");
-      print("Expires At: $expiresAt");
-
-      userData['token'] = token;
-      userData['expires_at'] = expiresAt;
+      // String token = dataBody['token'];
+      // String expiresAt = dataBody['expires_at'];
 
       print(
-        'Complete user data with token (Add token and expires_at into userData object), result: $userData',
+        'Complete user data with token (Add token and expires_at into userData object), result: $dataBody',
       );
 
-      return UserModel.fromJson(userData);
+      return AuthorizationModel.fromJson(dataBody);
     } else if (response.statusCode == 404 || response.statusCode == 401) {
       Map<String, dynamic> data = jsonDecode(response.body);
       print(data);
@@ -87,6 +77,7 @@ class AuthenticationRemoteDataSourceImplementation
     }
   }
 
+  @override
   Future<ForgotPasswordModel> forgotPassword(
     bool isWithEmail,
     String? phoneNumber,
@@ -120,6 +111,7 @@ class AuthenticationRemoteDataSourceImplementation
     }
   }
 
+  @override
   Future<VerifyCodeModel> verifyCode(
     bool isWithEmail,
     String? phoneNumber,
@@ -221,6 +213,32 @@ class AuthenticationRemoteDataSourceImplementation
       throw GeneralException(
         message: "Cannot Recovery Password ${e.toString()}",
       );
+    }
+  }
+
+  @override
+  Future<UserModel> getUserFromApi(String token) async {
+    try {
+      final response = await client.get(
+        Uri.parse(Constant.endpoint('/user')),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> userData = jsonDecode(response.body);
+        return UserModel.fromJson(userData);
+      } else if (response.statusCode == 404 || response.statusCode == 401) {
+        Map<String, dynamic> data = jsonDecode(response.body);
+        throw EmptyException(message: data['message']);
+      } else {
+        throw GeneralException(message: "Server Error");
+      }
+    } catch (e) {
+      print('from profile data : $e');
+      throw GeneralException(message: "Cannot get user data:");
     }
   }
 

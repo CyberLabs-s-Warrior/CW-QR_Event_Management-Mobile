@@ -1,3 +1,5 @@
+import '../model/error_entity.dart';
+
 class GeneralException implements Exception {
   final String message;
 
@@ -5,6 +7,14 @@ class GeneralException implements Exception {
 
   @override
   String toString() => message;
+}
+
+class ValidationException implements Exception {
+  final ErrorEntity errorEntity;
+
+   ValidationException({required this.errorEntity});
+
+  
 }
 
 class ServerException implements Exception {

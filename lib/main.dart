@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'features/User/presentation/provider/user_provider.dart';
 import 'features/ChangePasswordInProfile/presentation/provider/change_password_provider.dart';
 import 'features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
 
@@ -15,6 +16,8 @@ import 'injection.dart' as di;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //? dependency injection = di
+
+
 
   await di.init();
   runApp(MyApp());
@@ -37,6 +40,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => di.myInjection<SearchEventsProvider>()),
         ChangeNotifierProvider(create: (_) => di.myInjection<EventDashboardProvider>()),
         ChangeNotifierProvider(create: (_) => di.myInjection<ChangePasswordProvider>()),
+        ChangeNotifierProvider(create: (_) => di.myInjection<UserProvider>()),
       ],
       child: MaterialApp(
         home: SplashScreen(),

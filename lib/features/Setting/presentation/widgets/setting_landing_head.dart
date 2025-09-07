@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 
@@ -60,7 +61,7 @@ class _SettingLandingHeadState extends State<SettingLandingHead> {
                             child: Icon(
                               Icons.broken_image,
                               color: AppColors.primary,
-                              size: 35
+                              size: 35,
                             ),
                           ),
                         ),
@@ -73,7 +74,8 @@ class _SettingLandingHeadState extends State<SettingLandingHead> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        authProvider.currentUser?.name ?? '',
+                        authProvider.userProfile?.name ?? '',
+
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -82,7 +84,7 @@ class _SettingLandingHeadState extends State<SettingLandingHead> {
                         ),
                       ),
                       Text(
-                        authProvider.currentUser?.email ?? '',
+                        authProvider.userProfile?.email ?? '',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,

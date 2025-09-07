@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import '../../../../core/constant/constant.dart';
 import '../../../../core/error/exceptions.dart';
+import '../../../../core/model/error_model.dart';
+import '../../../../core/constant/constant.dart';
 
 abstract class ChangePasswordRemoteDatasource {
   Future<String> changePassword({
@@ -43,19 +44,40 @@ class ChangePasswordRemoteDataSourceImplementation
 
     print('from change-password response: $response');
 
+    final Map<String, dynamic> body = jsonDecode(response.body);
+
     if (response.statusCode == 200) {
-      final Map<String, dynamic> body = jsonDecode(response.body);
+      return body['message'] ?? 'Password changed successfully';
+    } else if (response.statusCode == 400 || response.statusCode == 422) {
+      print('from change-password validation: $body');
 
-      return body['message'];
-    } else if (response.statusCode == 400) {
-      final Map<String, dynamic> body = jsonDecode(response.body);
+      final errorEntity = ErrorModel(
+        error: body['error'] ?? 'Validation failed',
+        details: _parseErrorDetails(body['details']),
+      );
 
-      return body['error'];
+      throw ValidationException(errorEntity: errorEntity);
     } else {
-      final Map<String, dynamic> body = jsonDecode(response.body);
-
       print('from change-password error: $body');
-      return body['error'];
+      throw GeneralException(message: body['details'] ?? 'Unknown error');
     }
+  }
+
+  Map<String, List<String>> _parseErrorDetails(dynamic details) {
+    if (details == null) return {};
+
+    final Map<String, List<String>> result = {};
+
+    if (details is Map<String, dynamic>) {
+      details.forEach((key, value) {
+        if (value is List) {
+          result[key] = value.map((e) => e.toString()).toList();
+        } else if (value is String) {
+          result[key] = [value];
+        }
+      });
+    }
+
+    return result;
   }
 }

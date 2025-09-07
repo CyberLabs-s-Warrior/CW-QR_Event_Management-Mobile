@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../model/error_entity.dart';
 
 abstract class Failure extends Equatable {
   final String message;
@@ -23,4 +24,13 @@ class GeneralFailure extends Failure {
 // allow to use for all error
 class SimpleFailure extends Failure {
   const SimpleFailure(super.message);
+}
+
+class ValidationFailure extends Failure {
+  final ErrorEntity errorEntity;
+
+  const ValidationFailure(super.message, this.errorEntity);
+
+  @override
+  List<Object> get props => [message, errorEntity];
 }

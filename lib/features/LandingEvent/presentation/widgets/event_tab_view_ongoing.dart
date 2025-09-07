@@ -33,8 +33,8 @@ class _EventTabViewOngoingState extends State<EventTabViewOngoing> {
 
     final landingEventProvider = context.read<LandingEventProvider>();
     landingEventProvider.getEventOngoing(
-      token: user.currentUser!.token,
-      userId: user.currentUser!.id,
+      token: user.authorization!.token,
+      userId: user.userProfile!.id,
     );
   }
 
@@ -68,8 +68,8 @@ class _EventTabViewOngoingState extends State<EventTabViewOngoing> {
               RefreshIndicator(
                 onRefresh: () async {
                   await landingEventProvider.getEventOngoing(
-                    token: authProvider.currentUser!.token,
-                    userId: authProvider.currentUser!.id,
+                    token: authProvider.authorization!.token,
+                    userId: authProvider.userProfile!.id,
                   );
                 },
                 child:
