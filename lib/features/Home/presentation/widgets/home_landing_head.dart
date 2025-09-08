@@ -46,7 +46,7 @@ class _HomeLandingHeadState extends State<HomeLandingHead> {
                     borderRadius: BorderRadius.circular(50),
                     child: CachedNetworkImage(
                       imageUrl:
-                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSMUi9wHqia_68xlAU7vP3E3sxn5K0KS-nUvBZk5jSJ54p8FPnw20uYV5yxNgF59DZoqc&usqp=CAU",
+                          "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg",
                       width: 70,
                       height: 70,
                       fit: BoxFit.cover,

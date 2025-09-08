@@ -3,13 +3,15 @@ import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/widgets/event_dashboard_floating_button.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/widgets/event_dashboard_head.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/widgets/event_dashboard_refresh_data.dart';
 import '../../../../gen/alert/toastification.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../../../core/constant/enum_status.dart';
 import '../../../../core/provider/network_status_provider.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../gen/alert/snack_bar.dart';
 import '../../../../widgets/general_back_button.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../provider/event_dashboard_provider.dart';
@@ -67,8 +69,8 @@ class _EventDashboardPageState extends State<EventDashboardPage>
           ),
         ),
       ),
-      body: Consumer<EventDashboardProvider>(
-        builder: (context, eventDashboardProvider, child) {
+      body: Consumer2<EventDashboardProvider, AuthenticationProvider>(
+        builder: (context, eventDashboardProvider, authProvider, child) {
           if (eventDashboardProvider.eventStatus == ResponseStatus.loading) {
             return EventDashboardLoading();
           } else if (!isOnline) {
@@ -107,73 +109,10 @@ class _EventDashboardPageState extends State<EventDashboardPage>
                             children: [
                               Gap(30),
 
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "${eventDashboardProvider.event?.title}",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColors.secondary,
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Iconify(
-                                              Bi.clock_fill,
-                                              color: AppColors.secondary,
-                                              size: 20,
-                                            ),
-                                            Gap(5),
-                                            Text(
-                                              "${eventDashboardProvider.event?.endDate}",
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600,
-                                                color: AppColors.secondary,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Gap(10),
-
-                                  ZoomTapAnimation(
-                                    onTap: () {},
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(9999),
-                                      child: Container(
-                                        padding: EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.secondary,
-                                        ),
-                                        child: SizedBox(
-                                          width: 24,
-                                          height: 24,
-                                          child: CircularProgressIndicator(
-                                            color: AppColors.primary,
-                                            strokeWidth: 10,
-                                          ),
-                                        ),
-                                        // child: Iconify(
-                                        //   Ic.twotone_refresh,
-                                        //   color: AppColors.primary,
-                                        // ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              EventDashboardHead(
+                                widget: widget,
+                                eventDashboardProvider: eventDashboardProvider,
+                                authProvider: authProvider,
                               ),
 
                               Gap(50),
@@ -201,45 +140,13 @@ class _EventDashboardPageState extends State<EventDashboardPage>
                     ],
                   ),
 
-                  Positioned(
-                    bottom: 15,
-                    left: 15,
-                    right: 15,
-                    child: ZoomTapAnimation(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => QRViewTest()),
-                        );
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(9999),
-                        child: Container(
-                          padding: EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: AppColors.buttonBackgroundPrimary,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Iconify(
-                                Bi.qr_code_scan,
-                                color: AppColors.secondary,
-                              ),
-                              Gap(5),
-                              Text(
-                                'Scan QR',
-                                style: TextStyle(
-                                  color: AppColors.secondary,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                  EventDashboardFloatingButton(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => QRViewTest()),
+                      );
+                    },
                   ),
                 ],
               ),
