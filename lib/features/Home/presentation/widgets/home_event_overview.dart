@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../provider/home_provider.dart';
 
@@ -117,4 +118,3 @@ Widget eventOverview({required HomeProvider homeProvider}) {
     ),
   );
 }
-

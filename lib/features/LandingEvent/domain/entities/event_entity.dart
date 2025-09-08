@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class EventEntities extends Equatable {
+class EventEntity extends Equatable {
   final int id;
   final String? title;
   final String? location;
@@ -9,7 +9,7 @@ class EventEntities extends Equatable {
   final String? banner;
   final String? createdBy;
 
-  const EventEntities({
+  const EventEntity({
     required this.id,
     required this.title,
     required this.location,

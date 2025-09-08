@@ -1,18 +1,18 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failure.dart';
-import '../entities/event_entities.dart';
+import '../entities/event_entity.dart';
 
 abstract class LandingEventRepository {
-  Future<Either<Failure, List<EventEntities>>> getEventUpcoming(
+  Future<Either<Failure, List<EventEntity>>> getEventUpcoming(
     String token,
     int userId,
   );
-  Future<Either<Failure, List<EventEntities>>> getEventOngoing(
+  Future<Either<Failure, List<EventEntity>>> getEventOngoing(
     String token,
     int userId,
   );
-  Future<Either<Failure, List<EventEntities>>> getEventPast(
+  Future<Either<Failure, List<EventEntity>>> getEventPast(
     String token,
     int userId,
   );

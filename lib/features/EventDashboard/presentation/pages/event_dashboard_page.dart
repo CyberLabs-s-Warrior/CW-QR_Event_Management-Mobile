@@ -3,19 +3,20 @@ import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:provider/provider.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
+
 import '../../../../core/constant/enum_status.dart';
 import '../../../../core/provider/network_status_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../gen/alert/snack_bar.dart';
+import '../../../../widgets/general_back_button.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
-import 'event_dashboard_qr_scanner.dart';
 import '../provider/event_dashboard_provider.dart';
 import '../widgets/check_in_and_not_check_in.dart';
 import '../widgets/event_dashboard_error.dart';
 import '../widgets/event_dashboard_loading.dart';
 import '../widgets/event_registration_percentage.dart';
-import '../../../../gen/alert/snack_bar.dart';
-import '../../../../widgets/general_back_button.dart';
-import 'package:zoom_tap_animation/zoom_tap_animation.dart';
+import 'event_dashboard_qr_scanner.dart';
 
 class EventDashboardPage extends StatefulWidget {
   final int eventId;

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../Home/presentation/provider/home_provider.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
+import '../../../Home/presentation/provider/home_provider.dart';
 import '../../../SplashScreen/presentation/pages/splashscreen.dart';
 
 void logout(context) async {

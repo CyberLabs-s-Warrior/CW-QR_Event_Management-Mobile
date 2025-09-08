@@ -1,4 +1,3 @@
-// lib/core/providers/validation_provider.dart
 import 'package:flutter/material.dart';
 import 'package:qr_event_management/core/helper/validation_helper.dart';
 
@@ -14,10 +13,8 @@ class ValidationProvider extends ChangeNotifier {
   String? get phoneError => _phoneError;
 
   // Check if form is valid
-  bool get isFormValid => 
-      _emailError == null && 
-      _passwordError == null && 
-      _phoneError == null;
+  bool get isFormValid =>
+      _emailError == null && _passwordError == null && _phoneError == null;
 
   // Validate email
   void validateEmail(String email) {

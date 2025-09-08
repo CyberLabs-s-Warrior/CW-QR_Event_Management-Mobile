@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
+import '../../../../core/error/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/error/failure.dart';
-import '../../domain/entities/event_entities.dart';
+import '../../domain/entities/event_entity.dart';
 import '../../domain/repositories/landing_event_repository.dart';
 import '../datasources/landing_event_local_datasource.dart';
 import '../datasources/landing_event_remote_datasource.dart';
@@ -22,7 +23,7 @@ class LandingEventRepositoryImplementation implements LandingEventRepository {
   });
 
   @override
-  Future<Either<Failure, List<EventEntities>>> getEventOngoing(
+  Future<Either<Failure, List<EventEntity>>> getEventOngoing(
     String token,
     int userId,
   ) async {
@@ -31,12 +32,12 @@ class LandingEventRepositoryImplementation implements LandingEventRepository {
           await (Connectivity().checkConnectivity());
 
       if (connectivityResult.contains(ConnectivityResult.none)) {
-        List<EventEntities> result =
+        List<EventEntity> result =
             await landingEventLocalDatasource.getEventOngoing();
 
         return Right(result);
       } else {
-        List<EventEntities> result = await landingEventRemoteDataSource
+        List<EventEntity> result = await landingEventRemoteDataSource
             .getEventOngoing(token, userId);
 
         sharedPreferences.setString(
@@ -52,7 +53,7 @@ class LandingEventRepositoryImplementation implements LandingEventRepository {
   }
 
   @override
-  Future<Either<Failure, List<EventEntities>>> getEventPast(
+  Future<Either<Failure, List<EventEntity>>> getEventPast(
     String token,
     int userId,
   ) async {
@@ -61,12 +62,12 @@ class LandingEventRepositoryImplementation implements LandingEventRepository {
           await (Connectivity().checkConnectivity());
 
       if (connectivityResult.contains(ConnectivityResult.none)) {
-        List<EventEntities> result =
+        List<EventEntity> result =
             await landingEventLocalDatasource.getEventPast();
 
         return Right(result);
       } else {
-        List<EventEntities> result = await landingEventRemoteDataSource
+        List<EventEntity> result = await landingEventRemoteDataSource
             .getEventPast(token, userId);
 
         sharedPreferences.setString(
@@ -82,7 +83,7 @@ class LandingEventRepositoryImplementation implements LandingEventRepository {
   }
 
   @override
-  Future<Either<Failure, List<EventEntities>>> getEventUpcoming(
+  Future<Either<Failure, List<EventEntity>>> getEventUpcoming(
     String token,
     int userId,
   ) async {
@@ -91,12 +92,12 @@ class LandingEventRepositoryImplementation implements LandingEventRepository {
           await (Connectivity().checkConnectivity());
 
       if (connectivityResult.contains(ConnectivityResult.none)) {
-        List<EventEntities> result =
+        List<EventEntity> result =
             await landingEventLocalDatasource.getEventUpcoming();
 
         return Right(result);
       } else {
-        List<EventEntities> result = await landingEventRemoteDataSource
+        List<EventEntity> result = await landingEventRemoteDataSource
             .getEventUpcoming(token, userId);
 
         sharedPreferences.setString(
@@ -106,8 +107,10 @@ class LandingEventRepositoryImplementation implements LandingEventRepository {
 
         return Right(result);
       }
+    } on EmptyException catch (e) {
+      return Left(GeneralFailure(e.toString()));
     } catch (e) {
-      return Left(SimpleFailure(e.toString()));
+      return Left(GeneralFailure(e.toString()));
     }
   }
 }

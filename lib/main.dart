@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'features/ChangePasswordInProfile/presentation/provider/change_password_provider.dart';
 import 'features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
 
 import 'core/provider/network_status_provider.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => di.myInjection<LandingEventProvider>()),
         ChangeNotifierProvider(create: (_) => di.myInjection<SearchEventsProvider>()),
         ChangeNotifierProvider(create: (_) => di.myInjection<EventDashboardProvider>()),
+        ChangeNotifierProvider(create: (_) => di.myInjection<ChangePasswordProvider>()),
       ],
       child: MaterialApp(
         home: SplashScreen(),
