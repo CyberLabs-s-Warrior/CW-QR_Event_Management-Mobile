@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/provider/network_status_provider.dart';
+import '../../../../core/provider/validation_provider.dart';
+import '../../../../gen/alert/toastification.dart';
 
 import '../../../../core/constant/enum_status.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../gen/alert/snack_bar.dart';
 import '../../../../gen/loading/dialog_screen.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../../../Authentication/presentation/widgets/back_button.dart';
@@ -29,6 +31,14 @@ class _ChangePasswordInProfilePageState
   final TextEditingController _newPasswordConfirmationController =
       TextEditingController();
 
+  List<String> _currentPasswordErrors = [];
+  List<String> _newPasswordErrors = [];
+  List<String> _confirmPasswordErrors = [];
+
+   bool _isCurrentPasswordVisible = false;
+   bool _isNewPasswordVisible = false;
+   bool _isConfirmPasswordVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -38,17 +48,29 @@ class _ChangePasswordInProfilePageState
     final authProvider = context.read<AuthenticationProvider>();
     final changePasswordProvider = context.read<ChangePasswordProvider>();
 
+    _currentPasswordErrors = [];
+    _newPasswordErrors = [];
+    _confirmPasswordErrors = [];
+
     await changePasswordProvider.changePassword(
-      token: authProvider.currentUser!.token,
-      userId: authProvider.currentUser!.id,
+      token: authProvider.authorization!.token,
+      userId: authProvider.userProfile!.id,
       currentPassword: _currentPasswordController.text,
       newPassword: _newPasswordController.text,
       newPasswordConfirmation: _newPasswordConfirmationController.text,
     );
   }
 
+  void _resetField() {
+    _currentPasswordController.clear();
+    _newPasswordController.clear();
+    _newPasswordConfirmationController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final validationProvider = context.read<ValidationProvider>();
+
     return Scaffold(
       backgroundColor: AppColors.backgroundPage,
       appBar: AppBar(
@@ -71,19 +93,46 @@ class _ChangePasswordInProfilePageState
             WidgetsBinding.instance.addPostFrameCallback((_) {
               showLoadingDialog(context, text: "Changing your password...");
             });
-          }
-
-          if (changePasswordProvider.changePasswordStatus ==
-              ResponseStatus.error) {
+          } else if (changePasswordProvider.changePasswordStatus ==
+              ResponseStatus.success) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              showCustomSnackBar(
+              Navigator.of(context, rootNavigator: true).pop();
+
+              showCustomToast(
                 context: context,
-                message:
-                    changePasswordProvider.cleanErrorMessage ??
-                    'An error occured',
-                color: AppColors.error,
+                message: 'Success, your password changed!',
+                backgroundColor: AppColors.success,
+                foregroundColor: AppColors.white,
+                primaryColor: AppColors.white,
               );
             });
+
+            _resetField();
+            changePasswordProvider.resetAllStatus();
+          } else if (changePasswordProvider.changePasswordStatus ==
+              ResponseStatus.error) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context, rootNavigator: true).pop();
+
+              showCustomToast(
+                context: context,
+                message: "Failed to change Password",
+                backgroundColor: AppColors.error,
+                foregroundColor: AppColors.white,
+                primaryColor: AppColors.white,
+              );
+            });
+
+            if (changePasswordProvider.errorEntity != null) {
+              _currentPasswordErrors =
+                  changePasswordProvider.currentPasswordErrors;
+              _newPasswordErrors = changePasswordProvider.newPasswordErrors;
+              _confirmPasswordErrors =
+                  changePasswordProvider.newPasswordConfirmationErrors;
+            }
+
+            _resetField();
+            changePasswordProvider.resetAllStatus();
           }
 
           return SafeArea(
@@ -103,31 +152,70 @@ class _ChangePasswordInProfilePageState
                         AuthenticationCustomTextFieldLabel(
                           text: "Current Password",
                         ),
+
+                        _buildErrorMessages(_currentPasswordErrors),
                         SizedBox(height: 8),
                         AuthenticationCustomTextField(
                           hintText: "Enter your Current Password",
                           prefixIcon: Icons.lock_outline,
                           controller: _currentPasswordController,
+                          obscureText: !_isCurrentPasswordVisible,
+                          errorText: validationProvider.passwordError,
+                          onSuffixIconTap: () {
+                            setState(() {
+                              _isCurrentPasswordVisible = !_isCurrentPasswordVisible;
+                            });
+                          },
+                          suffixIcon:
+                              _isCurrentPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                         ),
                         Gap(15),
                         AuthenticationCustomTextFieldLabel(
                           text: "New Password",
                         ),
+                        _buildErrorMessages(_newPasswordErrors),
                         SizedBox(height: 8),
+
                         AuthenticationCustomTextField(
                           hintText: "Enter your New Password",
                           prefixIcon: Icons.lock_outline,
                           controller: _newPasswordController,
+                          obscureText: !_isNewPasswordVisible,
+                          errorText: validationProvider.passwordError,
+                          onSuffixIconTap: () {
+                            setState(() {
+                              _isNewPasswordVisible = !_isNewPasswordVisible;
+                            });
+                          },
+                          suffixIcon:
+                              _isNewPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                         ),
                         Gap(15),
                         AuthenticationCustomTextFieldLabel(
                           text: "New Password Confirmation",
                         ),
+                        _buildErrorMessages(_confirmPasswordErrors),
                         SizedBox(height: 8),
+
                         AuthenticationCustomTextField(
                           hintText: "Enter your New Password Confirmation",
                           prefixIcon: Icons.lock_outline,
                           controller: _newPasswordConfirmationController,
+                          obscureText: !_isConfirmPasswordVisible,
+                          errorText: validationProvider.passwordError,
+                          onSuffixIconTap: () {
+                            setState(() {
+                              _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                            });
+                          },
+                          suffixIcon:
+                              _isConfirmPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                         ),
                       ],
                     ),
@@ -176,4 +264,23 @@ class _ChangePasswordInProfilePageState
       ),
     );
   }
+}
+
+Widget _buildErrorMessages(List<String> errors) {
+  if (errors.isEmpty) return SizedBox.shrink();
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      ...List.generate(errors.length, (index) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: AuthenticationCustomTextFieldLabel(
+            text: errors[index],
+            color: AppColors.error,
+          ),
+        );
+      }),
+    ],
+  );
 }

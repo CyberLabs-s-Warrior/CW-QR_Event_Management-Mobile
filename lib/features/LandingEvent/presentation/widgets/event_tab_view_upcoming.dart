@@ -33,8 +33,8 @@ class _EventTabViewUpcomingState extends State<EventTabViewUpcoming> {
 
     final landingEventProvider = context.read<LandingEventProvider>();
     landingEventProvider.getEventUpcoming(
-      token: user.currentUser!.token,
-      userId: user.currentUser!.id,
+      token: user.authorization!.token,
+      userId: user.userProfile!.id,
     );
   }
 
@@ -68,8 +68,8 @@ class _EventTabViewUpcomingState extends State<EventTabViewUpcoming> {
               RefreshIndicator(
                 onRefresh: () async {
                   await landingEventProvider.getEventUpcoming(
-                    token: authProvider.currentUser!.token,
-                    userId: authProvider.currentUser!.id,
+                    token: authProvider.authorization!.token,
+                    userId: authProvider.userProfile!.id,
                   );
                 },
                 child:

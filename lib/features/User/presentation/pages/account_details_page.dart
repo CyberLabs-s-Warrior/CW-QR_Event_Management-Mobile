@@ -1,6 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/constant/enum_status.dart';
+import '../../../../core/helper/convert_to_formatted_phone.dart';
+import '../../../Authentication/presentation/provider/authentication_provider.dart';
+import '../provider/user_provider.dart';
+import '../../../../gen/alert/toastification.dart';
+import '../../../../gen/loading/dialog_screen.dart';
+import '../../../../gen/loading/wave_loading.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../widgets/text_fields.dart';
@@ -26,6 +35,102 @@ class _AccountDetailsPageState extends State<AccountDetailsPage> {
   final TextEditingController _roleController = TextEditingController(
     text: "Administrator",
   );
+
+  @override
+  void initState() {
+    super.initState();
+    final authProvider = context.read<AuthenticationProvider>();
+
+    final token = authProvider.authorization!.token;
+
+    authProvider.getUserFromApi(token: token);
+
+    _nameController.text = authProvider.userProfile?.name ?? '';
+    _emailController.text = authProvider.userProfile?.email ?? '';
+    _phoneNumberController.text = convertToFormattedPhone(
+      authProvider.userProfile?.phoneNumber ?? '',
+    );
+    _roleController.text = authProvider.userProfile?.role ?? '';
+  }
+
+  void editProfile() async {
+    final authProvider = context.read<AuthenticationProvider>();
+    final phoneNumber = _phoneNumberController.text.replaceAll(
+      RegExp(r'[\+\s\-]'),
+      '',
+    );
+
+    if (_nameController.text.trim().isEmpty) {
+      showCustomToast(
+        context: context,
+        message: "Name cannot be empty",
+        primaryColor: AppColors.white,
+        foregroundColor: AppColors.white,
+        backgroundColor: AppColors.error,
+      );
+      return;
+    }
+
+    if (phoneNumber.isEmpty) {
+      showCustomToast(
+        context: context,
+        message: "Phone number cannot be empty",
+        primaryColor: AppColors.white,
+        foregroundColor: AppColors.white,
+        backgroundColor: AppColors.error,
+      );
+      return;
+    }
+
+    if (phoneNumber.length > 18) {
+      showCustomToast(
+        context: context,
+        message: "Phone number cannot exceed 18 characters",
+        primaryColor: AppColors.white,
+        foregroundColor: AppColors.white,
+        backgroundColor: AppColors.error,
+      );
+      return;
+    }
+
+    print(_nameController.text);
+    print(phoneNumber);
+    print(authProvider.userProfile!.name);
+    print(authProvider.userProfile!.phoneNumber);
+
+    if (phoneNumber == authProvider.userProfile!.phoneNumber &&
+        _nameController.text == authProvider.userProfile!.name) {
+      showCustomToast(
+        context: context,
+        message:
+            "No changes detected. Please modify your information before saving.",
+        primaryColor: AppColors.white,
+        foregroundColor: AppColors.white,
+        backgroundColor: AppColors.error,
+      );
+      return;
+    }
+
+    final userProvider = context.read<UserProvider>();
+
+    await userProvider.editProfile(
+      token: authProvider.authorization!.token,
+      newName: _nameController.text,
+      newPhoneNumber: phoneNumber,
+    );
+  }
+
+  void _refreshData() async {
+    final authProvider = context.read<AuthenticationProvider>();
+    await authProvider.getUserFromApi(token: authProvider.authorization!.token);
+
+    _nameController.text = authProvider.userProfile?.name ?? '';
+    _emailController.text = authProvider.userProfile?.email ?? '';
+    _phoneNumberController.text = convertToFormattedPhone(
+      authProvider.userProfile?.phoneNumber ?? '',
+    );
+    _roleController.text = authProvider.userProfile?.role ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +190,7 @@ class _AccountDetailsPageState extends State<AccountDetailsPage> {
                                 child: Icon(
                                   Icons.broken_image,
                                   color: AppColors.primary,
-                                  size: 100
+                                  size: 100,
                                 ),
                               ),
                             ),
@@ -141,30 +246,92 @@ class _AccountDetailsPageState extends State<AccountDetailsPage> {
                 ),
               ),
               Gap(40),
-              GeneralTextField(
-                controller: _nameController,
-                hintText: 'Your Name',
-                prefixIcon: Icons.verified_user_outlined,
-              ),
-              Gap(20),
-              GeneralTextField(
-                controller: _emailController,
-                hintText: 'Your Email',
-                prefixIcon: Icons.email_outlined,
-                readOnly: true,
-              ),
-              Gap(20),
-              GeneralTextField(
-                controller: _phoneNumberController,
-                hintText: 'Your Phone Number',
-                prefixIcon: Icons.phone_outlined,
-              ),
-              Gap(20),
-              GeneralTextField(
-                controller: _roleController,
-                hintText: 'Nabil Dzikrika',
-                prefixIcon: Icons.supervised_user_circle_outlined,
-                readOnly: true,
+
+              Consumer2<AuthenticationProvider, UserProvider>(
+                builder: (context, authProvider, userProvider, child) {
+                  if (userProvider.editProfileStatus ==
+                      ResponseStatus.loading) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      showLoadingDialog(
+                        context,
+                        text: "Editing your profile...",
+                      );
+                    });
+                  } else if (userProvider.editProfileStatus ==
+                      ResponseStatus.success) {
+                    Navigator.of(context, rootNavigator: true).pop();
+
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      showCustomToast(
+                        context: context,
+                        message: 'Success, your password changed!',
+                        backgroundColor: AppColors.success,
+                        foregroundColor: AppColors.white,
+                        primaryColor: AppColors.white,
+                      );
+                    });
+
+                    _refreshData();
+
+                    userProvider.resetAllStatus();
+                  } else if (userProvider.editProfileStatus ==
+                      ResponseStatus.error) {
+                    Navigator.of(context, rootNavigator: true).pop();
+
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      showCustomToast(
+                        context: context,
+                        message: userProvider.errorMessage ?? '',
+                        backgroundColor: AppColors.error,
+                        foregroundColor: AppColors.white,
+                        primaryColor: AppColors.white,
+                      );
+                    });
+
+                    userProvider.resetAllStatus();
+                  }
+
+                  if (authProvider.getUserFromApiStatus == AuthStatus.loading) {
+                    return WaveLoading();
+                  } else if (authProvider.getUserFromApiStatus ==
+                      AuthStatus.error) {
+                    return Center(child: WaveLoading());
+                  } else {
+                    return Column(
+                      children: [
+                        GeneralTextField(
+                          controller: _nameController,
+                          hintText: 'Your Name',
+                          prefixIcon: Icons.verified_user_outlined,
+                        ),
+                        Gap(20),
+                        GeneralTextField(
+                          controller: _emailController,
+                          hintText: 'Your Email',
+                          prefixIcon: Icons.email_outlined,
+                          readOnly: true,
+                        ),
+                        Gap(20),
+                        GeneralTextField(
+                          controller: _phoneNumberController,
+                          hintText: 'Your Phone Number',
+                          prefixIcon: Icons.phone_outlined,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                        ),
+                        Gap(20),
+                        GeneralTextField(
+                          controller: _roleController,
+                          hintText: 'Nabil Dzikrika',
+                          prefixIcon: Icons.supervised_user_circle_outlined,
+                          readOnly: true,
+                        ),
+                      ],
+                    );
+                  }
+                },
               ),
 
               Spacer(),
@@ -177,9 +344,7 @@ class _AccountDetailsPageState extends State<AccountDetailsPage> {
                     foregroundColor: AppColors.white,
                     minimumSize: Size(100, 55),
                   ),
-                  onPressed: () {
-                    print('confirm editing...');
-                  },
+                  onPressed: editProfile,
                   child: const Text(
                     'Confirm my Editing',
                     style: TextStyle(

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
+import '../../domain/entities/authorization_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/error/failure.dart';
@@ -23,7 +24,10 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   });
 
   @override
-  Future<Either<Failure, User>> signIn(String email, String password) async {
+  Future<Either<Failure, AuthorizationEntity>> signIn(
+    String email,
+    String password,
+  ) async {
     try {
       final List<ConnectivityResult> connectivityResult =
           await (Connectivity().checkConnectivity());
@@ -31,29 +35,20 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
       if (connectivityResult.contains(ConnectivityResult.none)) {
         return Left(ConnectionFailure('No available network connection.'));
       } else {
-        final UserModel result = await authenticationRemoteDataSource.signIn(
+        final result = await authenticationRemoteDataSource.signIn(
           email,
           password,
         );
 
         print('auth-repository-success: ${result}');
 
-        String userJson = jsonEncode(result.toJson());
-        await sharedPreferences.setString("user", userJson);
+        String authorization = jsonEncode(result.toJson());
+        await sharedPreferences.setString("authorization", authorization);
 
-        // if (result.token != null && result.expiresAt != null) {
-        await sharedPreferences.setString(
-          "auth_data",
-          jsonEncode({"token": result.token, "expires_at": result.expiresAt}),
-        );
-        // }
+        final authorizationFromLocal = sharedPreferences.get('authorization');
 
-        final userFromLocal = sharedPreferences.get('user');
-        final tokenFromLocal = sharedPreferences.get('auth_data');
+        print("from-shared-preferences-auth_data: $authorizationFromLocal");
 
-        print("from-shared-preferences-auth_data: $tokenFromLocal");
-
-        print('from-shared-preferences-user: ${userFromLocal}');
         return Right(result);
       }
     } catch (e) {
@@ -185,6 +180,41 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
       print('from getUser(): $userJson');
       final userModel = UserModel.fromJson(jsonDecode(userJson));
       return Right(userModel);
+    } catch (e) {
+      print('Error while get user from local: $e');
+      return Left(SimpleFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> getUserFromApi(String token) async {
+    try {
+      final List<ConnectivityResult> _connectivityResult =
+          await (Connectivity().checkConnectivity());
+
+      if (_connectivityResult.contains(ConnectivityResult.none)) {
+        final userJson = sharedPreferences.getString('user');
+        print('User get from local (getUserFromApi()): $userJson');
+        if (userJson == null) {
+          return Left(SimpleFailure('No user found.'));
+        }
+        print('from local (getUserFromApi()): $userJson');
+        final userModel = UserModel.fromJson(jsonDecode(userJson));
+        return Right(userModel);
+      } else {
+        final user = await authenticationRemoteDataSource.getUserFromApi(token);
+
+        print('from get user from api result: $user');
+
+        String userJson = jsonEncode(user.toJson());
+        sharedPreferences.setString('user', userJson);
+
+        final userLocal = sharedPreferences.getString('user');
+
+        print('from get user from shared preferences after set: $userLocal');
+
+        return Right(user);
+      }
     } catch (e) {
       print('Error while get user from local: $e');
       return Left(SimpleFailure(e.toString()));

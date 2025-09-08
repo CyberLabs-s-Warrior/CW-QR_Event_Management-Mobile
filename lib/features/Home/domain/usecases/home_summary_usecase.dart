@@ -11,8 +11,7 @@ class HomeSummaryUsecase {
 
   Future<Either<Failure, HomeSummaryEntity>> execute(
     String token,
-    int userId,
   ) async {
-    return homeRepository.getHomeSummary(token, userId);
+    return homeRepository.getHomeSummary(token);
   }
 }

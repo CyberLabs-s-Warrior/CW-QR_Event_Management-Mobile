@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../domain/entities/authorization_entity.dart';
+import '../../domain/usecases/get_user_from_api.dart';
 
 import '../../../../core/error/clean_error_message_cleaner.dart';
 import '../../domain/entities/forgot_password.dart';
@@ -25,6 +27,7 @@ class AuthenticationProvider extends ChangeNotifier {
   final Logout logoutUseCase;
   final RecoveryPassword recoveryPasswordUseCase;
   final RefreshToken refreshTokenUsecase;
+  final GetUserFromApi getUserFromApiUsecase;
 
   AuthenticationProvider({
     required this.getUserUseCase,
@@ -34,6 +37,7 @@ class AuthenticationProvider extends ChangeNotifier {
     required this.verifyCodeUseCase,
     required this.recoveryPasswordUseCase,
     required this.refreshTokenUsecase,
+    required this.getUserFromApiUsecase,
   });
 
   // state variable \/ init
@@ -44,8 +48,10 @@ class AuthenticationProvider extends ChangeNotifier {
   AuthStatus _recoveryPasswordStatus = AuthStatus.initial;
   AuthStatus _getUserStatus = AuthStatus.initial;
   AuthStatus _refreshTokenStatus = AuthStatus.initial;
+  AuthStatus _getUserFromApiStatus = AuthStatus.initial;
 
-  User? _currentUser;
+  AuthorizationEntity? _authorization;
+  User? _userProfile;
   late ForgotPasswordEntities _forgotPasswordResult;
   late VerifyCodeEntities _verifyCodeResult;
   late RecoveryPasswordEntity _recoveryPasswordResult;
@@ -60,9 +66,11 @@ class AuthenticationProvider extends ChangeNotifier {
   AuthStatus get recoveryPasswordStatus => _recoveryPasswordStatus;
   AuthStatus get getUserStatus => _getUserStatus;
   AuthStatus get refreshTokenStatus => _refreshTokenStatus;
+  AuthStatus get getUserFromApiStatus => _getUserFromApiStatus;
 
   // getter data location
-  User? get currentUser => _currentUser;
+  AuthorizationEntity? get authorization => _authorization;
+  User? get userProfile => _userProfile;
   ForgotPasswordEntities? get forgotPasswordResult => _forgotPasswordResult;
   VerifyCodeEntities? get verifyCodeResult => _verifyCodeResult;
   RecoveryPasswordEntity? get recoveryPasswordResult => _recoveryPasswordResult;
@@ -78,6 +86,8 @@ class AuthenticationProvider extends ChangeNotifier {
       _recoveryPasswordStatus == AuthStatus.loading;
   bool get isGetUserStatus => _getUserStatus == AuthStatus.loading;
   bool get isRefreshTokenStatus => _refreshTokenStatus == AuthStatus.loading;
+  bool get isGetUserFromApiStatus =>
+      _getUserFromApiStatus == AuthStatus.loading;
 
   String get cleanErrorMessage => _errorMessage.cleanErrorMessage;
 
@@ -96,7 +106,7 @@ class AuthenticationProvider extends ChangeNotifier {
         _setAuthStatus(AuthStatus.error);
       },
       (user) {
-        _currentUser = user;
+        _authorization = user;
         _setAuthStatus(AuthStatus.success);
       },
     );
@@ -165,8 +175,24 @@ class AuthenticationProvider extends ChangeNotifier {
         _setGetUserStatus(AuthStatus.error);
       },
       (user) {
-        _currentUser = user;
+        _userProfile = user;
         _setGetUserStatus(AuthStatus.success);
+      },
+    );
+  }
+
+  Future<void> getUserFromApi({required String token}) async {
+    _setGetUserFromApi(AuthStatus.loading);
+
+    final result = await getUserFromApiUsecase.execute(token);
+    result.fold(
+      (failure) {
+        _errorMessage = failure.message;
+        _setGetUserFromApi(AuthStatus.error);
+      },
+      (user) {
+        _userProfile = user;
+        _setGetUserFromApi(AuthStatus.success);
       },
     );
   }
@@ -209,7 +235,8 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   void resetState() {
-    _currentUser = null;
+    _userProfile = null;
+    _authorization = null;
     notifyListeners();
   }
 
@@ -276,6 +303,10 @@ class AuthenticationProvider extends ChangeNotifier {
     _setRefreshTokenStatus(AuthStatus.initial);
   }
 
+  void _resetGetUserFromApi() {
+    _setGetUserFromApi(AuthStatus.initial);
+  }
+
   void resetAllStatus() {
     resetLogoutStatus();
     resetAuthStatus();
@@ -284,6 +315,7 @@ class AuthenticationProvider extends ChangeNotifier {
     resetRecoveryPasswordStatus();
     resetGetUserStatus();
     resetRefreshToken();
+    _resetGetUserFromApi();
   }
 
   // private method
@@ -319,6 +351,11 @@ class AuthenticationProvider extends ChangeNotifier {
 
   void _setRefreshTokenStatus(AuthStatus status) {
     _refreshTokenStatus = status;
+    notifyListeners();
+  }
+
+  void _setGetUserFromApi(AuthStatus status) {
+    _getUserFromApiStatus = status;
     notifyListeners();
   }
 }

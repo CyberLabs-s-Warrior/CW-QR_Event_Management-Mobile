@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qr_event_management/core/helper/validation_helper.dart';
+import '../helper/validation_helper.dart';
 
 class ValidationProvider extends ChangeNotifier {
   // Error states

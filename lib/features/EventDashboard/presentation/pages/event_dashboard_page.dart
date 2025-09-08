@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:provider/provider.dart';
+import '../../../../gen/alert/toastification.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../../../core/constant/enum_status.dart';
@@ -37,7 +38,7 @@ class _EventDashboardPageState extends State<EventDashboardPage>
     final authProvider = context.read<AuthenticationProvider>();
 
     eventDashboardProvider.getEventById(
-      authProvider.currentUser?.token,
+      authProvider.authorization?.token,
       widget.eventId,
     );
   }
@@ -72,10 +73,12 @@ class _EventDashboardPageState extends State<EventDashboardPage>
             return EventDashboardLoading();
           } else if (!isOnline) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              showCustomSnackBar(
+              showCustomToast(
                 context: context,
                 message: "Connection must be stable",
-                color: AppColors.warning,
+                backgroundColor: AppColors.warning,
+                foregroundColor: AppColors.white,
+                primaryColor: AppColors.white,
               );
             });
             return EventDashboardError(message: "No internet connection");

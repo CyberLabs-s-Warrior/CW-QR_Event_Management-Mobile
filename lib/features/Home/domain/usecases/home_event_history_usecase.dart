@@ -10,7 +10,7 @@ class HomeEventHistoryUsecase {
   HomeEventHistoryUsecase( this.homeRepository);
 
 
-  Future<Either<Failure, List<HomeEventHistoryEntity>>> execute(String token, int userId) {
-    return homeRepository.getHomeEventHistory(token, userId);
+  Future<Either<Failure, List<HomeEventHistoryEntity>>> execute(String token) {
+    return homeRepository.getHomeEventHistory(token);
   } 
 }

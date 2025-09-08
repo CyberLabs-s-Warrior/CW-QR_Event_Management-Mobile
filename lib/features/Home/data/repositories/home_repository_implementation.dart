@@ -26,7 +26,6 @@ class HomeRepositoryImplementation extends HomeRepository {
   @override
   Future<Either<Failure, HomeSummaryEntity>> getHomeSummary(
     String token,
-    int userId,
   ) async {
     try {
       final List<ConnectivityResult> connectivityResult =
@@ -41,7 +40,6 @@ class HomeRepositoryImplementation extends HomeRepository {
       } else {
         HomeSummaryModel result = await homeRemoteDatasource.getHomeSummary(
           token,
-          userId,
         );
 
         print(result);
@@ -58,7 +56,6 @@ class HomeRepositoryImplementation extends HomeRepository {
   @override
   Future<Either<Failure, List<HomeEventHistoryModel>>> getHomeEventHistory(
     String token,
-    int userId,
   ) async {
     try {
       final List<ConnectivityResult> connectivityResult =
@@ -68,16 +65,16 @@ class HomeRepositoryImplementation extends HomeRepository {
         List<HomeEventHistoryModel> result =
             await homeLocalDatasource.getHomeEventHistory();
 
-        print('in repo impl (no conn): $result');
+        // print('in repo impl (no conn): $result');
 
         return Right(result);
       } else {
         List<HomeEventHistoryModel> result = await homeRemoteDatasource
-            .getHomeEventHistory(token, userId);
+            .getHomeEventHistory(token);
 
         sharedPreferences.setString('home_event_history', jsonEncode(result));
 
-        print('in repo impl (conn available): $result');
+        // print('in repo impl (conn available): $result');
 
         return Right(result);
       }

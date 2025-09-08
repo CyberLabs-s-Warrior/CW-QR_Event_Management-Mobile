@@ -2,6 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
+import '../../../User/presentation/provider/user_provider.dart';
+import '../../../../gen/alert/toastification.dart';
+import '../../../../gen/loading/dialog_screen.dart';
 
 import '../../../../core/helper/validation_helper.dart';
 import '../../../../core/provider/validation_provider.dart';
@@ -88,6 +91,7 @@ class _LoginPageState extends State<LoginPage>
     }
   }
 
+
   @override
   void initState() {
     super.initState();
@@ -106,17 +110,32 @@ class _LoginPageState extends State<LoginPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer2<ValidationProvider, AuthenticationProvider>(
-        builder: (context, validationProvider, authProvider, child) {
+      body: Consumer3<ValidationProvider, AuthenticationProvider, UserProvider>(
+        builder: (
+          context,
+          validationProvider,
+          authProvider,
+          userProvider,
+          child,
+        ) {
           // handle login success
           if (authProvider.authStatus == AuthStatus.success) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               authProvider.resetAuthStatus();
 
-              showCustomSnackBar(
+              // get user after auth success
+              authProvider.getUserFromApi(
+                token: authProvider.authorization!.token,
+              );
+
+              authProvider.resetAuthStatus();
+
+              showCustomToast(
                 context: context,
-                message: 'Login Successful',
-                color: AppColors.success,
+                message: "Login Successful",
+                backgroundColor: AppColors.success,
+                foregroundColor: AppColors.white,
+                primaryColor: AppColors.white,
               );
 
               Navigator.pushReplacement(
@@ -131,10 +150,12 @@ class _LoginPageState extends State<LoginPage>
             WidgetsBinding.instance.addPostFrameCallback((_) {
               authProvider.resetAuthStatus();
 
-              showCustomSnackBar(
+              showCustomToast(
                 context: context,
                 message: authProvider.cleanErrorMessage,
-                color: AppColors.error,
+                backgroundColor: AppColors.warning,
+                foregroundColor: AppColors.white,
+                primaryColor: AppColors.white,
               );
             });
           }

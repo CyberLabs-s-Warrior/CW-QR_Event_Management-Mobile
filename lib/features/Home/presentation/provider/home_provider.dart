@@ -24,7 +24,7 @@ class HomeProvider extends ChangeNotifier {
   //? HomeSummary
   HomeStatus _homeSummaryStatus = HomeStatus.initial;
   HomeSummaryEntity? _homeSummary;
-  // here
+
   Timer? _autoTimer;
   bool _disposed = false;
   // getter
@@ -42,16 +42,16 @@ class HomeProvider extends ChangeNotifier {
 
   Future<void> getHomeSummary({
     required String token,
-    required int userId,
+   
   }) async {
-    // here
+  
 
-    final result = await homeSummaryUsecase.execute(token, userId);
+    final result = await homeSummaryUsecase.execute(token);
     print('from provider: $result');
 
     result.fold(
       (failure) {
-        // here
+        
         print(
           'error message: ${failure.message}, result: ${result}, all failure: $failure',
         );
@@ -79,10 +79,10 @@ class HomeProvider extends ChangeNotifier {
 
   Future<void> getHomeEventHistory({
     required String token,
-    required int userId,
+   
   }) async {
     try {
-      final result = await homeEventHistoryUsecase.execute(token, userId);
+      final result = await homeEventHistoryUsecase.execute(token);
 
       result.fold(
         (failure) {
@@ -109,11 +109,11 @@ class HomeProvider extends ChangeNotifier {
 
   Future<void> getHomeSummaryRefresh({
     required String token,
-    required int userId,
+   
   }) async {
     _setHomeSummaryStatus(HomeStatus.loading);
 
-    final result = await homeSummaryUsecase.execute(token, userId);
+    final result = await homeSummaryUsecase.execute(token);
     print('from provider: $result');
 
     result.fold(
@@ -133,12 +133,12 @@ class HomeProvider extends ChangeNotifier {
 
   Future<void> getHomeEventHistoryRefresh({
     required String token,
-    required int userId,
+   
   }) async {
     try {
       _setHomeSummaryStatus(HomeStatus.loading);
 
-      final result = await homeEventHistoryUsecase.execute(token, userId);
+      final result = await homeEventHistoryUsecase.execute(token);
 
       result.fold(
         (failure) {
@@ -173,29 +173,29 @@ class HomeProvider extends ChangeNotifier {
 
   void refreshAutoRefresh({
     required String token,
-    required int userId,
+   
     Duration interval = const Duration(seconds: 5),
   }) {
     stopAutoRefresh();
-    startAutoRefresh(interval: interval, token: token, userId: userId);
+    startAutoRefresh(interval: interval, token: token);
   }
 
-  // here
+  
   // start auto refresh setiap interval (default 5 detik)
   void startAutoRefresh({
     Duration interval = const Duration(seconds: 5),
     required String token,
-    required int userId,
+   
   }) {
     _autoTimer?.cancel();
     // Fetch pertama segera
-    getHomeSummary(token: token, userId: userId);
-    getHomeEventHistory(token: token, userId: userId);
+    getHomeSummary(token: token);
+    getHomeEventHistory(token: token);
 
     _autoTimer = Timer.periodic(interval, (_) {
       if (_disposed) return;
-      getHomeSummary(token: token, userId: userId);
-      getHomeEventHistory(token: token, userId: userId);
+      getHomeSummary(token: token);
+      getHomeEventHistory(token: token);
     });
   }
 

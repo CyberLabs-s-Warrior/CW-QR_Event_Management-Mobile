@@ -17,7 +17,7 @@ void showCustomSnackBar({
         content: content ?? Text(message),
         backgroundColor: color ?? AppColors.primary,
         margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).size.height - 100,
+          bottom: MediaQuery.of(context).size.height - 130,
           left: left ?? 10,
           right: right ?? 10,
       ),

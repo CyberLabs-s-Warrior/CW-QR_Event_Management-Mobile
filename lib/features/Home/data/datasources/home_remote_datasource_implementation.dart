@@ -15,12 +15,10 @@ class HomeRemoteDatasourceImplementation extends HomeRemoteDatasource {
   HomeRemoteDatasourceImplementation({required this.client});
 
   @override
-  Future<HomeSummaryModel> getHomeSummary(String token, int userId) async {
+  Future<HomeSummaryModel> getHomeSummary(String token) async {
     try {
-      print('user_id: $userId');
-
       final response = await client.get(
-        Uri.parse(Constant.endpoint("/user/$userId/events-summary")),
+        Uri.parse(Constant.endpoint("/user/events-summary")),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -29,7 +27,7 @@ class HomeRemoteDatasourceImplementation extends HomeRemoteDatasource {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> data = jsonDecode(response.body);
-        print('result body: $data');
+        // print('result body: $data');
         return HomeSummaryModel.fromJson(data);
       } else if (response.statusCode == 404) {
         throw StatusCodeException(message: "Data not found - Error");
@@ -48,11 +46,10 @@ class HomeRemoteDatasourceImplementation extends HomeRemoteDatasource {
   @override
   Future<List<HomeEventHistoryModel>> getHomeEventHistory(
     String token,
-    int userId,
   ) async {
     try {
       final response = await client.get(
-        Uri.parse(Constant.endpoint('/user/$userId/events-history')),
+        Uri.parse(Constant.endpoint('/user/events-history')),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -64,7 +61,7 @@ class HomeRemoteDatasourceImplementation extends HomeRemoteDatasource {
         if (dataBody.isEmpty) {
           throw EmptyException(message: "Empty Data - Error");
         }
-        print('result body | event history: $dataBody');
+        // print('result body | event history: $dataBody');
         return HomeEventHistoryModel.fromJsonList(dataBody);
       } else if (response.statusCode == 404) {
         throw EmptyException(message: "Data not found - Error");

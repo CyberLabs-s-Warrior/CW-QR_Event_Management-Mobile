@@ -46,9 +46,9 @@ class GeneralTextField extends StatelessWidget {
           cursorColor: Colors.blue,
           readOnly: readOnly ?? false,
           onChanged: onChanged,
-          keyboardType: keyboardType ?? TextInputType.number,
+          keyboardType: keyboardType,
           inputFormatters:
-              inputFormatters ?? [FilteringTextInputFormatter.digitsOnly],
+              inputFormatters,
 
           decoration: InputDecoration(
             hintText: hintText,
