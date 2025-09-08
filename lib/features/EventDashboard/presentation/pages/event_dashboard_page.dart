@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
+import 'package:iconify_flutter/icons/ic.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/pages/event_dashboard_attendees_checked_in_page.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/pages/event_dashboard_pending_attendees_page.dart';
 import 'package:qr_event_management/features/EventDashboard/presentation/widgets/event_dashboard_floating_button.dart';
 import 'package:qr_event_management/features/EventDashboard/presentation/widgets/event_dashboard_head.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/widgets/event_dashboard_item.dart';
 import 'package:qr_event_management/features/EventDashboard/presentation/widgets/event_dashboard_refresh_data.dart';
 import '../../../../gen/alert/toastification.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
@@ -93,51 +97,94 @@ class _EventDashboardPageState extends State<EventDashboardPage>
             return SafeArea(
               child: Stack(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        height: 550,
-                        decoration: BoxDecoration(
-                          color: AppColors.eventDashboard,
+                  SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: 650,
+                          decoration: BoxDecoration(
+                            color: AppColors.eventDashboard,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Gap(30),
+
+                                EventDashboardHead(
+                                  widget: widget,
+                                  eventDashboardProvider:
+                                      eventDashboardProvider,
+                                  authProvider: authProvider,
+                                ),
+
+                                Gap(50),
+
+                                EventRegistrationPercentage(),
+
+                                Gap(50),
+
+                                CheckInAndNotCheckIn(),
+
+                                Gap(50),
+
+                                Column(
+                                  children: [
+                                    EventDashboardItem(
+                                      title: 'Pending Attendees',
+                                      count: '35',
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (_) =>
+                                                    EventDashboardPendingAttendeesPage(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    Gap(10),
+                                    EventDashboardItem(
+                                      title: 'Attendees Checked-In',
+                                      count: '30',
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (_) =>
+                                                    EventDashboardAttendeesCheckedInPage(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 40.0,
+                            vertical: 20,
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Gap(30),
-
-                              EventDashboardHead(
-                                widget: widget,
-                                eventDashboardProvider: eventDashboardProvider,
-                                authProvider: authProvider,
-                              ),
-
-                              Gap(50),
-
-                              EventRegistrationPercentage(),
-
-                              Gap(50),
-
-                              CheckInAndNotCheckIn(),
+                              Text('Event Logs'),
                             ],
                           ),
                         ),
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 40.0,
-                          vertical: 20,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [Text('Event Logs')],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
 
                   EventDashboardFloatingButton(
