@@ -35,6 +35,8 @@ class LandingEventRepositoryImplementation implements LandingEventRepository {
         List<EventEntity> result =
             await landingEventLocalDatasource.getEventOngoing();
 
+        print('event ongoing local: $result');
+
         return Right(result);
       } else {
         List<EventEntity> result = await landingEventRemoteDataSource

@@ -64,6 +64,9 @@ void logoutEasy(context) async {
     listen: false,
   );
 
+    print('from authorization local: ${authProvider.authorization!.token}');
+
+
   final homeProvider = Provider.of<HomeProvider>(context, listen: false);
 
   await authProvider.logout();
