@@ -36,7 +36,7 @@ class _QRViewTestState extends State<QRViewTest>
 
   late AnimationController _animationController;
   late Animation<double> _animation;
-
+  
   ScanMode _currentScanMode = ScanMode.attendance;
 
   @override
@@ -212,7 +212,7 @@ class _QRViewTestState extends State<QRViewTest>
                   ),
                 ],
               ),
-              child: EventDashboardScanIdentityCheckResult(),
+              child: _currentScanMode == ScanMode.attendance ? EventDashboardScanAttendanceResult() :  EventDashboardScanIdentityCheckResult(),
 
               // child: Center(
               //   child:
