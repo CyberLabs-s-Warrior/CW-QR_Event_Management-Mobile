@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
-import 'package:qr_event_management/features/Authentication/data/models/authorization_model.dart';
+import '../models/authorization_model.dart';
 import '../../domain/entities/authorization_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

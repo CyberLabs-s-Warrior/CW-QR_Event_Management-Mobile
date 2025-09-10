@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
-import 'package:qr_event_management/features/Authentication/presentation/provider/authentication_provider.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/pages/event_dashboard_page.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../Authentication/presentation/provider/authentication_provider.dart';
+import '../pages/event_dashboard_page.dart';
+import '../provider/event_dashboard_provider.dart';
 
 import 'event_dashboard_refresh_data.dart';
 

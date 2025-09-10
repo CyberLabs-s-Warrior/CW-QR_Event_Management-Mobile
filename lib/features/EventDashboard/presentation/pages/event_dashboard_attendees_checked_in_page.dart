@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
-import 'package:qr_event_management/widgets/general_back_button.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../widgets/general_back_button.dart';
 
 class EventDashboardAttendeesCheckedInPage extends StatefulWidget {
   const EventDashboardAttendeesCheckedInPage({super.key});

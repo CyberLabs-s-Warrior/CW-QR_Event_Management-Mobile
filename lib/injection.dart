@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
-import 'package:qr_event_management/features/Authentication/domain/usecases/get_authorization.dart';
+import 'features/Authentication/domain/usecases/get_authorization.dart';
 import 'features/Authentication/domain/usecases/get_user_from_api.dart';
 import 'features/User/data/datasources/user_remote_datasource.dart';
 import 'features/User/data/repositories/user_repository_implementation.dart';

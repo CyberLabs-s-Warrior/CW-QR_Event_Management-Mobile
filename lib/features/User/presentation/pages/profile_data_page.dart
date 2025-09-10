@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/helper/convert_to_formatted_phone.dart';
-import '../../../Authentication/presentation/provider/authentication_provider.dart';
-import '../../../../gen/loading/wave_loading.dart';
 
+import '../../../../core/helper/convert_to_formatted_phone.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../gen/loading/wave_loading.dart';
 import '../../../../widgets/text_fields.dart';
+import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../../../Authentication/presentation/widgets/back_button.dart';
 
 class ProfileDataPage extends StatefulWidget {

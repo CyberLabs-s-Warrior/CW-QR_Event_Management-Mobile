@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:qr_event_management/features/Authentication/domain/entities/authorization_entity.dart';
+import '../entities/authorization_entity.dart';
 
 import '../../../../core/error/failure.dart';
 import '../repositories/authentication_repository.dart';

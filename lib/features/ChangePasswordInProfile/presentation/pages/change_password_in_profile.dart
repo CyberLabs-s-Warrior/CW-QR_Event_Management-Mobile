@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/provider/network_status_provider.dart';
-import '../../../../core/provider/validation_provider.dart';
-import '../../../../gen/alert/toastification.dart';
 
 import '../../../../core/constant/enum_status.dart';
+import '../../../../core/provider/validation_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../gen/alert/toastification.dart';
 import '../../../../gen/loading/dialog_screen.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../../../Authentication/presentation/widgets/back_button.dart';

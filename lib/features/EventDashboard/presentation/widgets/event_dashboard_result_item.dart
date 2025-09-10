@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/widgets/event_dashboard_result_item_content_widget.dart';
+import 'event_dashboard_result_item_content_widget.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class EventDashboardResultItem extends StatelessWidget {

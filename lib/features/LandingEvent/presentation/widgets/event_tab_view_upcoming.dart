@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/features/LandingEvent/presentation/widgets/event_empty_state.dart';
+import 'event_empty_state.dart';
 
 import '../../../../core/constant/enum_status.dart';
 import '../../../../gen/loading/wave_loading.dart';

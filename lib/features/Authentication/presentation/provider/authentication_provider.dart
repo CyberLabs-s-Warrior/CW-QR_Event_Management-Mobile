@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qr_event_management/features/Authentication/domain/usecases/get_authorization.dart';
+import '../../domain/usecases/get_authorization.dart';
 import '../../domain/entities/authorization_entity.dart';
 import '../../domain/usecases/get_user_from_api.dart';
 

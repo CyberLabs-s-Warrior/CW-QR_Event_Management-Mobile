@@ -11,7 +11,7 @@ import 'package:iconify_flutter/icons/mi.dart';
 import 'package:iconify_flutter/icons/ri.dart';
 import 'package:iconify_flutter/icons/uil.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/widgets/event_dashboard_result_item.dart';
+import '../widgets/event_dashboard_result_item.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../../../core/theme/app_colors.dart';

@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import '../../../EventDashboard/presentation/pages/event_dashboard_page.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../../../core/constant/constant.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../EventDashboard/presentation/pages/event_dashboard_page.dart';
 
 class HomeEventHistoryItem extends StatelessWidget {
   final String title;

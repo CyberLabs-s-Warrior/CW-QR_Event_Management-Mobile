@@ -4,14 +4,12 @@ import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/controller/inner_tab_controller.dart';
-import '../../../../core/scope/landing_tabs_scope.dart';
-import '../../../User/presentation/pages/profile_data_page.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../../../Notification/presentation/pages/notification_page.dart';
+import '../../../User/presentation/pages/profile_data_page.dart';
 
 class HomeLandingHead extends StatefulWidget {
   final int tabIndex;

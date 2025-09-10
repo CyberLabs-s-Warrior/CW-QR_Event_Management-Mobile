@@ -4,12 +4,12 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/pages/event_dashboard_attendees_checked_in_page.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/pages/event_dashboard_pending_attendees_page.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/widgets/event_dashboard_floating_button.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/widgets/event_dashboard_head.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/widgets/event_dashboard_item.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/widgets/event_dashboard_refresh_data.dart';
+import 'event_dashboard_attendees_checked_in_page.dart';
+import 'event_dashboard_pending_attendees_page.dart';
+import '../widgets/event_dashboard_floating_button.dart';
+import '../widgets/event_dashboard_head.dart';
+import '../widgets/event_dashboard_item.dart';
+import '../widgets/event_dashboard_refresh_data.dart';
 import '../../../../gen/alert/toastification.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 

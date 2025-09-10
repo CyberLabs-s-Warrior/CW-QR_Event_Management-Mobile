@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart';
+
 import '../../../../core/constant/enum_status.dart';
+import '../../../../core/error/clean_error_message_cleaner.dart';
 import '../../domain/entities/event_entity.dart';
 import '../../domain/usecases/get_event_by_id_usecase.dart';
-import '../../../../core/error/clean_error_message_cleaner.dart';
 
 class EventDashboardProvider extends ChangeNotifier {
   final GetEventByIdUsecase getEventByIdUsecase;

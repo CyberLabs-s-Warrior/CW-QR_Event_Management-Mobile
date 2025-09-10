@@ -2,15 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
-import '../../../User/presentation/provider/user_provider.dart';
-import '../../../../gen/alert/toastification.dart';
-import '../../../../gen/loading/dialog_screen.dart';
 
 import '../../../../core/helper/validation_helper.dart';
 import '../../../../core/provider/validation_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../gen/alert/snack_bar.dart';
+import '../../../../gen/alert/toastification.dart';
 import '../../../Landing/presentation/pages/landing_page.dart';
+import '../../../User/presentation/provider/user_provider.dart';
 import '../provider/authentication_provider.dart';
 import '../widgets/text_field.dart';
 import '../widgets/text_field_digits.dart';
