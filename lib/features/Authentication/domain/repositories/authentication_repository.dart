@@ -31,7 +31,9 @@ abstract class AuthenticationRepository {
     String newPasswordConfirmation
   );
 
-  Future<Either<Failure, bool>> refreshToken();
+  Future<Either<Failure, AuthorizationEntity>> getAuthorization();
+
+  Future<Either<Failure, AuthorizationEntity>> refreshToken(String token);
 
   Future<Either<Failure, bool>> logout();
 }

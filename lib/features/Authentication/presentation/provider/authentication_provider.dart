@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_event_management/features/Authentication/domain/usecases/get_authorization.dart';
 import '../../domain/entities/authorization_entity.dart';
 import '../../domain/usecases/get_user_from_api.dart';
 
@@ -28,6 +29,7 @@ class AuthenticationProvider extends ChangeNotifier {
   final RecoveryPassword recoveryPasswordUseCase;
   final RefreshToken refreshTokenUsecase;
   final GetUserFromApi getUserFromApiUsecase;
+  final GetAuthorization getAuthorizationUsecase;
 
   AuthenticationProvider({
     required this.getUserUseCase,
@@ -38,6 +40,7 @@ class AuthenticationProvider extends ChangeNotifier {
     required this.recoveryPasswordUseCase,
     required this.refreshTokenUsecase,
     required this.getUserFromApiUsecase,
+    required this.getAuthorizationUsecase,
   });
 
   // state variable \/ init
@@ -49,6 +52,7 @@ class AuthenticationProvider extends ChangeNotifier {
   AuthStatus _getUserStatus = AuthStatus.initial;
   AuthStatus _refreshTokenStatus = AuthStatus.initial;
   AuthStatus _getUserFromApiStatus = AuthStatus.initial;
+  AuthStatus _getAuthorizationStatus = AuthStatus.initial;
 
   AuthorizationEntity? _authorization;
   User? _userProfile;
@@ -67,6 +71,7 @@ class AuthenticationProvider extends ChangeNotifier {
   AuthStatus get getUserStatus => _getUserStatus;
   AuthStatus get refreshTokenStatus => _refreshTokenStatus;
   AuthStatus get getUserFromApiStatus => _getUserFromApiStatus;
+  AuthStatus get getAuthorizationStatus => _getAuthorizationStatus;
 
   // getter data location
   AuthorizationEntity? get authorization => _authorization;
@@ -181,6 +186,22 @@ class AuthenticationProvider extends ChangeNotifier {
     );
   }
 
+  Future<void> getAuthorization() async {
+    _setGetAuthorization(AuthStatus.loading);
+
+    final result = await getAuthorizationUsecase.execute();
+    result.fold(
+      (failure) {
+        _errorMessage = failure.message;
+        _setGetAuthorization(AuthStatus.error);
+      },
+      (authorization) {
+        _authorization = authorization;
+        _setGetAuthorization(AuthStatus.success);
+      },
+    );
+  }
+
   Future<void> getUserFromApi({required String token}) async {
     _setGetUserFromApi(AuthStatus.loading);
 
@@ -216,25 +237,28 @@ class AuthenticationProvider extends ChangeNotifier {
     );
   }
 
-  Future<void> refreshToken() async {
+  Future<void> refreshToken(String token) async {
     _setRefreshTokenStatus(AuthStatus.loading);
 
-    final result = await refreshTokenUsecase.execute();
+    final result = await refreshTokenUsecase.execute(token);
 
     result.fold(
       (failure) {
         print('Logout failed : ${failure.message}');
         _setRefreshTokenStatus(AuthStatus.error);
       },
-      (success) {
-        print('logout successful');
+      (authZ) {
+        print('Refresh token successful');
+        _authorization = authZ;
 
-        _setRefreshTokenStatus(AuthStatus.error);
+        print('authZ provider: $_authorization');
+        _setRefreshTokenStatus(AuthStatus.success);
       },
     );
   }
 
   void resetState() {
+    print('logout easy runned');
     _userProfile = null;
     _authorization = null;
     notifyListeners();
@@ -307,6 +331,10 @@ class AuthenticationProvider extends ChangeNotifier {
     _setGetUserFromApi(AuthStatus.initial);
   }
 
+  void _resetGetAuthorization() {
+    _setGetAuthorization(AuthStatus.initial);
+  }
+
   void resetAllStatus() {
     resetLogoutStatus();
     resetAuthStatus();
@@ -316,6 +344,7 @@ class AuthenticationProvider extends ChangeNotifier {
     resetGetUserStatus();
     resetRefreshToken();
     _resetGetUserFromApi();
+    _resetGetAuthorization();
   }
 
   // private method
@@ -356,6 +385,11 @@ class AuthenticationProvider extends ChangeNotifier {
 
   void _setGetUserFromApi(AuthStatus status) {
     _getUserFromApiStatus = status;
+    notifyListeners();
+  }
+
+  void _setGetAuthorization(AuthStatus status) {
+    _getAuthorizationStatus = status;
     notifyListeners();
   }
 }

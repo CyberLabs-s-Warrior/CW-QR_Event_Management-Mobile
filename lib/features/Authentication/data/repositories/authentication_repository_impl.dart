@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
+import 'package:qr_event_management/features/Authentication/data/models/authorization_model.dart';
 import '../../domain/entities/authorization_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -48,6 +49,13 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
         final authorizationFromLocal = sharedPreferences.get('authorization');
 
         print("from-shared-preferences-auth_data: $authorizationFromLocal");
+
+        String user = jsonEncode(result.toJson());
+        await sharedPreferences.setString("user", user);
+
+        final userFromLocal = sharedPreferences.get('user');
+
+        print("from-shared-preferences-auth_data: $userFromLocal");
 
         return Right(result);
       }
@@ -186,6 +194,26 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
     }
   }
 
+  // authorization
+  @override
+  Future<Either<Failure, AuthorizationEntity>> getAuthorization() async {
+    try {
+      final authorizationJson = sharedPreferences.getString('authorization');
+      print('Authorization get from local: $authorizationJson');
+      if (authorizationJson == null) {
+        return Left(SimpleFailure('No authorization found.'));
+      }
+      print('from getAuthorization(): $authorizationJson');
+      final authorizationModel = AuthorizationModel.fromJson(
+        jsonDecode(authorizationJson),
+      );
+      return Right(authorizationModel);
+    } catch (e) {
+      print('Error while get user from local: $e');
+      return Left(SimpleFailure(e.toString()));
+    }
+  }
+
   @override
   Future<Either<Failure, User>> getUserFromApi(String token) async {
     try {
@@ -258,34 +286,30 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> refreshToken() async {
+  Future<Either<Failure, AuthorizationEntity>> refreshToken(token) async {
     try {
       final List<ConnectivityResult> connectivityResult =
           await (Connectivity().checkConnectivity());
 
       if (connectivityResult.contains(ConnectivityResult.none)) {
-        print(
-          'No connection found, clearing local data without logout endpoint',
-        );
+        // if (token.isEmpty) {
+        //   return Left(GeneralFailure('No credentials found!'));
+        // }
 
-        return _clearLocalData();
+        return Left(GeneralFailure('No connection available!'));
       } else {
-        final userResult = await getUser();
+        final result = await authenticationRemoteDataSource.refreshToken(token);
 
-        return userResult.fold(
-          (failure) {
-            // no user found, just clear local data
-            print('No user found for logout, clearing local data');
-            return Right(false);
-          },
-          (user) async {
-            // user found, logout from server first
-            if (user.token.isNotEmpty) {
-              await authenticationRemoteDataSource.refreshToken(user!.token);
-            }
-            return Right(true);
-          },
-        );
+        print('auth-repository-impl-refresh-token-success: ${result}');
+
+        String authorization = jsonEncode(result.toJson());
+        await sharedPreferences.setString("authorization", authorization);
+
+        final authorizationFromLocal = sharedPreferences.get('authorization');
+
+        print("from-shared-preferences-authZ_data: $authorizationFromLocal");
+
+        return Right(result);
       }
     } catch (e) {
       print('Logout Error: $e');

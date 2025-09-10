@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:qr_event_management/features/EventDashboard/data/models/event_model.dart';
 
 import '../../../../core/constant/constant.dart';
 import '../../../../core/error/exceptions.dart';
@@ -35,7 +36,7 @@ abstract class AuthenticationRemoteDataSource {
 
   Future<UserModel> getUserFromApi(String token);
 
-  Future<void> refreshToken(String token);
+  Future<AuthorizationModel> refreshToken(String token);
 }
 
 class AuthenticationRemoteDataSourceImplementation
@@ -243,17 +244,22 @@ class AuthenticationRemoteDataSourceImplementation
   }
 
   @override
-  Future<void> refreshToken(String token) async {
+  Future<AuthorizationModel> refreshToken(String token) async {
     try {
       final response = await client.get(
         Uri.parse(Constant.endpoint('/user/refresh-token')),
-        headers: {"Content-Type": "application/json", "Authorization": ""},
+        headers: {"Content-Type": "application/json", "Authorization": "Bearer $token"},
       );
 
       if (response.statusCode == 200) {
-        // print('Success Refreshed');
+        print('from refresh-token auth remote-datasource: success refreshed');
+
+        Map<String, dynamic> body = jsonDecode(response.body);
+
+        return AuthorizationModel.fromJson(body);
       } else {
-        // print('Logout failed on server, but will clear local data anywayy');
+        print('from refresh-token auth remote-datasource: logout failed on server, but will clear local data anywayy');
+        throw ServerException(message: 'Something went happen');
       }
     } catch (e) {
       throw GeneralException(message: e.toString());
