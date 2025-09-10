@@ -7,16 +7,23 @@ import '../../domain/usecases/get_event_by_id_usecase.dart';
 
 class EventDashboardProvider extends ChangeNotifier {
   final GetEventByIdUsecase getEventByIdUsecase;
+  // final ScanAttendanceUsecase scanAttendanceUsecase;
 
-  EventDashboardProvider({required this.getEventByIdUsecase});
+  EventDashboardProvider({
+    required this.getEventByIdUsecase,
+    // required this.scanAttendanceUsecase
+  });
 
+  //? init
   String? _errorMessage;
 
+  // dashboard
   EventEntity? _event;
+  
 
   ResponseStatus _eventStatus = ResponseStatus.initial;
 
-  // getters
+  //? getters
   String get cleanErrorMessage => _errorMessage.cleanErrorMessage;
   EventEntity? get event => _event;
   ResponseStatus get eventStatus => _eventStatus;

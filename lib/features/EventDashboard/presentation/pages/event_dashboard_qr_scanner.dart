@@ -11,6 +11,7 @@ import 'package:iconify_flutter/icons/mi.dart';
 import 'package:iconify_flutter/icons/ri.dart';
 import 'package:iconify_flutter/icons/uil.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/pages/event_dashboard_attendance_result_page.dart';
 import '../widgets/event_dashboard_result_item.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
@@ -36,7 +37,7 @@ class _QRViewTestState extends State<QRViewTest>
 
   late AnimationController _animationController;
   late Animation<double> _animation;
-  
+
   ScanMode _currentScanMode = ScanMode.attendance;
 
   @override
@@ -149,47 +150,47 @@ class _QRViewTestState extends State<QRViewTest>
       body: Stack(
         children: <Widget>[
           // qrscanner
-          // QRView(
-          //   key: qrKey,
-          //   onQRViewCreated: _onQRViewCreated,
-          //   overlay: QrScannerOverlayShape(
-          //     borderColor: Colors.blue,
-          //     borderRadius: 10,
-          //     borderLength: 30,
-          //     borderWidth: 8,
-          //     cutOutSize: cutOutSize,
-          //     overlayColor: Colors.black.withOpacity(0.5),
-          //   ),
-          // ),
+          QRView(
+            key: qrKey,
+            onQRViewCreated: _onQRViewCreated,
+            overlay: QrScannerOverlayShape(
+              borderColor: Colors.blue,
+              borderRadius: 10,
+              borderLength: 30,
+              borderWidth: 8,
+              cutOutSize: cutOutSize,
+              overlayColor: Colors.black.withOpacity(0.5),
+            ),
+          ),
 
           // scan line
-          // Positioned.fill(
-          //   child: Center(
-          //     child: ClipRRect(
-          //       borderRadius: BorderRadius.circular(14),
-          //       child: SizedBox(
-          //         width: cutOutSize,
-          //         height: cutOutSize,
-          //         child: AnimatedBuilder(
-          //           animation: _animation,
-          //           builder: (context, child) {
-          //             return Align(
-          //               alignment: Alignment(0, (2 * _animation.value) - 1),
-          //               child: ImageFiltered(
-          //                 imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          //                 child: Container(
-          //                   height: 4,
-          //                   width: cutOutSize,
-          //                   color: Colors.blueAccent.withOpacity(0.8),
-          //                 ),
-          //               ),
-          //             );
-          //           },
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          Positioned.fill(
+            child: Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: SizedBox(
+                  width: cutOutSize,
+                  height: cutOutSize,
+                  child: AnimatedBuilder(
+                    animation: _animation,
+                    builder: (context, child) {
+                      return Align(
+                        alignment: Alignment(0, (2 * _animation.value) - 1),
+                        child: ImageFiltered(
+                          imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Container(
+                            height: 4,
+                            width: cutOutSize,
+                            color: Colors.blueAccent.withOpacity(0.8),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
 
           // result & tab
           Positioned(
@@ -212,7 +213,10 @@ class _QRViewTestState extends State<QRViewTest>
                   ),
                 ],
               ),
-              child: _currentScanMode == ScanMode.attendance ? EventDashboardScanAttendanceResult() :  EventDashboardScanIdentityCheckResult(),
+              child:
+                  _currentScanMode == ScanMode.attendance
+                      ? EventDashboardScanAttendanceResult()
+                      : EventDashboardScanIdentityCheckResult(),
 
               // child: Center(
               //   child:
@@ -363,9 +367,7 @@ class _QRViewTestState extends State<QRViewTest>
 }
 
 class EventDashboardScanIdentityCheckResult extends StatelessWidget {
-  const EventDashboardScanIdentityCheckResult({
-    super.key,
-  });
+  const EventDashboardScanIdentityCheckResult({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -387,10 +389,7 @@ class EventDashboardScanIdentityCheckResult extends StatelessWidget {
                 EventDashboardResultItem(
                   title: 'Details',
                   isBadge: false,
-                  icon: Iconify(
-                    Ph.file_text,
-                    color: AppColors.primary,
-                  ),
+                  icon: Iconify(Ph.file_text, color: AppColors.primary),
                   onTap: () {
                     print('clicked');
                   },
@@ -408,10 +407,7 @@ class EventDashboardScanIdentityCheckResult extends StatelessWidget {
                 EventDashboardResultItem(
                   title: 'Status',
                   isBadge: true,
-                  icon: Iconify(
-                    Ph.check_circle,
-                    color: AppColors.primary,
-                  ),
+                  icon: Iconify(Ph.check_circle, color: AppColors.primary),
                   isScannedStatus: true,
                 ),
               ],
@@ -454,8 +450,16 @@ class EventDashboardScanAttendanceResult extends StatelessWidget {
                 EventDashboardResultItem(
                   title: 'Details',
                   isBadge: false,
-                  icon: Iconify(Uil.phone, color: AppColors.primary),
+                  icon: Iconify(Ph.file_text, color: AppColors.primary),
 
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => EventDashboardAttendanceResultPage(),
+                      ),
+                    );
+                  },
                   textContent: "Click Me!",
                 ),
               ],
@@ -493,4 +497,3 @@ class EventDashboardScanAttendanceResult extends StatelessWidget {
     );
   }
 }
-
