@@ -5,18 +5,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/clarity.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
-import 'package:iconify_flutter/icons/mi.dart';
 import 'package:iconify_flutter/icons/ri.dart';
 import 'package:iconify_flutter/icons/uil.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:qr_event_management/features/EventDashboard/presentation/pages/event_dashboard_attendance_result_page.dart';
 import '../widgets/event_dashboard_result_item.dart';
-import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import 'package:iconify_flutter/icons/jam.dart';
 import 'package:iconify_flutter/icons/ph.dart';
 import '../../../../widgets/general_back_button.dart';
 
@@ -114,6 +110,9 @@ class _QRViewTestState extends State<QRViewTest>
                           ListTile(
                             leading: const Iconify(Ri.qr_scan_fill),
                             title: const Text('Scanner Options'),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(99),
+                            ),
                             onTap: () {
                               Navigator.pop(context);
                               scannerOptionsModalBottomSheet(context);
@@ -122,6 +121,9 @@ class _QRViewTestState extends State<QRViewTest>
                           ListTile(
                             leading: const Iconify(MaterialSymbols.flash_on),
                             title: const Text('Toggle Flash'),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(99),
+                            ),
                             onTap: () {
                               controller?.toggleFlash();
                               Navigator.pop(context);
@@ -132,6 +134,9 @@ class _QRViewTestState extends State<QRViewTest>
                               MaterialSymbols.flip_camera_ios,
                             ),
                             title: const Text('Flip Camera'),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(99),
+                            ),
                             onTap: () {
                               controller?.flipCamera();
                               Navigator.pop(context);
@@ -350,6 +355,7 @@ class _QRViewTestState extends State<QRViewTest>
                     Navigator.pop(context);
                   },
                 ),
+                Gap(20),
               ],
             ),
           ),

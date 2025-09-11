@@ -83,7 +83,7 @@ class _EventTabViewUpcomingState extends State<EventTabViewUpcoming> {
                             true)
                         ? EventEmptyState(text: "No upcoming events found")
                         : ListView.builder(
-                          physics: const AlwaysScrollableScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           itemCount:
                               landingEventProvider.landingEventUpcoming!.length,
                           itemBuilder: (context, index) {
