@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/attendee.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/attendee_with_attendance_entity.dart';
+import '../../../../../core/theme/app_colors.dart';
+import '../../../domain/entities/attendee_with_attendance_entity.dart';
 
 class EventDashboardAttendeesItem extends StatefulWidget {
   final bool? isSelected;

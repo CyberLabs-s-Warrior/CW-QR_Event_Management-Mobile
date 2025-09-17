@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
-import 'event_empty_state.dart';
 
 import '../../../../core/constant/enum_status.dart';
 import '../../../../gen/loading/wave_loading.dart';
 import '../../../../gen/scroll/scroll_to_up_button.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../provider/landing_event_provider.dart';
+import 'event_empty_state.dart';
 import 'event_landing_card.dart';
 
 class EventTabViewUpcoming extends StatefulWidget {

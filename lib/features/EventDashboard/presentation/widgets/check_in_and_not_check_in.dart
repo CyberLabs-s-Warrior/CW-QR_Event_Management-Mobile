@@ -3,8 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ep.dart';
 import 'package:iconify_flutter/icons/ion.dart';
-import 'package:iconify_flutter/icons/mdi.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
+import '../provider/event_dashboard_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class CheckInAndNotCheckIn extends StatelessWidget {

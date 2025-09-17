@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/attendee_with_attendance_entity.dart';
+
+import 'attendee_with_attendance_entity.dart';
 
 class ListAttendeesEntity extends Equatable {
   final List<AttendeeWithAttendanceEntity> attendeeWithAttendance;

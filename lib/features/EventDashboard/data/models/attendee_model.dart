@@ -1,4 +1,4 @@
-import 'package:qr_event_management/features/EventDashboard/domain/entities/attendee.dart';
+import '../../domain/entities/attendee.dart';
 
 class AttendeeModel extends AttendeeEntity {
   final String firstName;
@@ -27,7 +27,7 @@ class AttendeeModel extends AttendeeEntity {
       updatedAt: data['updated_at'] ?? '-',
     );
   }
-  
+
 
   Map<String, dynamic> toJson() {
     return {

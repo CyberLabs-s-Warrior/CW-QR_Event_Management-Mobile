@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/attendance_data_entity.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/list_attendees_entity.dart';
+import '../entities/attendance_data_entity.dart';
+import '../entities/list_attendees_entity.dart';
 
 import '../../../../core/error/failure.dart';
 import '../entities/event_entity.dart';

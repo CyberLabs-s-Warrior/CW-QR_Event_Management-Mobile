@@ -1,7 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/attendance_data_entity.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/list_attendees_entity.dart';
+import '../../domain/entities/attendance_data_entity.dart';
+import '../../domain/entities/list_attendees_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/error/failure.dart';

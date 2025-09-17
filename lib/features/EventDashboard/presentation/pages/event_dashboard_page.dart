@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/bi.dart';
-import 'package:iconify_flutter/icons/ic.dart';
 import 'package:provider/provider.dart';
-import 'event_dashboard_attendees_checked_in_page.dart';
 import 'event_dashboard_pending_attendees_page.dart';
 import '../widgets/event_dashboard_floating_button.dart';
 import '../widgets/event_dashboard_head.dart';
 import '../widgets/event_dashboard_item.dart';
-import '../widgets/event_dashboard_refresh_data.dart';
 import '../../../../gen/alert/toastification.dart';
-import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../../../core/constant/enum_status.dart';
 import '../../../../core/provider/network_status_provider.dart';

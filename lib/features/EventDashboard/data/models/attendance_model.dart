@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/attendance.dart';
+import '../../domain/entities/attendance.dart';
 
 class AttendanceModel extends AttendanceEntity {
   const AttendanceModel({

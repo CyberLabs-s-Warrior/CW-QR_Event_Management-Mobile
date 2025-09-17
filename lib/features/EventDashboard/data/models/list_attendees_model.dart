@@ -1,5 +1,5 @@
-import 'package:qr_event_management/features/EventDashboard/data/models/attendee_with_attendance_model.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/list_attendees_entity.dart';
+import 'attendee_with_attendance_model.dart';
+import '../../domain/entities/list_attendees_entity.dart';
 
 class ListAttendeesModel extends ListAttendeesEntity {
   const ListAttendeesModel({

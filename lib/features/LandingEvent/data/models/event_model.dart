@@ -1,6 +1,8 @@
-import '../../domain/entities/event_entity.dart';
 import 'dart:core';
+
 import 'package:intl/intl.dart';
+
+import '../../domain/entities/event_entity.dart';
 
 class EventModel extends EventEntity {
   const EventModel({

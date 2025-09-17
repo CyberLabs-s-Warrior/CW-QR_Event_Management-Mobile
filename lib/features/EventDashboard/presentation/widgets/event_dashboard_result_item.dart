@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'event_dashboard_result_item_content_widget.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
+
+import 'event_dashboard_result_item_content_widget.dart';
 
 class EventDashboardResultItem extends StatelessWidget {
   const EventDashboardResultItem({

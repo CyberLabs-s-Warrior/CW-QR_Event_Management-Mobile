@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:gap/gap.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/attendee_with_attendance_entity.dart';
+import '../../../../../core/theme/app_colors.dart';
+import '../../../domain/entities/attendee_with_attendance_entity.dart';
 
 // build action row (select all, switch, reset)
 

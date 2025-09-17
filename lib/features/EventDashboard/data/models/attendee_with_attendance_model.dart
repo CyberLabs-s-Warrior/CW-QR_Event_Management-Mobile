@@ -1,6 +1,6 @@
-import 'package:qr_event_management/features/EventDashboard/data/models/attendance_model.dart';
-import 'package:qr_event_management/features/EventDashboard/data/models/attendee_model.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/attendee_with_attendance_entity.dart';
+import 'attendance_model.dart';
+import 'attendee_model.dart';
+import '../../domain/entities/attendee_with_attendance_entity.dart';
 
 class AttendeeWithAttendanceModel extends AttendeeWithAttendanceEntity {
   const AttendeeWithAttendanceModel({

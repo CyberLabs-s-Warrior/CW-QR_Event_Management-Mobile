@@ -1,17 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/attendance_data_entity.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/list_attendees_entity.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/usecases/get_event_attendees_usecase.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/usecases/scan_attendance_usecase.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/usecases/scan_identity_check_usecase.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/usecases/update_attendees_status_usecase.dart';
 
 import '../../../../core/constant/enum_status.dart';
 import '../../../../core/error/clean_error_message_cleaner.dart';
+import '../../domain/entities/attendance_data_entity.dart';
 import '../../domain/entities/event_entity.dart';
+import '../../domain/entities/list_attendees_entity.dart';
+import '../../domain/usecases/get_event_attendees_usecase.dart';
 import '../../domain/usecases/get_event_by_id_usecase.dart';
+import '../../domain/usecases/scan_attendance_usecase.dart';
+import '../../domain/usecases/scan_identity_check_usecase.dart';
+import '../../domain/usecases/update_attendees_status_usecase.dart';
 
 class EventDashboardProvider extends ChangeNotifier {
   final GetEventByIdUsecase getEventByIdUsecase;

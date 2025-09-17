@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
+
 import '../../../../core/theme/app_colors.dart';
+import '../provider/event_dashboard_provider.dart';
 
 class EventRegistrationPercentage extends StatelessWidget {
   final EventDashboardProvider eventDashboardProvider;

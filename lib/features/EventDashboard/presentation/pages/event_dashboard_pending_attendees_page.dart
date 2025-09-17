@@ -2,22 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
-import 'package:iconify_flutter/icons/ion.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/core/constant/enum_status.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
-import 'package:qr_event_management/features/Authentication/presentation/provider/authentication_provider.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/attendee_with_attendance_entity.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/widgets/attendees/event_dashboard_attendees_action_row.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/widgets/attendees/event_dashboard_attendees_attendee_list.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/widgets/attendees/event_dashboard_attendees_item.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/widgets/attendees/event_dashboard_attendees_search_filter.dart';
-import 'package:qr_event_management/gen/alert/snack_bar.dart';
-import 'package:qr_event_management/gen/alert/toastification.dart';
-import 'package:qr_event_management/gen/loading/dialog_screen.dart';
-import 'package:qr_event_management/gen/loading/wave_loading.dart';
-import 'package:qr_event_management/widgets/general_back_button.dart';
+import '../../../../core/constant/enum_status.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../Authentication/presentation/provider/authentication_provider.dart';
+import '../../domain/entities/attendee_with_attendance_entity.dart';
+import '../provider/event_dashboard_provider.dart';
+import '../widgets/attendees/event_dashboard_attendees_action_row.dart';
+import '../widgets/attendees/event_dashboard_attendees_attendee_list.dart';
+import '../widgets/attendees/event_dashboard_attendees_search_filter.dart';
+import '../../../../gen/alert/toastification.dart';
+import '../../../../gen/loading/dialog_screen.dart';
+import '../../../../gen/loading/wave_loading.dart';
+import '../../../../widgets/general_back_button.dart';
 
 enum AttendeeFilter { none, present, absent, azAsc, azDesc }
 

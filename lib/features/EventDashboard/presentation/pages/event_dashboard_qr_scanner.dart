@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
@@ -11,11 +9,11 @@ import 'package:iconify_flutter/icons/ri.dart';
 import 'package:iconify_flutter/icons/uil.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
-import 'package:qr_event_management/core/constant/enum_status.dart';
-import 'package:qr_event_management/features/Authentication/presentation/provider/authentication_provider.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/pages/event_dashboard_attendance_result_page.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
-import 'package:qr_event_management/gen/loading/dialog_screen.dart';
+import '../../../../core/constant/enum_status.dart';
+import '../../../Authentication/presentation/provider/authentication_provider.dart';
+import 'event_dashboard_attendance_result_page.dart';
+import '../provider/event_dashboard_provider.dart';
+import '../../../../gen/loading/dialog_screen.dart';
 import '../../../../gen/alert/toastification.dart';
 import '../widgets/event_dashboard_result_item.dart';
 

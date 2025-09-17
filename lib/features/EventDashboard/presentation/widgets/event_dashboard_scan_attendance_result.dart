@@ -4,7 +4,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/ph.dart';
 import 'package:iconify_flutter/icons/uil.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/pages/event_dashboard_attendance_result_page.dart';
+import '../pages/event_dashboard_attendance_result_page.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../provider/event_dashboard_provider.dart';

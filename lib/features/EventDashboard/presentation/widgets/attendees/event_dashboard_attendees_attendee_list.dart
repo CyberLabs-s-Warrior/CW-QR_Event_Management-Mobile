@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/attendee_with_attendance_entity.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/widgets/attendees/event_dashboard_attendees_item.dart'; 
+import '../../../domain/entities/attendee_with_attendance_entity.dart';
+import 'event_dashboard_attendees_item.dart';
 
 class EventDashboardAttendeesAttendeeList extends StatefulWidget {
   final List<AttendeeWithAttendanceEntity> attendees;

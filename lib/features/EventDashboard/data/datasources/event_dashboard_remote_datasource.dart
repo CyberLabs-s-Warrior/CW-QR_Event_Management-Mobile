@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:qr_event_management/features/EventDashboard/data/models/attendance_data_model.dart';
-import 'package:qr_event_management/features/EventDashboard/data/models/list_attendees_model.dart';
+import '../models/attendance_data_model.dart';
+import '../models/list_attendees_model.dart';
 
 import '../../../../core/constant/constant.dart';
 import '../../../../core/error/exceptions.dart';

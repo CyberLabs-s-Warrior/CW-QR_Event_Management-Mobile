@@ -5,9 +5,9 @@ import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_event_management/core/theme/app_colors.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
-import 'package:qr_event_management/widgets/general_back_button.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../provider/event_dashboard_provider.dart';
+import '../../../../widgets/general_back_button.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class EventDashboardResultPage extends StatefulWidget {

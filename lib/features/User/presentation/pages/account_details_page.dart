@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/constant/enum_status.dart';
 import '../../../../core/helper/convert_to_formatted_phone.dart';
-import '../../../Authentication/presentation/provider/authentication_provider.dart';
-import '../provider/user_provider.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../gen/alert/toastification.dart';
 import '../../../../gen/loading/dialog_screen.dart';
 import '../../../../gen/loading/wave_loading.dart';
-
-import '../../../../core/theme/app_colors.dart';
 import '../../../../widgets/text_fields.dart';
+import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../../../Authentication/presentation/widgets/back_button.dart';
+import '../provider/user_provider.dart';
 
 class AccountDetailsPage extends StatefulWidget {
   const AccountDetailsPage({super.key});

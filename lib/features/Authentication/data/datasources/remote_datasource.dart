@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import '../../../EventDashboard/data/models/event_model.dart';
 
 import '../../../../core/constant/constant.dart';
 import '../../../../core/error/exceptions.dart';

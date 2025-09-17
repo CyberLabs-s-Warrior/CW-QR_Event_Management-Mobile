@@ -1,9 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
-import 'package:qr_event_management/features/EventDashboard/domain/usecases/get_event_attendees_usecase.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/usecases/scan_attendance_usecase.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/usecases/scan_identity_check_usecase.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/usecases/update_attendees_status_usecase.dart';
+import 'features/EventDashboard/domain/usecases/get_event_attendees_usecase.dart';
+import 'features/EventDashboard/domain/usecases/scan_attendance_usecase.dart';
+import 'features/EventDashboard/domain/usecases/scan_identity_check_usecase.dart';
+import 'features/EventDashboard/domain/usecases/update_attendees_status_usecase.dart';
 import 'features/Authentication/domain/usecases/get_authorization.dart';
 import 'features/Authentication/domain/usecases/get_user_from_api.dart';
 import 'features/User/data/datasources/user_remote_datasource.dart';

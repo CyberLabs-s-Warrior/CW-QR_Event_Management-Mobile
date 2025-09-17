@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/attendance.dart';
-import 'package:qr_event_management/features/EventDashboard/domain/entities/attendee.dart';
+import 'attendance.dart';
+import 'attendee.dart';
 
 class AttendanceDataEntity extends Equatable {
   final bool success;

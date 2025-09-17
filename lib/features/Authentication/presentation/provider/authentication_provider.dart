@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import '../../domain/usecases/get_authorization.dart';
-import '../../domain/entities/authorization_entity.dart';
-import '../../domain/usecases/get_user_from_api.dart';
 
 import '../../../../core/error/clean_error_message_cleaner.dart';
+import '../../domain/entities/authorization_entity.dart';
 import '../../domain/entities/forgot_password.dart';
 import '../../domain/entities/recovery_password.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/entities/verify_code.dart';
 import '../../domain/usecases/forgot_password.dart';
+import '../../domain/usecases/get_authorization.dart';
 import '../../domain/usecases/get_user.dart';
+import '../../domain/usecases/get_user_from_api.dart';
 import '../../domain/usecases/logout.dart';
 import '../../domain/usecases/recovery_password.dart';
 import '../../domain/usecases/refresh_token.dart';
