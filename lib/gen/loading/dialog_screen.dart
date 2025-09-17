@@ -16,14 +16,19 @@ Future<void> showLoadingDialog(BuildContext context, {required String text}) {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF3F7CFF)),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Color(0xFF3F7CFF),
+                  ),
                 ),
                 const SizedBox(width: 20),
-                Text(
-                  text,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
+                Flexible(
+                  child: Text(
+                    text,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],
