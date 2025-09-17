@@ -4,13 +4,20 @@ class HomeSummaryEntity extends Equatable {
   final int pastCount;
   final String upcomingEvent;
   final int currentMonthCount;
+  final String ongoingEvent;
 
   const HomeSummaryEntity({
     required this.pastCount,
     required this.upcomingEvent,
+    required this.ongoingEvent,
     required this.currentMonthCount,
   });
 
   @override
-  List<Object?> get props => [pastCount, upcomingEvent, currentMonthCount];
+  List<Object?> get props => [
+    pastCount,
+    upcomingEvent,
+    ongoingEvent,
+    currentMonthCount,
+  ];
 }

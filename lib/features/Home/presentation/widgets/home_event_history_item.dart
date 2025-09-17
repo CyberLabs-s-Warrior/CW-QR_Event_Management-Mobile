@@ -27,7 +27,7 @@ class HomeEventHistoryItem extends StatelessWidget {
     String _relativeTime(String input) {
       if (input.trim().isEmpty) return '-';
 
-      // Normalisasi ke format ISO sederhana
+      // Normalize to simple ISO format
       final normalized =
           input.contains('T') ? input : input.replaceFirst(' ', 'T');
       final dt = DateTime.tryParse(normalized);
