@@ -1,27 +1,25 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/ic.dart';
+import 'package:iconify_flutter/icons/ion.dart';
+import 'package:provider/provider.dart';
+import 'package:qr_event_management/core/constant/enum_status.dart';
+import 'package:qr_event_management/core/theme/app_colors.dart';
+import 'package:qr_event_management/features/Authentication/presentation/provider/authentication_provider.dart';
+import 'package:qr_event_management/features/EventDashboard/domain/entities/attendee_with_attendance_entity.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/widgets/attendees/event_dashboard_attendees_action_row.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/widgets/attendees/event_dashboard_attendees_attendee_list.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/widgets/attendees/event_dashboard_attendees_item.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/widgets/attendees/event_dashboard_attendees_search_filter.dart';
+import 'package:qr_event_management/gen/alert/snack_bar.dart';
+import 'package:qr_event_management/gen/alert/toastification.dart';
+import 'package:qr_event_management/gen/loading/dialog_screen.dart';
+import 'package:qr_event_management/gen/loading/wave_loading.dart';
+import 'package:qr_event_management/widgets/general_back_button.dart';
 
-class Attendee {
-  final String name;
-  final String rollNo;
-  bool present;
-  bool selected;
-
-  Attendee({
-    required this.name,
-    required this.rollNo,
-    this.present = true,
-    this.selected = false,
-  });
-
-  // clone backup
-  Attendee copy() => Attendee(
-    name: name,
-    rollNo: rollNo,
-    present: present,
-    selected: selected,
-  );
-}
+enum AttendeeFilter { none, present, absent, azAsc, azDesc }
 
 class EventDashboardPendingAttendeesPage extends StatefulWidget {
   const EventDashboardPendingAttendeesPage({super.key});
@@ -33,315 +31,571 @@ class EventDashboardPendingAttendeesPage extends StatefulWidget {
 
 class _EventDashboardPendingAttendeesPageState
     extends State<EventDashboardPendingAttendeesPage> {
-  List<Attendee> attendees = [
-    Attendee(name: "Akash Gupta", rollNo: "01"),
-    Attendee(name: "Brijesh Gupta", rollNo: "02", present: false),
-    Attendee(name: "Cajeton D’souza", rollNo: "03"),
-    Attendee(name: "Danish Shaikh", rollNo: "04"),
-    Attendee(name: "Daniel Walter", rollNo: "05"),
-    Attendee(name: "Faisal Khan", rollNo: "06"),
-    Attendee(name: "Ishwar Palekar", rollNo: "08"),
-  ];
-
+  // Search and filter state
   String searchQuery = "";
-  bool selectAll = false;
+  AttendeeFilter currentFilter = AttendeeFilter.none;
+
+  // Selection state
+  Map<int, bool> selectedAttendees = {};
+  Map<int, bool> attendeeStatusChanges = {};
   bool switchAllValue = true;
 
-  // init for cancel
-  List<Attendee> backup = [];
+  @override
+  void initState() {
+    super.initState();
 
-  void backupState() {
-    backup = attendees.map((a) => a.copy()).toList();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final eventDashboardProvider = context.read<EventDashboardProvider>();
+      final authProvider = context.read<AuthenticationProvider>();
+
+      eventDashboardProvider.getEventAttendees(
+        authProvider.authorization?.token ?? '',
+        eventDashboardProvider.event?.id ?? 0,
+      );
+    });
   }
 
-  void restoreState() {
+  // helper methods for attendance status
+  bool isAttendeePresent(AttendeeWithAttendanceEntity attendee) {
+    return attendeeStatusChanges[attendee.attendeeEntity.id] ??
+        (attendee.attendanceEntity.status == 'present');
+  }
+
+  void setAttendeePresent(
+    AttendeeWithAttendanceEntity attendee,
+    bool isPresent,
+  ) {
     setState(() {
-      // Reset ke daftar attendees awal
-      attendees = [
-        Attendee(name: "Akash Gupta", rollNo: "01"),
-        Attendee(name: "Brijesh Gupta", rollNo: "02", present: false),
-        Attendee(name: "Cajeton D'souza", rollNo: "03"),
-        Attendee(name: "Danish Shaikh", rollNo: "04"),
-        Attendee(name: "Daniel Walter", rollNo: "05"),
-        Attendee(name: "Faisal Khan", rollNo: "06"),
-        Attendee(name: "Ishwar Palekar", rollNo: "08"),
-      ];
-      // Reset selection state
-      selectAll = false;
+      attendeeStatusChanges[attendee.attendeeEntity.id] = isPresent;
+    });
+  }
+
+  // helper methods for selection
+  bool isAttendeeSelected(AttendeeWithAttendanceEntity attendee) {
+    return selectedAttendees[attendee.attendeeEntity.id] ?? false;
+  }
+
+  void setAttendeeSelected(
+    AttendeeWithAttendanceEntity attendee,
+    bool isSelected,
+  ) {
+    setState(() {
+      selectedAttendees[attendee.attendeeEntity.id] = isSelected;
+    });
+  }
+
+  // reset all changes
+  void resetChanges(List<AttendeeWithAttendanceEntity> attendees) {
+    setState(() {
+      selectedAttendees.clear();
+      attendeeStatusChanges.clear();
       switchAllValue = true;
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final filtered =
+  // apply filter to attendees list
+  List<AttendeeWithAttendanceEntity> applyFilters(
+    List<AttendeeWithAttendanceEntity> attendees,
+  ) {
+    // first apply search filter
+    var filtered =
         attendees
             .where(
               (a) =>
-                  a.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
-                  a.rollNo.contains(searchQuery),
+                  a.attendeeEntity.fullName.toLowerCase().contains(
+                    searchQuery.toLowerCase(),
+                  ) ||
+                  a.attendanceEntity.status.contains(searchQuery),
             )
             .toList();
 
-    final selectedCount = attendees.where((a) => a.selected).length;
+    // then apply type filter
+    switch (currentFilter) {
+      case AttendeeFilter.present:
+        filtered = filtered.where((a) => isAttendeePresent(a)).toList();
+        break;
+      case AttendeeFilter.absent:
+        filtered = filtered.where((a) => !isAttendeePresent(a)).toList();
+        break;
+      case AttendeeFilter.azAsc:
+        filtered.sort(
+          (a, b) =>
+              a.attendeeEntity.fullName.compareTo(b.attendeeEntity.fullName),
+        );
+        break;
+      case AttendeeFilter.azDesc:
+        filtered.sort(
+          (a, b) =>
+              b.attendeeEntity.fullName.compareTo(a.attendeeEntity.fullName),
+        );
+        break;
+      case AttendeeFilter.none:
+        // f no additional filtering
+        break;
+    }
 
-    return Scaffold(
-      appBar: AppBar(title: const Text("Pending Attendees")),
-      body: Column(
-        children: [
-          // 🔍 Search Bar
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              style: const TextStyle(color: Colors.black),
-              cursorColor: Colors.blue,
+    return filtered;
+  }
+
+  // show filter options
+  void showFilterOptions() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) => _buildFilterSheet(),
+    );
+  }
+
+  // build filter bottom sheet
+  Widget _buildFilterSheet() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(top: 8),
+          height: 5,
+          width: 60,
+          decoration: BoxDecoration(
+            color: Colors.grey[400],
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        const SizedBox(height: 10),
+        const Text(
+          "Filter Attendees",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        ...AttendeeFilter.values.map((filterOption) {
+          String label = filterOption.toString().split('.').last;
+          if (label == 'azAsc') label = 'A-Z Ascending';
+          if (label == 'azDesc') label = 'A-Z Descending';
+          if (label == 'none') label = 'None';
+
+          return ListTile(
+            leading: Radio<AttendeeFilter>(
+              value: filterOption,
+              groupValue: currentFilter,
               onChanged: (val) {
-              setState(() {
-                searchQuery = val;
-              });
+                setState(() {
+                  currentFilter = val!;
+                });
+                Navigator.pop(context);
               },
-              decoration: InputDecoration(
-              hintText: 'Search attendee...',
-              prefixIcon: const Icon(Icons.search),
-              fillColor: const Color(0xFFF5F5F5),
-              filled: true,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.grey),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Color.fromARGB(255, 105, 105, 105)),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 14,
-              ),
-              ),
             ),
-            ),
+            title: Text(label),
+            onTap: () {
+              setState(() {
+                currentFilter = filterOption;
+              });
+              Navigator.pop(context);
+            },
+          );
+        }).toList(),
+        const SizedBox(height: 10),
+      ],
+    );
+  }
 
-          // 🔧 Control Panel
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: CheckboxListTile(
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text("Select All"),
-                    value: selectAll,
-                    activeColor: Colors.grey[400],
-                    onChanged: (val) {
-                      backupState();
-                      setState(() {
-                        selectAll = val ?? false;
-                        for (var a in filtered) {
-                          a.selected = selectAll;
-                        }
-                      });
-                    },
+  // build submit modal
+  void showSubmitModal(
+    List<Map<String, dynamic>> selectedData,
+    authProvider,
+    provider,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      backgroundColor: AppColors.backgroundPage,
+      builder:
+          (context) => DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.5,
+            minChildSize: 0.3,
+            maxChildSize: 0.9,
+            builder:
+                (context, scrollController) => _buildSubmitSheet(
+                  selectedData,
+                  scrollController,
+                  authProvider,
+                  provider,
+                ),
+          ),
+    );
+  }
+
+  void handleSubmit(
+    List<Map<String, dynamic>> selectedData,
+   AuthenticationProvider authProvider,
+   EventDashboardProvider provider,
+  ) async {
+    try {
+      final token = authProvider.authorization?.token;
+      final eventId = provider.event?.id;
+
+
+      Navigator.pop(context);
+
+      showLoadingDialog(context, text: "Updating...");
+
+      await provider.updateAttendees(token, eventId, selectedData);
+
+      // close dialog
+      if (mounted) Navigator.pop(context);
+
+      setState(() {
+        selectedAttendees.clear();
+        attendeeStatusChanges.clear();
+      });
+
+      showCustomToast(
+        context: context,
+        message: 'Attendance status updated successfully',
+        backgroundColor: AppColors.success,
+        foregroundColor: AppColors.white,
+        primaryColor: AppColors.white,
+      );
+    } catch (e) {
+      // close dialog if error
+      if (mounted) Navigator.pop(context);
+
+      showCustomToast(
+        context: context,
+        message: 'Failed to update: ${e.toString()}',
+        backgroundColor: AppColors.error,
+        foregroundColor: AppColors.white,
+        primaryColor: AppColors.white,
+      );
+    }
+  }
+
+  // build submit sheet content
+  Widget _buildSubmitSheet(
+    List<Map<String, dynamic>> selectedData,
+    ScrollController scrollController,
+    AuthenticationProvider authProvider,
+    EventDashboardProvider provider,
+  ) {
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(top: 8),
+          height: 5,
+          width: 60,
+          decoration: BoxDecoration(
+            color: Colors.grey[400],
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        const SizedBox(height: 10),
+        const Text(
+          "Review Selected Attendees",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        Expanded(
+          child: ListView.builder(
+            controller: scrollController,
+            itemCount: selectedData.length,
+            itemBuilder: (context, index) {
+              final data = selectedData[index];
+              return ListTile(
+                leading: CircleAvatar(child: Text(data["id"].toString())),
+                title: Text(data["name"]!.toString()),
+                trailing: Text(
+                  data["status"]!.toString(),
+                  style: TextStyle(
+                    color:
+                        data["status"] == "Present" ? Colors.green : Colors.red,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      const Text("Switch All"),
-                      Switch(
-                        value: switchAllValue,
-                        onChanged: (val) {
-                          backupState();
-                          setState(() {
-                            switchAllValue = val;
-                            for (var a in filtered) {
-                              if (a.selected) {
-                                a.present = val;
-                              }
-                            }
-                          });
-                        },
-                        activeColor: Colors.green,
-                        inactiveThumbColor: Colors.red,
-                        inactiveTrackColor: Colors.red[200],
-                      ),
-                    ],
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: InkWell(
+            onTap: () => handleSubmit(selectedData, authProvider, provider),
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+              decoration: BoxDecoration(
+                color: AppColors.buttonBackgroundPrimary,
+                borderRadius: BorderRadius.circular(9999),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Update',
+                    style: TextStyle(
+                      color: AppColors.secondary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-                IconButton(
-                  tooltip: "Cancel changes",
-                  onPressed: () {
-                    restoreState();
-                  },
-                  icon: const Icon(Icons.refresh, color: Colors.red),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
+        ),
+      ],
+    );
+  }
 
-          // 📋 List Attendees
-          Expanded(
-            child: ListView.separated(
-              itemCount: filtered.length,
-              separatorBuilder:
-                  (context, index) => const Divider(
-                    color: Colors.grey,
-                    thickness: 0.8,
-                    height: 0.5,
+  Future<void> onRefresh(authProvider, provider) async {
+    try {
+      final token = authProvider.authorization?.token;
+      final eventId = provider.event?.id;
+
+      // token and event id validation
+      if (token == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Your session is invalid. Please log in again'),
+          ),
+        );
+        return;
+      }
+
+      if (eventId == null) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Event ID not found')));
+        return;
+      }
+
+      await provider.getEventAttendees(token, eventId);
+
+      //reset local
+      setState(() {
+        selectedAttendees.clear();
+        attendeeStatusChanges.clear();
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load data: ${e.toString()}')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.backgroundPage,
+      appBar: AppBar(
+        backgroundColor: AppColors.backgroundPage,
+        title: const Text(
+          "Attendees",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        scrolledUnderElevation: 0,
+        leading: GeneralBackButton(onTap: () => Navigator.pop(context)),
+      ),
+      body: Consumer2<EventDashboardProvider, AuthenticationProvider>(
+        builder: (context, provider, authProvider, child) {
+          final attendees = provider.listAttendee?.attendeeWithAttendance ?? [];
+          final filteredAttendees = applyFilters(attendees);
+          final selectedCount =
+              selectedAttendees.values.where((selected) => selected).length;
+
+          return Column(
+            children: [
+              // Search and filter row
+              EventDashboardAttendeesSearchFilter(
+                currentFilter: currentFilter,
+                onChangedSearch: (val) => setState(() => searchQuery = val),
+                onTapFilterOptions: () => showFilterOptions(),
+              ),
+
+              EventDashboardAttendeesActionRow(
+                filteredAttendees,
+                attendees: filteredAttendees,
+                selectedAttendees: Map<String, bool>.from(
+                  selectedAttendees.map(
+                    (key, value) => MapEntry(key.toString(), value),
                   ),
-              itemBuilder: (context, index) {
-                final attendee = filtered[index];
-                return ListTile(
-                  leading: Checkbox(
-                    value: attendee.selected,
-                    activeColor: Colors.grey[400],
-                    onChanged: (val) {
-                      setState(() {
-                        attendee.selected = val ?? false;
-                      });
-                    },
-                  ),
-                  title: Text(
-                    attendee.name,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  subtitle: Text("Roll No: ${attendee.rollNo}"),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Switch(
-                        value: attendee.present,
-                        onChanged: (val) {
-                          setState(() {
-                            attendee.present = val;
-                          });
-                        },
-                        activeColor: Colors.green,
-                        inactiveThumbColor: Colors.red,
-                        inactiveTrackColor: Colors.red[200],
-                      ),
-                      Text(
-                        attendee.present ? "Present" : "Absent",
-                        style: TextStyle(
-                          color: attendee.present ? Colors.green : Colors.red,
-                          fontWeight: FontWeight.w600,
+                ),
+                switchAllValue: switchAllValue,
+                onAttendeeSelectionChanged: (attendee, isSelected) {
+                  setAttendeeSelected(attendee, isSelected);
+                },
+                isAttendeeSelected: isAttendeeSelected,
+                onAttendeePresenceChanged: (attendee, isPresent) {
+                  setAttendeePresent(attendee, isPresent);
+                },
+                onResetChanges: (attendees) {
+                  resetChanges(attendees);
+                },
+                onSwitchAllValueChanged: (value) {
+                  setState(() {
+                    switchAllValue = value;
+                  });
+                },
+              ),
+              // attendee list
+              Expanded(
+                child:
+                    provider.listAttendeeStatus == ResponseStatus.loading
+                        ? WaveLoading()
+                        : provider.listAttendeeStatus == ResponseStatus.error
+                        ? Center(child: Text('Error loading attendees'))
+                        : provider.listAttendee!.attendeeWithAttendance.isEmpty
+                        ? Center(child: Text('No attendees found'))
+                        : EventDashboardAttendeesAttendeeList(
+                          attendees: filteredAttendees,
+                          onRefresh: () => onRefresh(authProvider, provider),
+                          isAttendeePresent: isAttendeePresent,
+                          isAttendeeSelected: isAttendeeSelected,
+                          setAttendeeSelected: setAttendeeSelected,
+                          setAttendeePresent: setAttendeePresent,
                         ),
-                      ),
-                    ],
-                  ),
+              ),
+            ],
+          );
+        },
+      ),
+      floatingActionButton:
+          Consumer2<EventDashboardProvider, AuthenticationProvider>(
+            builder: (context, provider, authProvider, child) {
+              final selectedCount =
+                  selectedAttendees.values.where((selected) => selected).length;
+              final attendees =
+                  provider.listAttendee?.attendeeWithAttendance ?? [];
+
+              if (selectedCount > 0) {
+                return FloatingActionButton.extended(
+                  splashColor: AppColors.secondary,
+
+                  foregroundColor: AppColors.primary,
+                  backgroundColor: AppColors.primaryLight,
+                  elevation: 2,
+                  onPressed: () {
+                    final selectedData =
+                        attendees
+                            .where((a) => isAttendeeSelected(a))
+                            .map(
+                              (a) => {
+                                "id": a.attendeeEntity.id,
+                                "name": a.attendeeEntity.fullName,
+                                "status":
+                                    isAttendeePresent(a) ? "Present" : "Absent",
+                              },
+                            )
+                            .toList();
+
+                    showSubmitModal(selectedData, authProvider, provider);
+                  },
+                  label: Text("Submit ($selectedCount)"),
+                  icon: const Icon(Icons.check),
                 );
-              },
+              }
+              return SizedBox.shrink(); // no FAB when nothing is selected
+            },
+          ),
+    );
+  }
+
+  // build action row (select all, switch, reset)
+  Widget _buildActionRow(List<AttendeeWithAttendanceEntity> filteredAttendees) {
+    bool selectAll = false;
+    if (filteredAttendees.isNotEmpty) {
+      selectAll = filteredAttendees.every(
+        (a) => selectedAttendees[a.attendeeEntity.id] == true,
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.grey),
+                color: AppColors.grey3.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: CheckboxListTile(
+                dense: true,
+                controlAffinity: ListTileControlAffinity.leading,
+                contentPadding: EdgeInsets.zero,
+                title: const Text("Select All"),
+                checkboxShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                value: selectAll,
+                activeColor: AppColors.primary,
+                onChanged: (val) {
+                  setState(() {
+                    for (var a in filteredAttendees) {
+                      setAttendeeSelected(a, val ?? false);
+                    }
+                  });
+                },
+              ),
+            ),
+          ),
+          Gap(10),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.grey),
+                color: AppColors.grey3.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Switch", overflow: TextOverflow.ellipsis),
+                  Expanded(
+                    child: Switch(
+                      value: switchAllValue,
+                      onChanged: (val) {
+                        setState(() {
+                          switchAllValue = val;
+                          for (var a in filteredAttendees) {
+                            if (isAttendeeSelected(a)) {
+                              setAttendeePresent(a, val);
+                            }
+                          }
+                        });
+                      },
+                      activeColor: AppColors.primary,
+                      inactiveThumbColor: AppColors.red,
+                      trackOutlineColor: MaterialStateProperty.all(
+                        AppColors.primaryLight,
+                      ),
+                      inactiveTrackColor: Colors.red[200],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Gap(10),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.grey),
+              color: AppColors.grey3.withOpacity(0.6),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: IconButton(
+              tooltip: "Reset changes",
+              onPressed: () => resetChanges(filteredAttendees),
+              icon: const Iconify(Ic.twotone_refresh, color: AppColors.primary),
             ),
           ),
         ],
       ),
-
-      // 🟢 Draggable Submit Sheet
-      floatingActionButton:
-          selectedCount > 0
-              ? FloatingActionButton.extended(
-                onPressed: () {
-                  final selectedData =
-                      attendees
-                          .where((a) => a.selected)
-                          .map(
-                            (a) => {
-                              "rollNo": a.rollNo,
-                              "name": a.name,
-                              "status": a.present ? "Present" : "Absent",
-                            },
-                          )
-                          .toList();
-
-                  // buka draggable bottom sheet
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(16),
-                      ),
-                    ),
-                    builder: (context) {
-                      return DraggableScrollableSheet(
-                        expand: false,
-                        initialChildSize: 0.5,
-                        minChildSize: 0.3,
-                        maxChildSize: 0.9,
-                        builder: (context, scrollController) {
-                          return Column(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 8),
-                                height: 5,
-                                width: 60,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[400],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              const Text(
-                                "Review Selected Attendees",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Expanded(
-                                child: ListView.builder(
-                                  controller: scrollController,
-                                  itemCount: selectedData.length,
-                                  itemBuilder: (context, index) {
-                                    final data = selectedData[index];
-                                    return ListTile(
-                                      leading: CircleAvatar(
-                                        child: Text(data["rollNo"]!),
-                                      ),
-                                      title: Text(data["name"]!),
-                                      trailing: Text(
-                                        data["status"]!,
-                                        style: TextStyle(
-                                          color:
-                                              data["status"] == "Present"
-                                                  ? Colors.green
-                                                  : Colors.red,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    minimumSize: const Size.fromHeight(45),
-                                  ),
-                                  onPressed: () {
-                                    print("Data siap dikirim:");
-                                    print(jsonEncode(selectedData));
-                                    Navigator.pop(context);
-                                  },
-                                  icon: const Icon(Icons.send),
-                                  label: const Text("Confirm & Send"),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
-                label: Text("Submit ($selectedCount)"),
-                icon: const Icon(Icons.check),
-              )
-              : null,
     );
   }
 }

@@ -103,7 +103,7 @@ class _EventDashboardPageState extends State<EventDashboardPage>
                       children: [
                         Container(
                           width: double.infinity,
-                          height: 650,
+                          height: 625,
                           decoration: BoxDecoration(
                             color: AppColors.eventDashboard,
                           ),
@@ -125,19 +125,26 @@ class _EventDashboardPageState extends State<EventDashboardPage>
 
                                 Gap(50),
 
-                                EventRegistrationPercentage(),
+                                EventRegistrationPercentage(
+                                  eventDashboardProvider:
+                                      eventDashboardProvider,
+                                ),
 
                                 Gap(50),
 
-                                CheckInAndNotCheckIn(),
+                                CheckInAndNotCheckIn(
+                                  eventDashboardProvider:
+                                      eventDashboardProvider,
+                                ),
 
                                 Gap(50),
 
                                 Column(
                                   children: [
                                     EventDashboardItem(
-                                      title: 'Pending Attendees',
-                                      count: '35',
+                                      title: 'Attendees List',
+                                      count:
+                                          "${eventDashboardProvider.event?.attendeeCount ?? '0'}",
                                       onTap: () {
                                         Navigator.push(
                                           context,
@@ -149,21 +156,22 @@ class _EventDashboardPageState extends State<EventDashboardPage>
                                         );
                                       },
                                     ),
-                                    Gap(10),
-                                    EventDashboardItem(
-                                      title: 'Attendees Checked-In',
-                                      count: '30',
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (_) =>
-                                                    EventDashboardAttendeesCheckedInPage(),
-                                          ),
-                                        );
-                                      },
-                                    ),
+                                    // Gap(10),
+                                    // EventDashboardItem(
+                                    //   title: 'Attendees Checked-In',
+                                    //   count:
+                                    //       "${eventDashboardProvider.event?.presentOrLateCount ?? ''}",
+                                    //   onTap: () {
+                                    //     Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //         builder:
+                                    //             (_) =>
+                                    //                 EventDashboardAttendeesCheckedInPage(),
+                                    //       ),
+                                    //     );
+                                    //   },
+                                    // ),
                                   ],
                                 ),
                               ],
@@ -171,18 +179,16 @@ class _EventDashboardPageState extends State<EventDashboardPage>
                           ),
                         ),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 40.0,
-                            vertical: 20,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Event Logs'),
-                            ],
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(
+                        //     horizontal: 40.0,
+                        //     vertical: 20,
+                        //   ),
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [Text('Event Logs')],
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -191,7 +197,12 @@ class _EventDashboardPageState extends State<EventDashboardPage>
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => QRViewTest()),
+                        MaterialPageRoute(
+                          builder:
+                              (_) => QRViewTest(
+                                eventId: eventDashboardProvider.event!.id,
+                              ),
+                        ),
                       );
                     },
                   ),

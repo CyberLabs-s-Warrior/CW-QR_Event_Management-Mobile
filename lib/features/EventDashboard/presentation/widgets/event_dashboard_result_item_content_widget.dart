@@ -39,47 +39,52 @@ class EventDashboardResultItemContentWidget extends StatelessWidget {
             child: icon,
           ),
           Gap(10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  color: AppColors.grey,
-                  fontWeight: FontWeight.bold,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: AppColors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.start,
                 ),
-                textAlign: TextAlign.start,
-              ),
-              isBadge == true
-                  ? Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                    decoration: BoxDecoration(
-                      color:
-                          isScannedStatus == true
-                              ? AppColors.successLight
-                              : AppColors.failedLight,
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      isScannedStatus == true ? 'Scanned' : 'Not Scanned',
-                      style: TextStyle(
+                isBadge == true
+                    ? Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                      decoration: BoxDecoration(
                         color:
                             isScannedStatus == true
-                                ? AppColors.successDark
-                                : AppColors.failedDark,
-                        fontWeight: FontWeight.bold,
+                                ? AppColors.successLight
+                                : AppColors.failedLight,
+                        borderRadius: BorderRadius.circular(999),
                       ),
+                      child: Text(
+                        textContent ?? '',
+                  overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color:
+                              isScannedStatus == true
+                                  ? AppColors.successDark
+                                  : AppColors.failedDark,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                    : Text(
+                      textContent ?? 'None',
+                  overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: AppColors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.start,
                     ),
-                  )
-                  : Text(
-                    textContent ?? 'None',
-                    style: TextStyle(
-                      color: AppColors.black,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.start,
-                  ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

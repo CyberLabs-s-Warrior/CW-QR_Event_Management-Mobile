@@ -4,20 +4,73 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_event_management/core/theme/app_colors.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
 import 'package:qr_event_management/widgets/general_back_button.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
-class EventDashboardAttendanceResultPage extends StatefulWidget {
-  const EventDashboardAttendanceResultPage({super.key});
+class EventDashboardResultPage extends StatefulWidget {
+  const EventDashboardResultPage({super.key});
 
   @override
-  State<EventDashboardAttendanceResultPage> createState() =>
-      _EventDashboardAttendanceResultPageState();
+  State<EventDashboardResultPage> createState() =>
+      _EventDashboardResultPageState();
 }
 
-class _EventDashboardAttendanceResultPageState
-    extends State<EventDashboardAttendanceResultPage> {
+class _EventDashboardResultPageState extends State<EventDashboardResultPage> {
+  String qrcodeData = '-';
+  String attendDate = '-';
+  String attendTime = '-';
+  String time = '-';
+  String email = '-';
+  String name = '-';
+  String phoneNumber = '-';
+  String status = '-';
+
+  @override
+  void initState() {
+    super.initState();
+
+    final eventDashboardProvider = context.read<EventDashboardProvider>();
+
+    // Initialize state variables from provider data
+    if (eventDashboardProvider.attendanceData != null) {
+      setState(() {
+        qrcodeData = eventDashboardProvider.attendanceData?.qrCode ?? '-';
+        name =
+            eventDashboardProvider.attendanceData?.attendeeEntity.fullName ??
+            "-";
+        attendDate =
+            eventDashboardProvider
+                .attendanceData
+                ?.attendanceEntity
+                .checkInDate ??
+            "-";
+        attendTime =
+            eventDashboardProvider
+                .attendanceData
+                ?.attendanceEntity
+                .checkInTime ??
+            "-";
+        time =
+            eventDashboardProvider
+                .attendanceData
+                ?.attendanceEntity
+                .checkInTime ??
+            "-";
+        email =
+            eventDashboardProvider.attendanceData?.attendeeEntity.email ?? "-";
+        phoneNumber =
+            eventDashboardProvider.attendanceData?.attendeeEntity.phoneNumber ??
+            "-";
+        status =
+            eventDashboardProvider.attendanceData?.attendanceEntity.status ??
+            "-";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,133 +86,308 @@ class _EventDashboardAttendanceResultPageState
         ),
         scrolledUnderElevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+      body: Consumer<EventDashboardProvider>(
+        builder: (context, eventDashboardProvider, child) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 8.0,
+              horizontal: 20.0,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Lottie.asset(
-                    'assets/lottie/success_nabildzr.json',
-                    width: 100,
+                  Row(
+                    children: [
+                      eventDashboardProvider.attendanceData != null &&
+                              eventDashboardProvider
+                                      .attendanceData!
+                                      .attendanceEntity
+                                      .status ==
+                                  'invalid'
+                          ? 
+                          Lottie.asset(
+                            'assets/lottie/failed_nabildzr.json',
+                            width: 100,
+                          )
+
+:                           Lottie.asset(
+                            'assets/lottie/success_nabildzr.json',
+                            width: 100,
+                          ),
+                      Gap(10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            eventDashboardProvider.attendanceData != null &&
+                                    eventDashboardProvider
+                                            .attendanceData!
+                                            .attendanceEntity
+                                            .status ==
+                                        'invalid'
+                                ? 'Invalid'
+                                : 'Success',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: AppColors.black.withOpacity(0.8),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            eventDashboardProvider
+                                .attendanceData!
+                                .attendanceEntity
+                                .status,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: AppColors.black.withOpacity(0.8),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   Gap(10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Divider(color: AppColors.grey1, thickness: 2),
+                  Gap(10),
+                  Text(
+                    eventDashboardProvider.event?.title ?? 'Untitled',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: AppColors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
+                  ),
+                  Gap(10),
+                  Text(
+                    name,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: AppColors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                    ),
+                  ),
+                  Gap(10),
+                  Row(
                     children: [
-                      Text(
-                        'Success',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: AppColors.black.withOpacity(0.8),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      Text(
-                        'Checked-In',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: AppColors.black.withOpacity(0.8),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'QR Code',
+                              style: TextStyle(
+                                color: AppColors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    qrcodeData,
+                                    style: TextStyle(
+                                      color: AppColors.black,
+                                      fontWeight: FontWeight.bold,
+                                      overflow: TextOverflow.ellipsis,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                Gap(5),
+                                ZoomTapAnimation(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      backgroundColor: AppColors.backgroundPage,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(32),
+                                        ),
+                                      ),
+                                      builder:
+                                          (context) => Container(
+                                            padding: const EdgeInsets.all(16),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Text(
+                                                  'Code Details',
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 16),
+                            
+                                                ListTile(
+                                                  leading: const Iconify(
+                                                    MaterialSymbols.qr_code,
+                                                  ),
+                                                  title: Text(qrcodeData),
+                                                ),
+                                                Gap(20),
+                                              ],
+                                            ),
+                                          ),
+                                    );
+                                  },
+                                  child: Iconify(
+                                    Ic.outline_remove_red_eye,
+                                    color: AppColors.primary,
+                                    size: 25,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-              Gap(10),
-              Divider(color: AppColors.grey1, thickness: 2),
-              Gap(10),
-              Text(
-                'Title Event',
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: AppColors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                ),
-              ),
-              Gap(10),
-              Text(
-                'Name Attendee',
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: AppColors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                ),
-              ),
-              Gap(10),
-              Row(
-                children: [
-                  Column(
+                  Gap(10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'QR Code',
-                        style: TextStyle(
-                          color: AppColors.grey,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Attend Date',
+                              style: TextStyle(
+                                color: AppColors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                            Text(
+                              attendDate,
+                              style: TextStyle(
+                                color: AppColors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Row(
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Time',
+                              style: TextStyle(
+                                color: AppColors.grey,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis,
+                                fontSize: 20,
+                              ),
+                            ),
+                            Text(
+                              attendTime,
+                              style: TextStyle(
+                                color: AppColors.black,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Gap(10),
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'A3IO3VIHO3AOAoi33qnoi1',
+                            'Email',
                             style: TextStyle(
-                              color: AppColors.black,
+                              color: AppColors.grey,
                               fontWeight: FontWeight.bold,
-                              overflow: TextOverflow.ellipsis,
                               fontSize: 20,
                             ),
                           ),
-                          Gap(5),
-                          ZoomTapAnimation(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                backgroundColor: AppColors.backgroundPage,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(32),
-                                  ),
-                                ),
-                                builder:
-                                    (context) => Container(
-                                      padding: const EdgeInsets.all(16),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Text(
-                                            'Code Details',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 16),
-
-                                          ListTile(
-                                            leading: const Iconify(
-                                              MaterialSymbols.qr_code,
-                                            ),
-                                            title: const Text('A3IO3VIHO3AOAoi33qnoi1'),
-                                          ),
-                                          Gap(20),
-                                        ],
-                                      ),
-                                    ),
-                              );
-                            },
-                            child: Iconify(
-                              Ic.outline_remove_red_eye,
-                              color: AppColors.primary,
-                              size: 25,
+                          Text(
+                            email,
+                            style: TextStyle(
+                              color: AppColors.black,
+                              overflow: TextOverflow.ellipsis,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Gap(10),
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Phone Number',
+                            style: TextStyle(
+                              color: AppColors.grey,
+                              overflow: TextOverflow.ellipsis,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            phoneNumber,
+                            style: TextStyle(
+                              color: AppColors.black,
+                              overflow: TextOverflow.ellipsis,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Gap(10),
+                  Divider(color: AppColors.grey1, thickness: 2),
+                  Gap(10),
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Status',
+                            style: TextStyle(
+                              color: AppColors.grey,
+                              overflow: TextOverflow.ellipsis,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            status,
+                            style: TextStyle(
+                              color: AppColors.black,
+                              overflow: TextOverflow.ellipsis,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
                             ),
                           ),
                         ],
@@ -168,150 +396,9 @@ class _EventDashboardAttendanceResultPageState
                   ),
                 ],
               ),
-              Gap(10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Attend Date',
-                          style: TextStyle(
-                            color: AppColors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        Text(
-                          'July 23, 2026',
-                          style: TextStyle(
-                            color: AppColors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Time',
-                          style: TextStyle(
-                            color: AppColors.grey,
-                            fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.ellipsis,
-                            fontSize: 20,
-                          ),
-                        ),
-                        Text(
-                          '10:00:00',
-                          style: TextStyle(
-                            color: AppColors.black,
-                            fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.ellipsis,
-                            fontSize: 20,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Gap(10),
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Email',
-                        style: TextStyle(
-                          color: AppColors.grey,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      Text(
-                        'example@mail.duar',
-                        style: TextStyle(
-                          color: AppColors.black,
-                          overflow: TextOverflow.ellipsis,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              Gap(10),
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Phone Number',
-                        style: TextStyle(
-                          color: AppColors.grey,
-                          overflow: TextOverflow.ellipsis,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      Text(
-                        '+62 888-9999-0000',
-                        style: TextStyle(
-                          color: AppColors.black,
-                          overflow: TextOverflow.ellipsis,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              Gap(10),
-              Divider(color: AppColors.grey1, thickness: 2),
-              Gap(10),
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Status',
-                        style: TextStyle(
-                          color: AppColors.grey,
-                          overflow: TextOverflow.ellipsis,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      Text(
-                        'Present',
-                        style: TextStyle(
-                          color: AppColors.black,
-                          overflow: TextOverflow.ellipsis,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

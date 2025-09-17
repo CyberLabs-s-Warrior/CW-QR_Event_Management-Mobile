@@ -34,9 +34,9 @@ class _ChangePasswordInProfilePageState
   List<String> _newPasswordErrors = [];
   List<String> _confirmPasswordErrors = [];
 
-   bool _isCurrentPasswordVisible = false;
-   bool _isNewPasswordVisible = false;
-   bool _isConfirmPasswordVisible = false;
+  bool _isCurrentPasswordVisible = false;
+  bool _isNewPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   @override
   void initState() {
@@ -162,7 +162,8 @@ class _ChangePasswordInProfilePageState
                           errorText: validationProvider.passwordError,
                           onSuffixIconTap: () {
                             setState(() {
-                              _isCurrentPasswordVisible = !_isCurrentPasswordVisible;
+                              _isCurrentPasswordVisible =
+                                  !_isCurrentPasswordVisible;
                             });
                           },
                           suffixIcon:
@@ -208,7 +209,8 @@ class _ChangePasswordInProfilePageState
                           errorText: validationProvider.passwordError,
                           onSuffixIconTap: () {
                             setState(() {
-                              _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                              _isConfirmPasswordVisible =
+                                  !_isConfirmPasswordVisible;
                             });
                           },
                           suffixIcon:

@@ -13,6 +13,11 @@ class EventEntity extends Equatable {
   final String banner;
   final String createdAt;
 
+  final int attendancePercentage;
+  final int attendeeCount;
+  final int presentOrLateCount;
+  final int absentCount;
+
   const EventEntity({
     required this.id,
     required this.title,
@@ -25,6 +30,10 @@ class EventEntity extends Equatable {
     required this.endDate,
     required this.banner,
     required this.createdAt,
+    required this.attendancePercentage,
+    required this.attendeeCount,
+    required this.presentOrLateCount,
+    required this.absentCount,
   });
 
   @override
@@ -40,5 +49,8 @@ class EventEntity extends Equatable {
     endDate,
     banner,
     createdAt,
+    attendancePercentage,
+    presentOrLateCount,
+    absentCount
   ];
 }

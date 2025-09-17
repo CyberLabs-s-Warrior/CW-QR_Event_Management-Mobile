@@ -47,6 +47,20 @@ class EventDashboardHead extends StatelessWidget {
                   Iconify(Bi.clock_fill, color: AppColors.secondary, size: 20),
                   Gap(5),
                   Text(
+                    "${eventDashboardProvider.event?.startDate}",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.secondary,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Iconify(Bi.clock_history, color: AppColors.secondary, size: 20),
+                  Gap(5),
+                  Text(
                     "${eventDashboardProvider.event?.endDate}",
                     style: TextStyle(
                       fontSize: 20,

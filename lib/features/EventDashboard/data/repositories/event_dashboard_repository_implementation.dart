@@ -1,5 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
+import 'package:qr_event_management/features/EventDashboard/domain/entities/attendance_data_entity.dart';
+import 'package:qr_event_management/features/EventDashboard/domain/entities/list_attendees_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/error/failure.dart';
@@ -40,6 +42,103 @@ class EventDashboardRepositoryImplementation
       }
     } catch (e) {
       return Left(SimpleFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AttendanceDataEntity>> scanAttendance(
+    token,
+    eventId,
+    code,
+  ) async {
+    try {
+      final List<ConnectivityResult> connectivityResult =
+          await (Connectivity().checkConnectivity());
+
+      if (connectivityResult.contains(ConnectivityResult.none)) {
+        return Left(ConnectionFailure('No connection available.'));
+      } else {
+        AttendanceDataEntity result = await eventDashboardRemoteDatasource
+            .scanAttendance(token, eventId, code);
+
+        return Right(result);
+      }
+    } catch (e) {
+      return Left(GeneralFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AttendanceDataEntity>> scanIdentityCheck(
+    token,
+    eventId,
+    code,
+  ) async {
+    try {
+      final List<ConnectivityResult> connectivityResult =
+          await (Connectivity().checkConnectivity());
+
+      if (connectivityResult.contains(ConnectivityResult.none)) {
+        return Left(ConnectionFailure('No connection available.'));
+      } else {
+        AttendanceDataEntity result = await eventDashboardRemoteDatasource
+            .scanIdentityCheck(token, eventId, code);
+
+        return Right(result);
+      }
+    } catch (e) {
+      return Left(GeneralFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ListAttendeesEntity>> getEventAttendees(
+    token,
+    eventId,
+  ) async {
+    try {
+      final List<ConnectivityResult> connectivityResult =
+          await (Connectivity().checkConnectivity());
+
+      if (connectivityResult.contains(ConnectivityResult.none)) {
+        return Left(ConnectionFailure('No connection available.'));
+      } else {
+        ListAttendeesEntity result = await eventDashboardRemoteDatasource
+            .getEventAttendees(token, eventId);
+
+        print(
+          'from event dashboard - repository implementation - get-event-attendee: $result',
+        );
+
+        return Right(result);
+      }
+    } catch (e) {
+      return Left(GeneralFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateAttendeesStatus(
+   token,
+ eventId,
+    List<Map<String, dynamic>> attendeesData,
+  ) async {
+    try {
+      final List<ConnectivityResult> connectivityResult =
+          await (Connectivity().checkConnectivity());
+
+      if (connectivityResult.contains(ConnectivityResult.none)) {
+        return Left(ConnectionFailure('No connection available.'));
+      } else {
+        bool result = await eventDashboardRemoteDatasource
+            .updateAttendeesStatus(token, eventId, attendeesData);
+
+        print('Repository: Update attendees status result: $result');
+        return Right(result);
+      }
+    } catch (e) {
+      print('Repository: Update attendees error: $e');
+      return Left(GeneralFailure(e.toString()));
     }
   }
 }

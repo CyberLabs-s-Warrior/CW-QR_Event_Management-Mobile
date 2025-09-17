@@ -15,7 +15,6 @@ class EventDashboardFloatingButton extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: ZoomTapAnimation(
-        
         onTap: onTap,
         child: Padding(
           padding: EdgeInsets.all(20),

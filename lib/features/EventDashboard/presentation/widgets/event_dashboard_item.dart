@@ -22,56 +22,60 @@ class EventDashboardItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ZoomTapAnimation(
       onTap: onTap,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              color: AppColors.secondary,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Text(
-                    count,
-                    style: TextStyle(
-                      color: AppColors.secondary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  // Positioned(
-                  //   top: 0,
-                  //   right: -6,
-                  //   child: Container(
-                  //     width: 5,
-                  //     height: 5,
-                  //     decoration: BoxDecoration(
-                  //       color: AppColors.red,
-                  //       borderRadius: BorderRadius.circular(4),
-                  //     ),
-                  //   ),
-                  // ),
-                ],
-              ),
-              Gap(5),
-              Iconify(
-                Ic.outline_arrow_forward_ios,
+      child: Container(
+        width: double.infinity,
+        color: Colors.transparent,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
                 color: AppColors.secondary,
-                size: 15,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
-            ],
-          ),
-        ],
+            ),
+        
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Text(
+                      count,
+                      style: TextStyle(
+                        color: AppColors.secondary,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    // Positioned(
+                    //   top: 0,
+                    //   right: -6,
+                    //   child: Container(
+                    //     width: 5,
+                    //     height: 5,
+                    //     decoration: BoxDecoration(
+                    //       color: AppColors.red,
+                    //       borderRadius: BorderRadius.circular(4),
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
+                Gap(5),
+                Iconify(
+                  Ic.outline_arrow_forward_ios,
+                  color: AppColors.secondary,
+                  size: 15,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
