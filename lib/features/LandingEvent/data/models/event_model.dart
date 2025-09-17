@@ -1,4 +1,6 @@
 import '../../domain/entities/event_entity.dart';
+import 'dart:core';
+import 'package:intl/intl.dart';
 
 class EventModel extends EventEntity {
   const EventModel({
@@ -16,8 +18,8 @@ class EventModel extends EventEntity {
       id: data['id'],
       title: data['title'],
       location: data['location'],
-      startDate: data['start_date'],
-      endDate: data['end_date'],
+      startDate: DateFormat('d MMMM yyyy HH:mm').format(DateTime.parse(data['start_date'])),
+      endDate: DateFormat('d MMMM yyyy HH:mm').format(DateTime.parse(data['end_date'])),
       banner: data['banner'],
       createdBy: data['created_by'],
     );
