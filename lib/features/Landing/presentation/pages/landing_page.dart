@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/ri.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_event_management/features/Authentication/presentation/provider/authentication_provider.dart';
 
 import '../../../../core/scope/landing_tabs_scope.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -32,7 +35,6 @@ class _LandingPageState extends State<LandingPage>
     final homeProvider = context.read<HomeProvider>();
     homeProvider.stopAutoRefresh();
 
-
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
       setState(() {});
@@ -49,6 +51,22 @@ class _LandingPageState extends State<LandingPage>
     );
 
     _homeScrollController.addListener(_onHomeScroll);
+
+    // Check token validity on app start
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkTokenValidity();
+    });
+
+    // Set up periodic token check (every 15 minutes)
+    Timer.periodic(Duration(seconds: 5), (_) {
+      print("Running token check...");
+      _checkTokenValidity();
+    });
+  }
+
+  void _checkTokenValidity() {
+    final authProvider = context.read<AuthenticationProvider>();
+    authProvider.checkTokenAndLogout(context);
   }
 
   void _onHomeScroll() {
@@ -92,9 +110,7 @@ class _LandingPageState extends State<LandingPage>
                     homeScrollController: _homeScrollController,
                   ),
                   // Tab 2: Events
-                  EventView(
-                    tabController: _tabController,
-                  ),
+                  EventView(tabController: _tabController),
                   // Tab 3: Settings
                   SettingView(
                     borderRadiusAnimation: _borderRadiusAnimation,
@@ -102,7 +118,7 @@ class _LandingPageState extends State<LandingPage>
                   ),
                 ],
               ),
-          
+
               _buildTabBar(),
             ],
           ),
@@ -112,7 +128,6 @@ class _LandingPageState extends State<LandingPage>
   }
 
   Widget _buildTabBar() {
-    
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
@@ -170,4 +185,3 @@ class _LandingPageState extends State<LandingPage>
     );
   }
 }
-

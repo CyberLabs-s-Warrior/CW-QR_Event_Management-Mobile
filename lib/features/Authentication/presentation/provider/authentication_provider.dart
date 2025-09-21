@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:qr_event_management/features/Authentication/presentation/pages/login_page.dart';
+import 'package:qr_event_management/gen/alert/toastification.dart';
 
 import '../../../../core/error/clean_error_message_cleaner.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/authorization_entity.dart';
 import '../../domain/entities/forgot_password.dart';
 import '../../domain/entities/recovery_password.dart';
@@ -391,5 +396,102 @@ class AuthenticationProvider extends ChangeNotifier {
   void _setGetAuthorization(AuthStatus status) {
     _getAuthorizationStatus = status;
     notifyListeners();
+  }
+
+  //? check token expired
+  bool isTokenExpired() {
+    print('checked');
+
+    if (_authorization == null || _authorization!.token.isEmpty) return true;
+
+    try {
+      // laravel sanctum token check
+      //(format: number|string)
+      if (_authorization!.token.contains('|')) {
+        // if token is sanctum then directly use expires_at
+        if (_authorization!.expiresAt.isNotEmpty) {
+          try {
+            final tokenExpiryTime = DateTime.parse(_authorization!.expiresAt);
+            return DateTime.now().isAfter(tokenExpiryTime);
+          } catch (parseError) {
+            print('Error parsing expiresAt date: $parseError');
+            // just consider valid
+            return false;
+          }
+        }
+        // no expired info, consider valid
+        return false; 
+      }
+
+      // check is token JWT standard (have 2 dots)
+      final parts = _authorization!.token.split('.');
+      if (parts.length == 3) {
+        // if jwt standard, dcode pyload
+        final payload = parts[1];
+        final normalized = base64Url.normalize(payload);
+        final decoded = utf8.decode(base64Url.decode(normalized));
+        final payloadMap = jsonDecode(decoded);
+
+        if (payloadMap.containsKey('exp')) {
+          final expiry = DateTime.fromMillisecondsSinceEpoch(
+            payloadMap['exp'] * 1000,
+          );
+          return DateTime.now().isAfter(expiry);
+        }
+      }
+
+      // check expires_at for fallback
+      if (_authorization!.expiresAt.isNotEmpty) {
+        try {
+          final tokenExpiryTime = DateTime.parse(_authorization!.expiresAt);
+          return DateTime.now().isAfter(tokenExpiryTime);
+        } catch (parseError) {
+          print('Error parsing expiresAt date: $parseError');
+          // just considr valid
+          return false; 
+        }
+      }
+
+      // no expired information valid
+      // by default: juust cnsider valid
+      return false;
+    } catch (e) {
+      print('Error checking token expiry: $e');
+      // valid if there's an error
+      return false; 
+    }
+  }
+
+  //? check and auto logout
+  Future<void> checkTokenAndLogout(BuildContext context) async {
+    print('Checking token validity...');
+    print('Authorization: ${_authorization?.token}');
+    print('Expires at: ${_authorization?.expiresAt}');
+
+    final isExpired = isTokenExpired();
+    print('Final token expiry result: $isExpired');
+
+    if (isExpired) {
+      print('Token expired, logging out...');
+
+      showCustomToast(
+        context: context,
+        message: "Session expired. Please login again.",
+        backgroundColor: AppColors.warning,
+        foregroundColor: AppColors.white,
+        primaryColor: AppColors.white,
+      );
+
+      // Logout
+      await logout();
+
+      // Navigate ke login page
+      Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => LoginPage()),
+        (route) => false,
+      );
+    } else {
+      print('Token still valid, no need to logout');
+    }
   }
 }

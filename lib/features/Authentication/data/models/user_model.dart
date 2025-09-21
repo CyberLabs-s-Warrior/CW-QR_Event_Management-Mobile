@@ -13,15 +13,14 @@ class UserModel extends User {
     required super.token,
   });
 
-  // convert object json ke model
   factory UserModel.fromJson(Map<String, dynamic> data) {
     return UserModel(
-      id: data['id'],
-      name: data['name'],
-      email: data['email'],
-      createdAt: data['created_at'],
-      updatedAt: data['updated_at'],
-      role: data['role'],
+      id: data['id']  ?? 0,
+      name: data['name'] ?? '',
+      email: data['email'] ?? '',
+      createdAt: data['created_at'] ?? '',
+      updatedAt: data['updated_at'] ?? '',
+      role: data['role'] ?? '',
       phoneNumber: data['phone_number'] ?? '',
       token: data['token'] ?? '',
       expiresAt: data['expires_at'] ?? '',

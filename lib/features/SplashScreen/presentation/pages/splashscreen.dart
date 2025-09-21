@@ -23,13 +23,25 @@ class _SplashScreenState extends State<SplashScreen> {
 
     final token = authProvider.authorization?.token;
 
-    if (token == null) {
+    if (token == null || authProvider.isTokenExpired()) {
       navigateToLogin();
     } else {
       final isOnline = context.read<NetworkStatusProvider>().isOnline;
 
       if (isOnline) {
-        await authProvider.refreshToken(authProvider.authorization!.token);
+        try {
+          await authProvider.refreshToken(authProvider.authorization!.token);
+          //check token after refresh
+          if (authProvider.refreshTokenStatus == AuthStatus.error ||
+              authProvider.isTokenExpired()) {
+            navigateToLogin();
+            return;
+          }
+        } catch (e) {
+          print('Error refreshing token: $e');
+          navigateToLogin();
+          return;
+        }
       }
 
       navigateToLanding();
@@ -51,6 +63,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
+    Future.delayed(const Duration(seconds: 3));
+
     checkToken();
   }
 
