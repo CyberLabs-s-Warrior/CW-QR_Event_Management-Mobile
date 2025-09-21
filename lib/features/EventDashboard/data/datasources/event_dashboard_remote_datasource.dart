@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import '../models/attendance_data_model.dart';
-import '../models/list_attendees_model.dart';
 
 import '../../../../core/constant/constant.dart';
 import '../../../../core/error/exceptions.dart';
+import '../models/attendance_data_model.dart';
 import '../models/event_model.dart';
+import '../models/list_attendees_model.dart';
 
 abstract class EventDashboardRemoteDatasource {
   Future<EventModel> getEventById(token, eventId);

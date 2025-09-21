@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:qr_event_management/features/Authentication/presentation/provider/authentication_provider.dart';
-import 'package:qr_event_management/features/EventDashboard/presentation/provider/event_dashboard_provider.dart';
+import '../../../Authentication/presentation/provider/authentication_provider.dart';
+import '../provider/event_dashboard_provider.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../gen/loading/wave_loading.dart';

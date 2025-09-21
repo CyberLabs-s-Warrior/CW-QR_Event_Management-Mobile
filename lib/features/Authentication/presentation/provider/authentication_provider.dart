@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:qr_event_management/features/Authentication/presentation/pages/login_page.dart';
-import 'package:qr_event_management/gen/alert/toastification.dart';
+import '../pages/login_page.dart';
+import '../../../../gen/alert/toastification.dart';
 
 import '../../../../core/error/clean_error_message_cleaner.dart';
 import '../../../../core/theme/app_colors.dart';

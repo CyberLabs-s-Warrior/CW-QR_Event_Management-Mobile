@@ -1,11 +1,11 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
-import '../../domain/entities/attendance_data_entity.dart';
-import '../../domain/entities/list_attendees_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/error/failure.dart';
+import '../../domain/entities/attendance_data_entity.dart';
 import '../../domain/entities/event_entity.dart';
+import '../../domain/entities/list_attendees_entity.dart';
 import '../../domain/repositories/event_dashboard_repository.dart';
 import '../datasources/event_dashboard_remote_datasource.dart';
 

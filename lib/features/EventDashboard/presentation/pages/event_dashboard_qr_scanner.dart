@@ -9,7 +9,7 @@ import 'package:iconify_flutter/icons/ri.dart';
 import 'package:iconify_flutter/icons/uil.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
-import 'package:qr_event_management/gen/loading/wave_loading.dart';
+import '../../../../gen/loading/wave_loading.dart';
 import '../../../../core/constant/enum_status.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import 'event_dashboard_attendance_result_page.dart';
