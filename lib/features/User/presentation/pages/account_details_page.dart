@@ -149,215 +149,207 @@ class _AccountDetailsPageState extends State<AccountDetailsPage> {
           },
         ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Center(
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(9999),
-                      child: CachedNetworkImage(
-                        imageUrl:
-                           "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg",
-                        width: 200,
-                        height: 200,
-                        fit: BoxFit.cover,
-                        placeholder:
-                            (context, url) => Container(
-                              height: 200,
-                              width: 200,
-                              decoration: BoxDecoration(
-                                color: AppColors.secondary,
-                              ),
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: AppColors.primary,
-                                  strokeWidth: 10,
-                                ),
-                              ),
-                            ),
-                        errorWidget:
-                            (context, url, error) => Container(
-                              height: 200,
-                              width: 200,
-                              decoration: BoxDecoration(
-                                color: AppColors.secondary,
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.broken_image,
-                                  color: AppColors.primary,
-                                  size: 100,
-                                ),
-                              ),
-                            ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 8,
-                      right: 8,
-                      child: GestureDetector(
-                        onTap: () {
-                          print('clicked open photo');
-                        },
-                        child: Container(
-                          width: 48,
-                          height: 48,
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 3),
-                          ),
-                          child: const Icon(
-                            Icons.camera_alt_rounded,
-                            color: Colors.white,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Positioned(
-                    //   top: 8,
-                    //   right: 8,
-                    //   child: GestureDetector(
-                    //     onTap: () {
-                    //       print('clicked delete photo');
-                    //     },
-                    //     child: Container(
-                    //       width: 48,
-                    //       height: 48,
-                    //       decoration: BoxDecoration(
-                    //         color: Colors.white,
-                    //         shape: BoxShape.circle,
-                    //         border: Border.all(color: Colors.white, width: 3),
-                    //       ),
-                    //       child: const Iconify(
-                    //         SystemUicons.cross,
-                    //         color: Colors.red,
-                    //         size: 24,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
-                ),
-              ),
-              Gap(40),
+      body: Consumer2<AuthenticationProvider, UserProvider>(
+        builder: (context, authProvider, userProvider, child) {
+          if (userProvider.editProfileStatus == ResponseStatus.loading) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              showLoadingDialog(context, text: "Editing your profile...");
+            });
+          } else if (userProvider.editProfileStatus == ResponseStatus.success) {
+            Navigator.of(context, rootNavigator: true).pop();
 
-              Consumer2<AuthenticationProvider, UserProvider>(
-                builder: (context, authProvider, userProvider, child) {
-                  if (userProvider.editProfileStatus ==
-                      ResponseStatus.loading) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      showLoadingDialog(
-                        context,
-                        text: "Editing your profile...",
-                      );
-                    });
-                  } else if (userProvider.editProfileStatus ==
-                      ResponseStatus.success) {
-                    Navigator.of(context, rootNavigator: true).pop();
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              showCustomToast(
+                context: context,
+                message: 'Success, your profile has been updated!',
+                backgroundColor: AppColors.success,
+                foregroundColor: AppColors.white,
+                primaryColor: AppColors.white,
+              );
+            });
 
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      showCustomToast(
-                        context: context,
-                        message: 'Success, your profile has been updated!',
-                        backgroundColor: AppColors.success,
-                        foregroundColor: AppColors.white,
-                        primaryColor: AppColors.white,
-                      );
-                    });
+            _refreshData();
 
-                    _refreshData();
+            userProvider.resetAllStatus();
+          } else if (userProvider.editProfileStatus == ResponseStatus.error) {
+            Navigator.of(context, rootNavigator: true).pop();
 
-                    userProvider.resetAllStatus();
-                  } else if (userProvider.editProfileStatus ==
-                      ResponseStatus.error) {
-                    Navigator.of(context, rootNavigator: true).pop();
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              showCustomToast(
+                context: context,
+                message: userProvider.errorMessage ?? '',
+                backgroundColor: AppColors.error,
+                foregroundColor: AppColors.white,
+                primaryColor: AppColors.white,
+              );
+            });
 
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      showCustomToast(
-                        context: context,
-                        message: userProvider.errorMessage ?? '',
-                        backgroundColor: AppColors.error,
-                        foregroundColor: AppColors.white,
-                        primaryColor: AppColors.white,
-                      );
-                    });
-
-                    userProvider.resetAllStatus();
-                  }
-
-                  if (authProvider.getUserFromApiStatus == AuthStatus.loading) {
-                    return WaveLoading();
-                  } else if (authProvider.getUserFromApiStatus ==
-                      AuthStatus.error) {
-                    return Center(child: WaveLoading());
-                  } else {
-                    return Column(
+            userProvider.resetAllStatus();
+          }
+          return SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Center(
+                    child: Stack(
                       children: [
-                        GeneralTextField(
-                          controller: _nameController,
-                          hintText: 'Your Name',
-                          prefixIcon: Icons.verified_user_outlined,
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(9999),
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg",
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.cover,
+                            placeholder:
+                                (context, url) => Container(
+                                  height: 200,
+                                  width: 200,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.secondary,
+                                  ),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.primary,
+                                      strokeWidth: 10,
+                                    ),
+                                  ),
+                                ),
+                            errorWidget:
+                                (context, url, error) => Container(
+                                  height: 200,
+                                  width: 200,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.secondary,
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.broken_image,
+                                      color: AppColors.primary,
+                                      size: 100,
+                                    ),
+                                  ),
+                                ),
+                          ),
                         ),
-                        Gap(20),
-                        GeneralTextField(
-                          controller: _emailController,
-                          hintText: 'Your Email',
-                          prefixIcon: Icons.email_outlined,
-                          readOnly: true,
-                        ),
-                        Gap(20),
-                        GeneralTextField(
-                          controller: _phoneNumberController,
-                          hintText: 'Your Phone Number',
-                          prefixIcon: Icons.phone_outlined,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                        ),
-                        Gap(20),
-                        GeneralTextField(
-                          controller: _roleController,
-                          hintText: 'Your Role',
-                          prefixIcon: Icons.supervised_user_circle_outlined,
-                          readOnly: true,
-                        ),
+                        // edit profile
+                        // Positioned(
+                        //   bottom: 8,
+                        //   right: 8,
+                        //   child: GestureDetector(
+                        //     onTap: () {
+                        //       print('clicked open photo');
+                        //     },
+                        //     child: Container(
+                        //       width: 48,
+                        //       height: 48,
+                        //       decoration: BoxDecoration(
+                        //         color: Colors.black54,
+                        //         shape: BoxShape.circle,
+                        //         border: Border.all(color: Colors.white, width: 3),
+                        //       ),
+                        //       child: const Icon(
+                        //         Icons.camera_alt_rounded,
+                        //         color: Colors.white,
+                        //         size: 24,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // back to normal
+                        // Positioned(
+                        //   top: 8,
+                        //   right: 8,
+                        //   child: GestureDetector(
+                        //     onTap: () {
+                        //       print('clicked delete photo');
+                        //     },
+                        //     child: Container(
+                        //       width: 48,
+                        //       height: 48,
+                        //       decoration: BoxDecoration(
+                        //         color: Colors.white,
+                        //         shape: BoxShape.circle,
+                        //         border: Border.all(color: Colors.white, width: 3),
+                        //       ),
+                        //       child: const Iconify(
+                        //         SystemUicons.cross,
+                        //         color: Colors.red,
+                        //         size: 24,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
-                    );
-                  }
-                },
-              ),
-
-              Spacer(),
-              SizedBox(
-                width: double.infinity,
-
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.white,
-                    minimumSize: Size(100, 55),
-                  ),
-                  onPressed: editProfile,
-                  child: const Text(
-                    'Confirm my Editing',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFCED4FF),
                     ),
                   ),
-                ),
+                  Gap(40),
+
+                  authProvider.getUserFromApiStatus == AuthStatus.loading
+                      ? WaveLoading()
+                      : authProvider.getUserFromApiStatus == AuthStatus.error
+                      ? Center(child: WaveLoading())
+                      : Column(
+                        children: [
+                          GeneralTextField(
+                            controller: _nameController,
+                            hintText: 'Your Name',
+                            prefixIcon: Icons.verified_user_outlined,
+                          ),
+                          Gap(20),
+                          GeneralTextField(
+                            controller: _emailController,
+                            hintText: 'Your Email',
+                            prefixIcon: Icons.email_outlined,
+                            readOnly: true,
+                          ),
+                          Gap(20),
+                          GeneralTextField(
+                            controller: _phoneNumberController,
+                            hintText: 'Your Phone Number',
+                            prefixIcon: Icons.phone_outlined,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                          ),
+                          Gap(20),
+                          GeneralTextField(
+                            controller: _roleController,
+                            hintText: 'Your Role',
+                            prefixIcon: Icons.supervised_user_circle_outlined,
+                            readOnly: true,
+                          ),
+                        ],
+                      ),
+
+                  Spacer(),
+                  SizedBox(
+                    width: double.infinity,
+
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: AppColors.white,
+                        minimumSize: Size(100, 55),
+                      ),
+                      onPressed: editProfile,
+                      child: const Text(
+                        'Confirm my Editing',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFCED4FF),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

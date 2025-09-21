@@ -90,7 +90,6 @@ class _LoginPageState extends State<LoginPage>
     }
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -164,10 +163,12 @@ class _LoginPageState extends State<LoginPage>
             WidgetsBinding.instance.addPostFrameCallback((_) {
               authProvider.resetForgotPasswordStatus();
 
-              showCustomSnackBar(
+              showCustomToast(
                 context: context,
-                message: 'Verification code sent!',
-                color: AppColors.primary,
+                message: "Verification sent!",
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.white,
+                primaryColor: AppColors.white,
               );
 
               Navigator.push(
@@ -191,10 +192,12 @@ class _LoginPageState extends State<LoginPage>
             WidgetsBinding.instance.addPostFrameCallback((_) {
               authProvider.resetForgotPasswordStatus();
 
-              showCustomSnackBar(
+               showCustomToast(
                 context: context,
                 message: authProvider.cleanErrorMessage,
-                color: AppColors.error,
+                backgroundColor: AppColors.error,
+                foregroundColor: AppColors.white,
+                primaryColor: AppColors.white,
               );
             });
           }

@@ -9,6 +9,7 @@ import 'package:iconify_flutter/icons/ri.dart';
 import 'package:iconify_flutter/icons/uil.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
+import 'package:qr_event_management/gen/loading/wave_loading.dart';
 import '../../../../core/constant/enum_status.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import 'event_dashboard_attendance_result_page.dart';
@@ -69,6 +70,10 @@ class _QRViewTestState extends State<QRViewTest>
 
   @override
   void dispose() {
+    final eventDashboardProvider = context.read<EventDashboardProvider>();
+    eventDashboardProvider.resetAttendanceStatus();
+    eventDashboardProvider.resetAttendanceState();
+
     _animationController.dispose();
     controller?.dispose();
     super.dispose();
@@ -227,9 +232,8 @@ class _QRViewTestState extends State<QRViewTest>
 
               if (eventDashboardProvider.attendanceStatus ==
                   ResponseStatus.success) {
-                Navigator.of(context, rootNavigator: true).pop();
-
                 WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.of(context, rootNavigator: true).pop();
                   showCustomToast(
                     context: context,
                     message: eventDashboardProvider.attendanceData!.message,
@@ -242,9 +246,8 @@ class _QRViewTestState extends State<QRViewTest>
 
               if (eventDashboardProvider.attendanceStatus ==
                   ResponseStatus.error) {
-                Navigator.of(context, rootNavigator: true).pop();
-
                 WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.of(context, rootNavigator: true).pop();
                   showCustomToast(
                     context: context,
                     message: eventDashboardProvider.cleanErrorMessage,
@@ -252,10 +255,11 @@ class _QRViewTestState extends State<QRViewTest>
                     foregroundColor: AppColors.white,
                     primaryColor: AppColors.white,
                   );
+                  Future.delayed(Duration(milliseconds: 500), () {
+                    eventDashboardProvider.resetAttendanceStatus();
+                    eventDashboardProvider.resetAttendanceState();
+                  });
                 });
-
-                eventDashboardProvider.resetAttendanceStatus();
-                eventDashboardProvider.resetAttendanceState();
               }
 
               return Positioned(
@@ -285,8 +289,9 @@ class _QRViewTestState extends State<QRViewTest>
                             child: Text('Position the QR code in the frame'),
                           )
                           : eventDashboardProvider.attendanceStatus ==
-                              ResponseStatus.loading
-                          ? Center(child: CircularProgressIndicator())
+                                  ResponseStatus.loading ||
+                              eventDashboardProvider.attendanceData == null
+                          ? Center(child: WaveLoading())
                           : _currentScanMode == ScanMode.attendance
                           ? EventDashboardScanAttendanceResult(
                             eventDashboardProvider: eventDashboardProvider,
@@ -460,18 +465,34 @@ class _QRViewTestState extends State<QRViewTest>
             result = scanData;
           });
 
-          if (_currentScanMode == ScanMode.attendance) {
-            await eventDashboardProvider.scanAttendance(
-              authProvider.authorization!.token,
-              widget.eventId,
-              result!.code,
-            );
-          } else {
-            await eventDashboardProvider.scanIdentityCheck(
-              authProvider.authorization!.token,
-              widget.eventId,
-              result!.code,
-            );
+          // Extract attendee ID from QR code
+          String? attendeeId = result!.code;
+
+          if (attendeeId == null || attendeeId.isEmpty) {
+            // Handle invalid QR code here
+            eventDashboardProvider.errorMessage = "Invalid QR code format";
+            eventDashboardProvider.setAttendanceStatus(ResponseStatus.error);
+            return;
+          }
+
+          try {
+            if (_currentScanMode == ScanMode.attendance) {
+              await eventDashboardProvider.scanAttendance(
+                authProvider.authorization!.token,
+                widget.eventId,
+                attendeeId,
+              );
+            } else {
+              await eventDashboardProvider.scanIdentityCheck(
+                authProvider.authorization!.token,
+                widget.eventId,
+                attendeeId,
+              );
+            }
+          } catch (e) {
+            eventDashboardProvider.errorMessage =
+                "Error processing QR code: ${e.toString()}";
+            eventDashboardProvider.setAttendanceStatus(ResponseStatus.error);
           }
         }
       }

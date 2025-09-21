@@ -113,28 +113,28 @@ class _HomeLandingHeadState extends State<HomeLandingHead> {
               ),
             ),
           ),
-          Row(
-            children: [
-              ZoomTapAnimation(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => NotificationPage()),
-                  );
-                },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(217, 217, 217, 1000),
-                    ),
-                    child: Iconify(Ic.baseline_notifications),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     ZoomTapAnimation(
+          //       onTap: () {
+          //         Navigator.push(
+          //           context,
+          //           MaterialPageRoute(builder: (_) => NotificationPage()),
+          //         );
+          //       },
+          //       child: ClipRRect(
+          //         borderRadius: BorderRadius.circular(50),
+          //         child: Container(
+          //           padding: EdgeInsets.all(10),
+          //           decoration: BoxDecoration(
+          //             color: const Color.fromARGB(217, 217, 217, 1000),
+          //           ),
+          //           child: Iconify(Ic.baseline_notifications),
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );

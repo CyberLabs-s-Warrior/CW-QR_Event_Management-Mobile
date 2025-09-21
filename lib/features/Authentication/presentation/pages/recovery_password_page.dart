@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_event_management/gen/alert/toastification.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../gen/alert/snack_bar.dart';
@@ -48,9 +49,12 @@ class _RecoveryPasswordPageState extends State<RecoveryPasswordPage> {
               Navigator.pop(context, true);
               authProvider.resetRecoveryPasswordStatus();
 
-              showCustomSnackBar(
+              showCustomToast(
                 context: context,
-                message: "Password Recovered Successful!",
+                message: "Password Recovered Successful",
+                backgroundColor: AppColors.success,
+                foregroundColor: AppColors.white,
+                primaryColor: AppColors.white,
               );
               Navigator.pushAndRemoveUntil(
                 context,
@@ -72,9 +76,12 @@ class _RecoveryPasswordPageState extends State<RecoveryPasswordPage> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               authProvider.resetRecoveryPasswordStatus();
 
-              showCustomSnackBar(
+              showCustomToast(
                 context: context,
-                message: authProvider.cleanErrorMessage,
+                message: "Password Recovered Successful",
+                backgroundColor: AppColors.error,
+                foregroundColor: AppColors.white,
+                primaryColor: AppColors.white,
               );
             });
           }
@@ -215,28 +222,34 @@ class _RecoveryPasswordPageState extends State<RecoveryPasswordPage> {
     final authProvider = context.read<AuthenticationProvider>();
 
     if (_newPasswordController.text.isEmpty) {
-      showCustomSnackBar(
+      showCustomToast(
         context: context,
-        message: 'Please enter new Password',
-        color: AppColors.warning,
+        message: "Please enter new password",
+        backgroundColor: AppColors.warning,
+        foregroundColor: AppColors.white,
+        primaryColor: AppColors.white,
       );
       return;
     }
 
     if (_newPasswordController.text.length < 6) {
-      showCustomSnackBar(
+      showCustomToast(
         context: context,
-        message: 'Password must be at least 6 characters',
-        color: AppColors.warning,
+        message: "Password must be at least 6 characters",
+        backgroundColor: AppColors.warning,
+        foregroundColor: AppColors.white,
+        primaryColor: AppColors.white,
       );
       return;
     }
 
     if (_newPasswordController.text != _confirmNewPasswordController.text) {
-      showCustomSnackBar(
+       showCustomToast(
         context: context,
-        message: 'Passwords do not match',
-        color: AppColors.warning,
+        message: "Password do not match",
+        backgroundColor: AppColors.warning,
+        foregroundColor: AppColors.white,
+        primaryColor: AppColors.white,
       );
       return;
     }

@@ -18,16 +18,16 @@ import '../../../../widgets/general_back_button.dart';
 
 enum AttendeeFilter { none, present, absent, azAsc, azDesc }
 
-class EventDashboardPendingAttendeesPage extends StatefulWidget {
-  const EventDashboardPendingAttendeesPage({super.key});
+class EventDashboardAttendeesPage extends StatefulWidget {
+  const EventDashboardAttendeesPage({super.key});
 
   @override
-  State<EventDashboardPendingAttendeesPage> createState() =>
-      _EventDashboardPendingAttendeesPageState();
+  State<EventDashboardAttendeesPage> createState() =>
+      _EventDashboardAtttendesPageState();
 }
 
-class _EventDashboardPendingAttendeesPageState
-    extends State<EventDashboardPendingAttendeesPage> {
+class _EventDashboardAtttendesPageState
+    extends State<EventDashboardAttendeesPage> {
   // Search and filter state
   String searchQuery = "";
   AttendeeFilter currentFilter = AttendeeFilter.none;
@@ -228,13 +228,12 @@ class _EventDashboardPendingAttendeesPageState
 
   void handleSubmit(
     List<Map<String, dynamic>> selectedData,
-   AuthenticationProvider authProvider,
-   EventDashboardProvider provider,
+    AuthenticationProvider authProvider,
+    EventDashboardProvider provider,
   ) async {
     try {
       final token = authProvider.authorization?.token;
       final eventId = provider.event?.id;
-
 
       Navigator.pop(context);
 
@@ -315,32 +314,34 @@ class _EventDashboardPendingAttendeesPageState
             },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: InkWell(
-            onTap: () => handleSubmit(selectedData, authProvider, provider),
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-              decoration: BoxDecoration(
-                color: AppColors.buttonBackgroundPrimary,
-                borderRadius: BorderRadius.circular(9999),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Update',
-                    style: TextStyle(
-                      color: AppColors.secondary,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
+        if (provider.event != null &&
+            provider.event!.isOngoing)
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: InkWell(
+              onTap: () => handleSubmit(selectedData, authProvider, provider),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                decoration: BoxDecoration(
+                  color: AppColors.buttonBackgroundPrimary,
+                  borderRadius: BorderRadius.circular(9999),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Update',
+                      style: TextStyle(
+                        color: AppColors.secondary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
       ],
     );
   }
