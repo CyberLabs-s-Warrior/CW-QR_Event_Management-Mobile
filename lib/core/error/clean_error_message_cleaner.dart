@@ -16,6 +16,15 @@ extension ErrorMessageCleaner on String? {
     if (cleanMessage.startsWith('ServerException: ')) {
       cleanMessage = cleanMessage.replaceFirst('ServerException: ', '');
     }
+    if (cleanMessage.startsWith('ClientException with SocketException: ')) {
+      cleanMessage = "Something Error with Server";
+    }
+    if (cleanMessage.startsWith('ClientException: ')) {
+      cleanMessage = "Something Error with Server";
+    }
+    if (cleanMessage.startsWith('SocketException: ')) {
+      cleanMessage = "Something Error with Server";
+    }
 
     return cleanMessage;
   }

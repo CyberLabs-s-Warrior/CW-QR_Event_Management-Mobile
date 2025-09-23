@@ -1,11 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import '../pages/login_page.dart';
-import '../../../../gen/alert/toastification.dart';
 
 import '../../../../core/error/clean_error_message_cleaner.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../gen/alert/toastification.dart';
 import '../../domain/entities/authorization_entity.dart';
 import '../../domain/entities/forgot_password.dart';
 import '../../domain/entities/recovery_password.dart';
@@ -20,6 +19,7 @@ import '../../domain/usecases/recovery_password.dart';
 import '../../domain/usecases/refresh_token.dart';
 import '../../domain/usecases/sign_in.dart';
 import '../../domain/usecases/verify_code.dart';
+import '../pages/login_page.dart';
 
 enum AuthStatus { initial, loading, success, error }
 

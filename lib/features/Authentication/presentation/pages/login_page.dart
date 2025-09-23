@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../../../../core/helper/validation_helper.dart';
 import '../../../../core/provider/validation_provider.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../gen/alert/snack_bar.dart';
 import '../../../../gen/alert/toastification.dart';
 import '../../../Landing/presentation/pages/landing_page.dart';
 import '../../../User/presentation/provider/user_provider.dart';
