@@ -447,13 +447,13 @@ class AuthenticationProvider extends ChangeNotifier {
           return DateTime.now().isAfter(tokenExpiryTime);
         } catch (parseError) {
           print('Error parsing expiresAt date: $parseError');
-          // just considr valid
+          // just consider valid
           return false; 
         }
       }
 
       // no expired information valid
-      // by default: juust cnsider valid
+      // by default: just consider valid
       return false;
     } catch (e) {
       print('Error checking token expiry: $e');
