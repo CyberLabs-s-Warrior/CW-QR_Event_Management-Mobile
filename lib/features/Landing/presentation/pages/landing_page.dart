@@ -58,7 +58,7 @@ class _LandingPageState extends State<LandingPage>
     });
 
     // Set up periodic token check (every 15 minutes)
-    Timer.periodic(Duration(seconds: 5), (_) {
+    Timer.periodic(Duration(minutes: 15), (_) {
       print("Running token check...");
       _checkTokenValidity();
     });
