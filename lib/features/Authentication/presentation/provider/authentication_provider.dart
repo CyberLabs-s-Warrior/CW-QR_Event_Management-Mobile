@@ -426,7 +426,7 @@ class AuthenticationProvider extends ChangeNotifier {
       // check is token JWT standard (have 2 dots)
       final parts = _authorization!.token.split('.');
       if (parts.length == 3) {
-        // if jwt standard, dcode pyload
+        // if jwt standard, decode payload
         final payload = parts[1];
         final normalized = base64Url.normalize(payload);
         final decoded = utf8.decode(base64Url.decode(normalized));
