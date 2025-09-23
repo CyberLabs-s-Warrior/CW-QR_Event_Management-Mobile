@@ -1,5 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'features/EventDashboard/domain/usecases/get_event_attendees_usecase.dart';
+import 'features/EventDashboard/domain/usecases/scan_attendance_usecase.dart';
+import 'features/EventDashboard/domain/usecases/scan_identity_check_usecase.dart';
+import 'features/EventDashboard/domain/usecases/update_attendees_status_usecase.dart';
+import 'features/Authentication/domain/usecases/get_authorization.dart';
 import 'features/Authentication/domain/usecases/get_user_from_api.dart';
 import 'features/User/data/datasources/user_remote_datasource.dart';
 import 'features/User/data/repositories/user_repository_implementation.dart';
@@ -235,6 +240,7 @@ Future<void> init() async {
   myInjection.registerLazySingleton(() => RecoveryPassword(myInjection()));
   myInjection.registerLazySingleton(() => RefreshToken(myInjection()));
   myInjection.registerLazySingleton(() => GetUserFromApi(myInjection()));
+  myInjection.registerLazySingleton(() => GetAuthorization(myInjection()));
 
   // * LANDING HOME
   myInjection.registerLazySingleton(() => HomeSummaryUsecase(myInjection()));
@@ -258,6 +264,16 @@ Future<void> init() async {
 
   // * EVENT DASHBOARD
   myInjection.registerLazySingleton(() => GetEventByIdUsecase(myInjection()));
+  myInjection.registerLazySingleton(() => ScanAttendanceUsecase(myInjection()));
+  myInjection.registerLazySingleton(
+    () => ScanIdentityCheckUsecase(myInjection()),
+  );
+  myInjection.registerLazySingleton(
+    () => GetEventAttendeesUsecase(myInjection()),
+  );
+  myInjection.registerLazySingleton(
+    () => UpdateAttendeesStatusUsecase(myInjection()),
+  );
 
   // * CHANGE PASSWORD
   myInjection.registerLazySingleton(() => ChangePasswordUsecase(myInjection()));
@@ -290,6 +306,7 @@ Future<void> init() async {
       recoveryPasswordUseCase: myInjection(),
       refreshTokenUsecase: myInjection(),
       getUserFromApiUsecase: myInjection(),
+      getAuthorizationUsecase: myInjection(),
     ),
   );
 
@@ -317,12 +334,18 @@ Future<void> init() async {
 
   // * EVENT DASHBOARD
   myInjection.registerFactory(
-    () => EventDashboardProvider(getEventByIdUsecase: myInjection()),
+    () => EventDashboardProvider(
+      getEventByIdUsecase: myInjection(),
+      scanAttendanceUsecase: myInjection(),
+      scanIdentityCheckUsecase: myInjection(),
+      getEventAttendeesUsecase: myInjection(), updateAttendeesStatusUsecase: myInjection(),
+    ),
   );
 
   // * CHANGE PASSWORD
   myInjection.registerFactory(
-    () => ChangePasswordProvider(changePasswordUsecase: myInjection()),
+    () => ChangePasswordProvider(changePasswordUsecase: 
+    myInjection()),
   );
 
   // * CHANGE PASSWORD

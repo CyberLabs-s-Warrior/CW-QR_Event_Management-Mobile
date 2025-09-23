@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+
 import '../../../../core/theme/app_colors.dart';
+import '../provider/event_dashboard_provider.dart';
 
 class EventRegistrationPercentage extends StatelessWidget {
+  final EventDashboardProvider eventDashboardProvider;
+
   const EventRegistrationPercentage({
     super.key,
+    required this.eventDashboardProvider,
   });
 
   @override
@@ -14,14 +19,13 @@ class EventRegistrationPercentage extends StatelessWidget {
         radius: 120.0,
         lineWidth: 25.0,
         animation: true,
-        percent: 0.7,
+        percent: ((eventDashboardProvider.event?.attendancePercentage ?? 0) / 100).clamp(0.0, 1.0),
         center: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment:
-              CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              "70%",
+            Text(
+              "${eventDashboardProvider.event?.attendancePercentage ?? ''}%",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 70.0,
@@ -41,7 +45,7 @@ class EventRegistrationPercentage extends StatelessWidget {
             ),
           ],
         ),
-                              
+
         backgroundColor: AppColors.primary,
         circularStrokeCap: CircularStrokeCap.round,
         progressBorderColor: AppColors.primary,

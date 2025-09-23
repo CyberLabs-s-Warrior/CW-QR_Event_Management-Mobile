@@ -80,8 +80,42 @@ Widget eventOverview({required HomeProvider homeProvider}) {
                   ),
 
                 SizedBox(height: 3),
+                
                 Text(
-                  "Total Event Participated",
+                  "Ongoing event",
+                  style: TextStyle(
+                  fontSize: 18,
+                  color: AppColors.secondary,
+                  height: 1,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+
+                if (homeProvider.homeSummaryStatus != HomeStatus.error)
+                  Text(
+                  homeProvider.homeSummary?.ongoingEvent ??
+                    'No Ongoing Event',
+                  style: TextStyle(
+                    fontSize: 19,
+                    color: AppColors.secondary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.start,
+                  )
+                else
+                  Text(
+                  homeProvider.cleanErrorMessage,
+                  style: TextStyle(
+                    fontSize: 19,
+                    color: AppColors.secondary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.start,
+                  ),
+
+                SizedBox(height: 3),
+                Text(
+                  "Total Past Event Participated",
                   style: TextStyle(
                     fontSize: 18,
                     color: AppColors.secondary,

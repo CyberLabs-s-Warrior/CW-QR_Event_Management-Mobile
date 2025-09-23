@@ -4,18 +4,18 @@ import 'package:iconify_flutter/icons/octicon.dart';
 import 'package:iconify_flutter/icons/ri.dart';
 import 'package:iconify_flutter/icons/uil.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/provider/network_status_provider.dart';
-import '../../../../gen/alert/toastification.dart';
-import '../widgets/setting_group_head.dart';
 
+import '../../../../core/provider/network_status_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../gen/alert/snack_bar.dart';
+import '../../../../gen/alert/toastification.dart';
 import '../../../../gen/loading/dialog_screen.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../../../ChangePasswordInProfile/presentation/pages/change_password_in_profile.dart';
 import '../../../Landing/presentation/func/logout.dart';
 import '../../../User/presentation/pages/account_details_page.dart';
 import '../../../User/presentation/pages/profile_data_page.dart';
+import '../widgets/setting_group_head.dart';
 import '../widgets/setting_item.dart';
 import '../widgets/setting_landing_head.dart';
 

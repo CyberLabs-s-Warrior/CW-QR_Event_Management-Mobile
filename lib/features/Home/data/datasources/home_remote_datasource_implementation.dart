@@ -58,9 +58,6 @@ class HomeRemoteDatasourceImplementation extends HomeRemoteDatasource {
 
       if (response.statusCode == 200) {
         List<dynamic> dataBody = jsonDecode(response.body);
-        if (dataBody.isEmpty) {
-          throw EmptyException(message: "Empty Data - Error");
-        }
         // print('result body | event history: $dataBody');
         return HomeEventHistoryModel.fromJsonList(dataBody);
       } else if (response.statusCode == 404) {

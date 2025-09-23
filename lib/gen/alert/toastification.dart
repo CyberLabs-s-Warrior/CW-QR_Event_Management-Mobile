@@ -10,7 +10,7 @@ void showCustomToast({
   Color? backgroundColor,
   Color? foregroundColor,
   Duration? autoCloseDuration,
-  Alignment alignment = Alignment.topRight,
+  Alignment alignment = Alignment.topCenter,
   bool showIcon = true,
   IconData? iconData,
 }) {
@@ -27,7 +27,7 @@ void showCustomToast({
 
     title: title != null ? Text(title) : null,
     description: Text(message, style: TextStyle(fontWeight: FontWeight.w600)),
-    alignment: alignment,
+    alignment: alignment ,
     direction: TextDirection.ltr,
     animationDuration: const Duration(milliseconds: 300),
     icon: showIcon ? Icon(iconData ?? _getDefaultIcon(type)) : null,

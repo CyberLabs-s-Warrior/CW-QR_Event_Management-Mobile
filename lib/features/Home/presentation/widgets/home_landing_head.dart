@@ -4,14 +4,12 @@ import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/controller/inner_tab_controller.dart';
-import '../../../../core/scope/landing_tabs_scope.dart';
-import '../../../User/presentation/pages/profile_data_page.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../../../Notification/presentation/pages/notification_page.dart';
+import '../../../User/presentation/pages/profile_data_page.dart';
 
 class HomeLandingHead extends StatefulWidget {
   final int tabIndex;
@@ -46,7 +44,7 @@ class _HomeLandingHeadState extends State<HomeLandingHead> {
                     borderRadius: BorderRadius.circular(50),
                     child: CachedNetworkImage(
                       imageUrl:
-                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSMUi9wHqia_68xlAU7vP3E3sxn5K0KS-nUvBZk5jSJ54p8FPnw20uYV5yxNgF59DZoqc&usqp=CAU",
+                          "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg",
                       width: 70,
                       height: 70,
                       fit: BoxFit.cover,

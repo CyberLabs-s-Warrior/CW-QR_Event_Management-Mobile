@@ -54,6 +54,9 @@ class LandingEventRemoteDatasourceImplementation
       final body = jsonDecode(response.body);
       throw EmptyException(message: body['message']);
     } else {
+      final body = jsonDecode(response.body);
+      print('while fetching: $body');
+
       throw GeneralException(message: "Something Error");
     }
   }

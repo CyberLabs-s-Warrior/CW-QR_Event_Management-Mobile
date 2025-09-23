@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../core/error/failure.dart';
-import '../../../../core/model/error_entity.dart';
+
 import '../../../../core/constant/enum_status.dart';
 import '../../../../core/error/clean_error_message_cleaner.dart';
+import '../../../../core/error/failure.dart';
+import '../../../../core/model/error_entity.dart';
 import '../../domain/usecases/change_password_usecase.dart';
 
 class ChangePasswordProvider extends ChangeNotifier {

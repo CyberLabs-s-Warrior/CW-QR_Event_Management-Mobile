@@ -42,15 +42,17 @@ class _HomePageState extends State<HomePage> {
   Future<void> _handleRefresh() async {
     final user = context.read<AuthenticationProvider>();
     final homeProvider = context.read<HomeProvider>();
+    print("home user token: ${user.authorization!.token}");
 
     await user.getUser();
 
-    homeProvider.getHomeSummaryRefresh(
-      token: user.authorization!.token,
+   await homeProvider.getHomeSummaryRefresh(
+      token: user.authorization?.token ?? '',
     );
 
-    homeProvider.getHomeEventHistoryRefresh(
-      token: user.authorization!.token,
+
+   await homeProvider.getHomeEventHistoryRefresh(
+      token: user.authorization?.token ?? '',
     );
   }
 

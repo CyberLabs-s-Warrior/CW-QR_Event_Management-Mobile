@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import '../entities/authorization_entity.dart';
 
 import '../../../../core/error/failure.dart';
 import '../repositories/authentication_repository.dart';
@@ -8,7 +9,7 @@ class RefreshToken {
 
   RefreshToken( this.authenticationRepository);
 
-  Future<Either<Failure, bool>> execute() async {
-    return await authenticationRepository.refreshToken();
+  Future<Either<Failure, AuthorizationEntity>> execute(String token) async {
+    return await authenticationRepository.refreshToken(token);
   }
 }

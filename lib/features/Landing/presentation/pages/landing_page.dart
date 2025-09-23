@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/ri.dart';
-import '../../../../core/scope/landing_tabs_scope.dart';
-import '../../../Home/presentation/provider/home_provider.dart';
-import '../../../Setting/presentation/pages/setting_page.dart';
-import '../../../LandingEvent/presentation/widgets/event_view.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../Home/presentation/widgets/home_view.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../core/scope/landing_tabs_scope.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../Home/presentation/provider/home_provider.dart';
+import '../../../Home/presentation/widgets/home_view.dart';
+import '../../../LandingEvent/presentation/widgets/event_view.dart';
+import '../../../Setting/presentation/pages/setting_page.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});

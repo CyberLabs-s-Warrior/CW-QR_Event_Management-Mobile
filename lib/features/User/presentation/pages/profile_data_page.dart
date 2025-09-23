@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/helper/convert_to_formatted_phone.dart';
-import '../../../Authentication/presentation/provider/authentication_provider.dart';
-import '../../../../gen/loading/wave_loading.dart';
 
+import '../../../../core/helper/convert_to_formatted_phone.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../gen/loading/wave_loading.dart';
 import '../../../../widgets/text_fields.dart';
+import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../../../Authentication/presentation/widgets/back_button.dart';
 
 class ProfileDataPage extends StatefulWidget {
@@ -76,7 +76,7 @@ class _ProfileDataPageState extends State<ProfileDataPage> {
                   borderRadius: BorderRadius.circular(9999),
                   child: CachedNetworkImage(
                     imageUrl:
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSMUi9wHqia_68xlAU7vP3E3sxn5K0KS-nUvBZk5jSJ54p8FPnw20uYV5yxNgF59DZoqc&usqp=CAU",
+                        "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg",
                     width: 200,
                     height: 200,
                     fit: BoxFit.cover,

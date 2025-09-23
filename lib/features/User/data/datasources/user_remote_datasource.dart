@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+
 import '../../../../core/constant/constant.dart';
 import '../../../../core/error/exceptions.dart';
 import '../models/user_model.dart';

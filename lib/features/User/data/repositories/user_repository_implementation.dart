@@ -1,10 +1,11 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../../core/error/failure.dart';
-import '../datasources/user_remote_datasource.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/user_repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../datasources/user_remote_datasource.dart';
 
 class UserRepositoryImplementation implements UserRepository {
   final SharedPreferences sharedPreferences;

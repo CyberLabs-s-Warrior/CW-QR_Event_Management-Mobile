@@ -25,6 +25,10 @@ class AppColors {
   static const Color backgroundPage = Colors.white;
 
   static const Color success = Color(0xFF4CAF50);
+  static const Color successDark = Color(0xFF3C9E1E);
+  static const Color successLight = Color(0xFF8CFF7F);
+  static const Color failedDark = Color(0xFF9E1E1E);
+  static const Color failedLight = Color(0xFFFF7F7F);
   static const Color error = Color(0xFFE53E3E);
   static const Color warning = Color(0xFFFF9800);
 

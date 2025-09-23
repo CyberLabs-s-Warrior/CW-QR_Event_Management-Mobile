@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/provider/network_status_provider.dart';
 
+import '../../../../core/provider/network_status_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../Authentication/presentation/pages/login_page.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
-import '../../../Landing/presentation/func/logout.dart';
-import '../../../Landing/presentation/func/refresh_token.dart';
 import '../../../Landing/presentation/pages/landing_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -21,40 +19,39 @@ class _SplashScreenState extends State<SplashScreen> {
     final authProvider = context.read<AuthenticationProvider>();
 
     await authProvider.getUser();
+    await authProvider.getAuthorization();
 
     final token = authProvider.authorization?.token;
 
     if (token == null) {
-      logoutEasy(context);
-
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
+      navigateToLogin();
     } else {
-      refreshToken(context);
-
-      final isOnline = context.select<NetworkStatusProvider, bool>(
-        (p) => p.isOnline,
-      );
+      final isOnline = context.read<NetworkStatusProvider>().isOnline;
 
       if (isOnline) {
-        await authProvider.getUserFromApi(
-          token: authProvider.authorization!.token,
-        );
+        await authProvider.refreshToken(authProvider.authorization!.token);
       }
 
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => LandingPage()));
+      navigateToLanding();
     }
+  }
+
+  void navigateToLogin() {
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
+  }
+
+  void navigateToLanding() {
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (_) => LandingPage()));
   }
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 5), () {
-      checkToken();
-    });
+    checkToken();
   }
 
   @override

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import '../../domain/entities/event_entity.dart';
 
 class EventModel extends EventEntity {
@@ -13,6 +15,10 @@ class EventModel extends EventEntity {
     required super.endDate,
     required super.banner,
     required super.createdAt,
+    required super.attendancePercentage,
+    required super.attendeeCount,
+    required super.presentOrLateCount,
+    required super.absentCount,
   });
 
   factory EventModel.fromJson(Map<String, dynamic> data) {
@@ -24,10 +30,18 @@ class EventModel extends EventEntity {
       eventCategory: data['event_category']['name'],
       createdBy: data['created_by']['name'],
       status: data['status'],
-      startDate: data['start_date'],
-      endDate: data['end_date'],
+      startDate: DateFormat(
+        'd MMMM yyyy HH:mm',
+      ).format(DateTime.parse(data['start_date'])),
+      endDate: DateFormat(
+        'd MMMM yyyy HH:mm',
+      ).format(DateTime.parse(data['end_date'])),
       banner: data['banner'],
       createdAt: data['created_at'],
+      attendancePercentage: data['attendance_percentage'],
+      attendeeCount: data['attendee_count'],
+      presentOrLateCount: data['present_or_late_count'],
+      absentCount: data['absent_count'],
     );
   }
 
@@ -43,6 +57,9 @@ class EventModel extends EventEntity {
       'end_date': endDate,
       'banner': banner,
       'created_at': createdAt,
+      'attendance_percentage': attendancePercentage,
+      'present_or_late_count': presentOrLateCount,
+      'absent_count': absentCount,
     };
   }
 }

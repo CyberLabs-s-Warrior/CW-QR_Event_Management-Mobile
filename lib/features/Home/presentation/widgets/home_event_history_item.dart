@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import '../../../EventDashboard/presentation/pages/event_dashboard_page.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../../../core/constant/constant.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../EventDashboard/presentation/pages/event_dashboard_page.dart';
 
 class HomeEventHistoryItem extends StatelessWidget {
   final String title;
@@ -27,7 +27,7 @@ class HomeEventHistoryItem extends StatelessWidget {
     String _relativeTime(String input) {
       if (input.trim().isEmpty) return '-';
 
-      // Normalisasi ke format ISO sederhana
+      // Normalize to simple ISO format
       final normalized =
           input.contains('T') ? input : input.replaceFirst(' ', 'T');
       final dt = DateTime.tryParse(normalized);

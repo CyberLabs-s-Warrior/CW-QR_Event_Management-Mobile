@@ -1,10 +1,10 @@
 class Constant {
   static String api =
-      "http://192.168.1.6:8000/api";
+      "https://str-cancelled-juice-speaking.trycloudflare.com/api";
   static String domain =
-      "http://192.168.1.6:8000";
+      "https://str-cancelled-juice-speaking.trycloudflare.com";
 
-static String endpoint(final String destination) {
-    return "http://192.168.1.6:8000/api$destination";
+  static String endpoint(final String destination) {
+    return "https://str-cancelled-juice-speaking.trycloudflare.com/api$destination";
   }
 }

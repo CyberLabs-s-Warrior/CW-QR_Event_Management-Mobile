@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/event_entity.dart';
 import '../../domain/repositories/landing_event_repository.dart';
@@ -34,6 +34,8 @@ class LandingEventRepositoryImplementation implements LandingEventRepository {
       if (connectivityResult.contains(ConnectivityResult.none)) {
         List<EventEntity> result =
             await landingEventLocalDatasource.getEventOngoing();
+
+        print('event ongoing local: $result');
 
         return Right(result);
       } else {

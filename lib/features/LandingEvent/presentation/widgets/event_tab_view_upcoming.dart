@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/bi.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/constant/enum_status.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../gen/loading/wave_loading.dart';
 import '../../../../gen/scroll/scroll_to_up_button.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../provider/landing_event_provider.dart';
+import 'event_empty_state.dart';
 import 'event_landing_card.dart';
 
 class EventTabViewUpcoming extends StatefulWidget {
@@ -33,7 +31,7 @@ class _EventTabViewUpcomingState extends State<EventTabViewUpcoming> {
 
     final landingEventProvider = context.read<LandingEventProvider>();
     landingEventProvider.getEventUpcoming(
-      token: user.authorization!.token,
+      token: user.authorization?.token ?? '',
       userId: user.userProfile!.id,
     );
   }
@@ -68,7 +66,7 @@ class _EventTabViewUpcomingState extends State<EventTabViewUpcoming> {
               RefreshIndicator(
                 onRefresh: () async {
                   await landingEventProvider.getEventUpcoming(
-                    token: authProvider.authorization!.token,
+                    token: authProvider.authorization?.token ?? '',
                     userId: authProvider.userProfile!.id,
                   );
                 },
@@ -78,72 +76,14 @@ class _EventTabViewUpcomingState extends State<EventTabViewUpcoming> {
                         ? WaveLoading()
                         : landingEventProvider.landingEventUpcomingStatus ==
                             ResponseStatus.error
-                        ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(9999),
-                                child: Container(
-                                  padding: EdgeInsets.all(25),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.secondary,
-                                  ),
-                                  child: Iconify(
-                                    Bi.calendar2_date_fill,
-                                    size: 50,
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                              ),
-                              Gap(25),
-                              Text(
-                                "Something went wrong, please\ntry again later",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              Gap(100),
-                            ],
-                          ),
+                        ? EventEmptyState(
+                          text: "Something went wrong, please\ntry again later",
                         )
                         : (landingEventProvider.landingEventUpcoming?.isEmpty ??
                             true)
-                        ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(9999),
-                                child: Container(
-                                  padding: EdgeInsets.all(25),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.secondary,
-                                  ),
-                                  child: Iconify(
-                                    Bi.calendar2_date_fill,
-                                    size: 50,
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                              ),
-                              Gap(25),
-                              Text(
-                                "No upcoming events found",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              Gap(100),
-                            ],
-                          ),
-                        )
+                        ? EventEmptyState(text: "No upcoming events found")
                         : ListView.builder(
-                          physics: const AlwaysScrollableScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           itemCount:
                               landingEventProvider.landingEventUpcoming!.length,
                           itemBuilder: (context, index) {

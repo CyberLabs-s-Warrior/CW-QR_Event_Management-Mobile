@@ -188,7 +188,7 @@ class HomeProvider extends ChangeNotifier {
    
   }) {
     _autoTimer?.cancel();
-    // Fetch pertama segera
+    // first fetch
     getHomeSummary(token: token);
     getHomeEventHistory(token: token);
 

@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../../core/error/failure.dart';
-import '../datasources/search_events_local_datasource.dart';
-import '../datasources/search_events_remote_datasource.dart';
 import '../../domain/entities/search_event_entity.dart';
 import '../../domain/repositories/search_events_repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../datasources/search_events_local_datasource.dart';
+import '../datasources/search_events_remote_datasource.dart';
 
 class SearchEventsRepositoryImplementation implements SearchEventsRepository {
   final SearchEventsRemoteDatasource searchEventsRemoteDatasource;
