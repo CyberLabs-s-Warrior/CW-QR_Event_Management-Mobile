@@ -111,7 +111,7 @@ class _EventDashboardPageState extends State<EventDashboardPage>
           } else if (eventDashboardProvider.eventStatus ==
               ResponseStatus.error) {
             return EventDashboardError(
-              message: "Coannection not stable, refresh again",
+              message: "Connection not stable, refresh again",
               eventDashboardProvider: eventDashboardProvider,
               authenticationProvider: authProvider,
               eventId: widget.eventId,
