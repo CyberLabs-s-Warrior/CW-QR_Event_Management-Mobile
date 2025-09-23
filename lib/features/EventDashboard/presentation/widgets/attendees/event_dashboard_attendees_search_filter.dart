@@ -3,7 +3,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/ion.dart';
 
-import '../../pages/event_dashboard_pending_attendees_page.dart';
+import '../../pages/event_dashboard_attendees_page.dart';
 
 class EventDashboardAttendeesSearchFilter extends StatefulWidget {
   final void Function(String)? onChangedSearch;

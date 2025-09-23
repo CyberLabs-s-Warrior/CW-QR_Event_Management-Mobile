@@ -32,7 +32,7 @@ class _EventTabViewPastState extends State<EventTabViewPast> {
     final landingEventProvider = context.read<LandingEventProvider>();
     landingEventProvider.getEventPast(
       token: user.authorization?.token ?? '',
-      userId: user.userProfile!.id,
+      userId: user.userProfile?.id ?? 0,
     );
   }
 
@@ -67,7 +67,7 @@ class _EventTabViewPastState extends State<EventTabViewPast> {
                 onRefresh: () async {
                   await landingEventProvider.getEventPast(
                     token: authProvider.authorization?.token ?? '',
-                    userId: authProvider.userProfile!.id,
+                    userId: authProvider.userProfile?.id ?? 0,
                   );
                 },
                 child:
@@ -77,10 +77,27 @@ class _EventTabViewPastState extends State<EventTabViewPast> {
                         : landingEventProvider.landingEventPastStatus ==
                             ResponseStatus.error
                         // ? EventEmptyState(text: "Something went wrong, please\ntry again later",)
-                        ? EventEmptyState(text: landingEventProvider.cleanErrorMessage,)
+                        ? EventEmptyState(
+                          text: landingEventProvider.cleanErrorMessage,
+
+                          onRefresh: () async {
+                            await landingEventProvider.getEventUpcoming(
+                              token: authProvider.authorization?.token ?? '',
+                              userId: authProvider.userProfile!.id,
+                            );
+                          },
+                        )
                         : (landingEventProvider.landingEventPast?.isEmpty ??
                             true)
-                        ? EventEmptyState(text: "No upcoming events found")
+                        ? EventEmptyState(
+                          text: "No past events found",
+                          onRefresh: () async {
+                            await landingEventProvider.getEventUpcoming(
+                              token: authProvider.authorization?.token ?? '',
+                              userId: authProvider.userProfile!.id,
+                            );
+                          },
+                        )
                         : ListView.builder(
                           controller: _scrollController,
                           shrinkWrap: true,
@@ -123,4 +140,3 @@ class _EventTabViewPastState extends State<EventTabViewPast> {
     );
   }
 }
-

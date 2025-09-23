@@ -5,8 +5,8 @@ class AuthorizationModel extends AuthorizationEntity {
 
   factory AuthorizationModel.fromJson(Map<String, dynamic> data) {
     return AuthorizationModel(
-      token: data['token'],
-      expiresAt: data['expires_at'],
+      token: data['token'] ?? '',
+      expiresAt: data['expires_at'] ?? '',
     );
   }
 

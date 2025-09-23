@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import '../entities/attendance_data_entity.dart';
-import '../entities/list_attendees_entity.dart';
 
 import '../../../../core/error/failure.dart';
+import '../entities/attendance_data_entity.dart';
 import '../entities/event_entity.dart';
+import '../entities/list_attendees_entity.dart';
 
 abstract class EventDashboardRepository {
   Future<Either<Failure, EventEntity>> getEventById(token, eventId);

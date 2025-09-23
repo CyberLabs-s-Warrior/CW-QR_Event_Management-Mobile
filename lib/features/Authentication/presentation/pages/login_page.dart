@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../../../../core/helper/validation_helper.dart';
 import '../../../../core/provider/validation_provider.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../gen/alert/snack_bar.dart';
 import '../../../../gen/alert/toastification.dart';
 import '../../../Landing/presentation/pages/landing_page.dart';
 import '../../../User/presentation/provider/user_provider.dart';
@@ -90,7 +89,6 @@ class _LoginPageState extends State<LoginPage>
     }
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -164,10 +162,12 @@ class _LoginPageState extends State<LoginPage>
             WidgetsBinding.instance.addPostFrameCallback((_) {
               authProvider.resetForgotPasswordStatus();
 
-              showCustomSnackBar(
+              showCustomToast(
                 context: context,
-                message: 'Verification code sent!',
-                color: AppColors.primary,
+                message: "Verification sent!",
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.white,
+                primaryColor: AppColors.white,
               );
 
               Navigator.push(
@@ -191,10 +191,12 @@ class _LoginPageState extends State<LoginPage>
             WidgetsBinding.instance.addPostFrameCallback((_) {
               authProvider.resetForgotPasswordStatus();
 
-              showCustomSnackBar(
+               showCustomToast(
                 context: context,
                 message: authProvider.cleanErrorMessage,
-                color: AppColors.error,
+                backgroundColor: AppColors.error,
+                foregroundColor: AppColors.white,
+                primaryColor: AppColors.white,
               );
             });
           }

@@ -1,6 +1,6 @@
+import '../../domain/entities/attendee_with_attendance_entity.dart';
 import 'attendance_model.dart';
 import 'attendee_model.dart';
-import '../../domain/entities/attendee_with_attendance_entity.dart';
 
 class AttendeeWithAttendanceModel extends AttendeeWithAttendanceEntity {
   const AttendeeWithAttendanceModel({

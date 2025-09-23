@@ -27,13 +27,15 @@ class _EventTabViewUpcomingState extends State<EventTabViewUpcoming> {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
 
-    final user = context.read<AuthenticationProvider>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final user = context.read<AuthenticationProvider>();
+      final landingEventProvider = context.read<LandingEventProvider>();
 
-    final landingEventProvider = context.read<LandingEventProvider>();
-    landingEventProvider.getEventUpcoming(
-      token: user.authorization?.token ?? '',
-      userId: user.userProfile!.id,
-    );
+      landingEventProvider.getEventUpcoming(
+        token: user.authorization?.token ?? '',
+        userId: user.userProfile?.id ?? 0,
+      );
+    });
   }
 
   void _scrollListener() {
@@ -78,14 +80,28 @@ class _EventTabViewUpcomingState extends State<EventTabViewUpcoming> {
                             ResponseStatus.error
                         ? EventEmptyState(
                           text: "Something went wrong, please\ntry again later",
+                          onRefresh: () async {
+                            await landingEventProvider.getEventUpcoming(
+                              token: authProvider.authorization?.token ?? '',
+                              userId: authProvider.userProfile!.id,
+                            );
+                          },
                         )
                         : (landingEventProvider.landingEventUpcoming?.isEmpty ??
                             true)
-                        ? EventEmptyState(text: "No upcoming events found")
+                        ? EventEmptyState(
+                          text: "No upcoming events found",
+                          onRefresh: () async {
+                            await landingEventProvider.getEventUpcoming(
+                              token: authProvider.authorization?.token ?? '',
+                              userId: authProvider.userProfile!.id,
+                            );
+                          },
+                        )
                         : ListView.builder(
                           physics: const BouncingScrollPhysics(),
                           itemCount:
-                              landingEventProvider.landingEventUpcoming!.length,
+                              landingEventProvider.landingEventUpcoming?.length,
                           itemBuilder: (context, index) {
                             final event =
                                 landingEventProvider

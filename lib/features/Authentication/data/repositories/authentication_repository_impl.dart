@@ -209,7 +209,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
       );
       return Right(authorizationModel);
     } catch (e) {
-      print('Error while get user from local: $e');
+      print('Error while get authorization from local: $e');
       return Left(SimpleFailure(e.toString()));
     }
   }

@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/provider/network_status_provider.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../gen/alert/snack_bar.dart';
 import '../../../../gen/alert/toastification.dart';
 import '../../../../gen/loading/dialog_screen.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
@@ -43,10 +42,12 @@ class SettingView extends StatelessWidget {
     if (authProvider.logoutStatus == AuthStatus.error) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         authProvider.resetLogoutStatus();
-        showCustomSnackBar(
+        showCustomToast(
           context: context,
           message: "Cannot Logout your account.",
-          color: AppColors.error,
+          backgroundColor: AppColors.warning,
+          foregroundColor: AppColors.white,
+          primaryColor: AppColors.white,
         );
       });
     }

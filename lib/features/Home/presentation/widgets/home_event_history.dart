@@ -6,6 +6,7 @@ import 'package:iconify_flutter/icons/ic.dart';
 import 'package:qr_event_management/features/Home/presentation/provider/home_provider.dart'
     show HomeStatus, HomeProvider;
 import 'package:qr_event_management/features/Home/presentation/widgets/home_event_history_item.dart';
+import 'package:qr_event_management/gen/loading/wave_loading.dart';
 
 import '../../../../core/controller/inner_tab_controller.dart';
 import '../../../../core/scope/landing_tabs_scope.dart';
@@ -40,7 +41,7 @@ Widget eventHistory({
               ),
               onPressed: () {
                 eventInnerTabIndex.value = 2;
-                // lalu pindah ke tab Events (index 1)
+                // then moved to Events tab (index 1)
                 final controller = LandingTabsScope.of(context)?.controller;
                 controller?.animateTo(1);
               },
@@ -67,8 +68,11 @@ Widget eventHistory({
         ],
       ),
 
-      homeProvider.homeEventHistoryStatus == HomeStatus.loading
-          ? Center(child: CircularProgressIndicator())
+    homeProvider.homeEventHistoryStatus == HomeStatus.loading
+          ? SizedBox(
+            height: 525,
+            
+            child: WaveLoading())
           : homeProvider.homeEventHistoryStatus == HomeStatus.error
           ? SizedBox(
             height: 525,

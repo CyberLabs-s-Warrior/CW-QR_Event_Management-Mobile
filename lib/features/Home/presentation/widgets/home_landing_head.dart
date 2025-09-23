@@ -1,14 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/ic.dart';
 import 'package:provider/provider.dart';
-import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
-import '../../../Notification/presentation/pages/notification_page.dart';
 import '../../../User/presentation/pages/profile_data_page.dart';
 
 class HomeLandingHead extends StatefulWidget {
@@ -113,28 +109,28 @@ class _HomeLandingHeadState extends State<HomeLandingHead> {
               ),
             ),
           ),
-          Row(
-            children: [
-              ZoomTapAnimation(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => NotificationPage()),
-                  );
-                },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(217, 217, 217, 1000),
-                    ),
-                    child: Iconify(Ic.baseline_notifications),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     ZoomTapAnimation(
+          //       onTap: () {
+          //         Navigator.push(
+          //           context,
+          //           MaterialPageRoute(builder: (_) => NotificationPage()),
+          //         );
+          //       },
+          //       child: ClipRRect(
+          //         borderRadius: BorderRadius.circular(50),
+          //         child: Container(
+          //           padding: EdgeInsets.all(10),
+          //           decoration: BoxDecoration(
+          //             color: const Color.fromARGB(217, 217, 217, 1000),
+          //           ),
+          //           child: Iconify(Ic.baseline_notifications),
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );

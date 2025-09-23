@@ -9,7 +9,7 @@ import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../gen/alert/snack_bar.dart';
+import '../../../../gen/alert/toastification.dart';
 import '../../../../gen/loading/dialog_screen.dart';
 import '../provider/authentication_provider.dart';
 import '../widgets/back_button.dart';
@@ -47,7 +47,6 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
   void initState() {
     super.initState();
     _focusNode.canRequestFocus = false;
-
 
     // validasi, listener memastikan biar ga lebih dari 4
     _pinController.addListener(() {
@@ -125,10 +124,12 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
               Navigator.of(context, rootNavigator: true).pop();
               authProvider.resetVerifyCodeStatus();
 
-              showCustomSnackBar(
+              showCustomToast(
                 context: context,
-                message: 'Successfully, verified!',
-                color: AppColors.primary,
+                message: "Successfully Verified!",
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.white,
+                primaryColor: AppColors.white,
               );
               Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                 MaterialPageRoute(

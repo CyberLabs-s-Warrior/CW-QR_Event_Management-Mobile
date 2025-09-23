@@ -123,11 +123,14 @@ class _ChangePasswordInProfilePageState
             });
 
             if (changePasswordProvider.errorEntity != null) {
+              setState(() {
+
               _currentPasswordErrors =
                   changePasswordProvider.currentPasswordErrors;
               _newPasswordErrors = changePasswordProvider.newPasswordErrors;
               _confirmPasswordErrors =
                   changePasswordProvider.newPasswordConfirmationErrors;
+              });
             }
 
             _resetField();
@@ -225,33 +228,28 @@ class _ChangePasswordInProfilePageState
 
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 20.0,
-                        right: 20.0,
-                        bottom: 20.0,
-                      ),
-                      child: SizedBox(
-                        width: double.infinity,
-
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: AppColors.white,
-                            minimumSize: Size(100, 55),
-                          ),
-                          onPressed: _changeMyPassword,
-                          child: const Text(
-                            'Change my password',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFFCED4FF),
-                            ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 20.0,
+                      right: 20.0,
+                      bottom: 20.0,
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                  
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: AppColors.white,
+                          minimumSize: Size(100, 55),
+                        ),
+                        onPressed: _changeMyPassword,
+                        child: const Text(
+                          'Change my password',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFCED4FF),
                           ),
                         ),
                       ),

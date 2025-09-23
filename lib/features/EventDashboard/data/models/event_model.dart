@@ -19,6 +19,9 @@ class EventModel extends EventEntity {
     required super.attendeeCount,
     required super.presentOrLateCount,
     required super.absentCount,
+    required super.rawStartDate,
+    required super.rawEndDate,
+    required super.isOngoing,
   });
 
   factory EventModel.fromJson(Map<String, dynamic> data) {
@@ -30,6 +33,9 @@ class EventModel extends EventEntity {
       eventCategory: data['event_category']['name'],
       createdBy: data['created_by']['name'],
       status: data['status'],
+      rawStartDate: data['start_date'],
+      rawEndDate: data['end_date'],
+
       startDate: DateFormat(
         'd MMMM yyyy HH:mm',
       ).format(DateTime.parse(data['start_date'])),
@@ -42,6 +48,11 @@ class EventModel extends EventEntity {
       attendeeCount: data['attendee_count'],
       presentOrLateCount: data['present_or_late_count'],
       absentCount: data['absent_count'],
+      isOngoing: _isEventOngoing(
+        data['start_date'],
+        data['end_date'],
+        data['status'],
+      ),
     );
   }
 
@@ -61,5 +72,25 @@ class EventModel extends EventEntity {
       'present_or_late_count': presentOrLateCount,
       'absent_count': absentCount,
     };
+  }
+
+  static bool _isEventOngoing(String startDate, String endDate, String status) {
+    try {
+      final now = DateTime.now();
+      final start = DateTime.parse(startDate);
+      final end = DateTime.parse(endDate);
+
+      // The event is ongoing if:
+      // - status is 'active'
+      // - start_date <= now
+      // - end_date >= now
+      // This logic matches the provided query.
+      return status == 'active' &&
+          !now.isBefore(DateTime(start.year, start.month, start.day)) &&
+          !now.isAfter(DateTime(end.year, end.month, end.day, 23, 59, 59));
+    } catch (e) {
+      print("Error parsing dates: $e");
+      return false;
+    }
   }
 }

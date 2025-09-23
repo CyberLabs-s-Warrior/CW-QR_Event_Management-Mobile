@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
 
 import '../../../../core/constant/enum_status.dart';
@@ -29,7 +27,7 @@ class EventDashboardProvider extends ChangeNotifier {
   });
 
   //? init
-  String? _errorMessage;
+  String? errorMessage;
 
   // dashboard
   EventEntity? _event;
@@ -44,7 +42,7 @@ class EventDashboardProvider extends ChangeNotifier {
   ResponseStatus _updateAttendeesStatus = ResponseStatus.initial;
 
   //? getters
-  String get cleanErrorMessage => _errorMessage.cleanErrorMessage;
+  String get cleanErrorMessage => errorMessage.cleanErrorMessage;
   EventEntity? get event => _event;
   AttendanceDataEntity? get attendanceData => _attendanceData;
   ListAttendeesEntity? get listAttendee => _listAttendees;
@@ -58,7 +56,7 @@ class EventDashboardProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _setAttendanceStatus(ResponseStatus status) {
+  void setAttendanceStatus(ResponseStatus status) {
     _attendanceStatus = status;
     notifyListeners();
   }
@@ -73,6 +71,29 @@ class EventDashboardProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetAllState() {
+    errorMessage = null;
+    _event = null;
+    _attendanceData = null;
+    _listAttendees = null;
+    _eventStatus = ResponseStatus.initial;
+    _attendanceStatus = ResponseStatus.initial;
+    _listAttendeesStatus = ResponseStatus.initial;
+    _updateAttendeesStatus = ResponseStatus.initial;
+    notifyListeners();
+  }
+
+  void resetAttendanceStatus() {
+    _attendanceStatus = ResponseStatus.initial;
+    errorMessage = null;
+    notifyListeners();
+  }
+
+  void resetAttendanceState() {
+    _attendanceData = null;
+    notifyListeners();
+  }
+
   Future<void> getEventById(token, eventId) async {
     _setEventStatus(ResponseStatus.loading);
 
@@ -80,8 +101,8 @@ class EventDashboardProvider extends ChangeNotifier {
 
     result.fold(
       (failure) {
-        _errorMessage = failure.message;
-        print(_errorMessage);
+        errorMessage = failure.message;
+        print(errorMessage);
         _setEventStatus(ResponseStatus.error);
       },
       (event) {
@@ -93,55 +114,36 @@ class EventDashboardProvider extends ChangeNotifier {
   }
 
   // Future<void> scanAttendance(token, eventId, code) async {
-  //   _setAttendanceStatus(ResponseStatus.loading);
+  //   setAttendanceStatus(ResponseStatus.loading);
 
   //   final result = await scanAttendanceUsecase.execute(token, eventId, code);
 
   //   result.fold(
   //     (failure) {
-  //       _errorMessage = failure.message;
-  //       _setAttendanceStatus(ResponseStatus.error);
+  //       errorMessage = failure.message;
+  //       setAttendanceStatus(ResponseStatus.error);
   //     },
   //     (attendance) {
   //       _attendanceData = attendance;
-  //       _setAttendanceStatus(ResponseStatus.success);
+  //       setAttendanceStatus(ResponseStatus.success);
   //     },
   //   );
   // }
 
-  Future<void> scanAttendance(String token, int eventId, String? qrData) async {
-    _setAttendanceStatus(ResponseStatus.loading);
+  Future<void> scanAttendance(
+    String token,
+    int eventId,
+    String attendeeId,
+  ) async {
+    setAttendanceStatus(ResponseStatus.loading);
 
-    try {
-      if (qrData == null || qrData.isEmpty) {
-        _errorMessage = "Invalid QR code";
-        _setAttendanceStatus(ResponseStatus.error);
-        return;
-      }
-
-      // Try to parse as JSON first
-      try {
-        final jsonData = jsonDecode(qrData);
-        // If successful, extract attendeeId from JSON
-        if (jsonData.containsKey("qrcode_data")) {
-          final attendeeId = jsonData["qrcode_data"];
-          await processAttendance(token, eventId, attendeeId);
-          return;
-        } else {
-          _errorMessage = "QR code is missing required data";
-          _setAttendanceStatus(ResponseStatus.error);
-          return;
-        }
-      } catch (e) {
-        // Not JSON, assume the entire string is the attendee ID
-        print("QR code is not JSON, using as plain ID: $qrData");
-        await processAttendance(token, eventId, qrData);
-        return;
-      }
-    } catch (e) {
-      _errorMessage = "Failed to process QR code: $e";
-      _setAttendanceStatus(ResponseStatus.error);
+    if (attendeeId.isEmpty) {
+      errorMessage = "Invalid QR code";
+      setAttendanceStatus(ResponseStatus.error);
+      return;
     }
+
+    await processAttendance(token, eventId, attendeeId);
   }
 
   // Helper method to process the attendance API call
@@ -158,29 +160,29 @@ class EventDashboardProvider extends ChangeNotifier {
 
     result.fold(
       (failure) {
-        _errorMessage = failure.message;
-        _setAttendanceStatus(ResponseStatus.error);
+        errorMessage = failure.message;
+        setAttendanceStatus(ResponseStatus.error);
       },
       (attendanceData) {
         _attendanceData = attendanceData;
-        _setAttendanceStatus(ResponseStatus.success);
+        setAttendanceStatus(ResponseStatus.success);
       },
     );
   }
 
   Future<void> scanIdentityCheck(token, eventId, code) async {
-    _setAttendanceStatus(ResponseStatus.loading);
+    setAttendanceStatus(ResponseStatus.loading);
 
     final result = await scanIdentityCheckUsecase.execute(token, eventId, code);
 
     result.fold(
       (failure) {
-        _errorMessage = failure.message;
-        _setAttendanceStatus(ResponseStatus.error);
+        errorMessage = failure.message;
+        setAttendanceStatus(ResponseStatus.error);
       },
       (attendance) {
         _attendanceData = attendance;
-        _setAttendanceStatus(ResponseStatus.success);
+        setAttendanceStatus(ResponseStatus.success);
       },
     );
   }
@@ -192,9 +194,9 @@ class EventDashboardProvider extends ChangeNotifier {
 
     result.fold(
       (failure) {
-        _errorMessage = failure.message;
+        errorMessage = failure.message;
 
-        print('error loading attendees at provider: $_errorMessage');
+        print('error loading attendees at provider: $errorMessage');
 
         _setListAttendeesStatus(ResponseStatus.error);
       },
@@ -206,42 +208,31 @@ class EventDashboardProvider extends ChangeNotifier {
   }
 
   Future<void> updateAttendees(
-     token,
-     eventId,
+    token,
+    eventId,
     List<Map<String, dynamic>> attendeesData,
   ) async {
     _setUpdateAttendeesStatus(ResponseStatus.loading);
 
-      final result = await updateAttendeesStatusUsecase.execute(
-        token,
-        eventId,
-        attendeesData,
-      );
+    final result = await updateAttendeesStatusUsecase.execute(
+      token,
+      eventId,
+      attendeesData,
+    );
 
-      result.fold(
-        (failure) {
-          _errorMessage = failure.message;
-          print('Update attendees error: $_errorMessage');
-          _setUpdateAttendeesStatus(ResponseStatus.error);
-        },
-        (success) {
-          print('Update attendees success: $success');
+    result.fold(
+      (failure) {
+        errorMessage = failure.message;
+        print('Update attendees error: $errorMessage');
+        _setUpdateAttendeesStatus(ResponseStatus.error);
+      },
+      (success) {
+        print('Update attendees success: $success');
 
-          // Refresh attendees list
-          getEventAttendees(token, eventId);
-          _setUpdateAttendeesStatus(ResponseStatus.success);
-        },
-      );
-    
-  }
-
-  void resetAttendanceStatus() {
-    _attendanceStatus = ResponseStatus.initial;
-    notifyListeners();
-  }
-
-  void resetAttendanceState() {
-    _attendanceData = null;
-    notifyListeners();
+        // Refresh attendees list
+        getEventAttendees(token, eventId);
+        _setUpdateAttendeesStatus(ResponseStatus.success);
+      },
+    );
   }
 }

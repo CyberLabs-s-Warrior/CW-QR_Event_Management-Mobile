@@ -67,7 +67,7 @@ class _EventTabViewOngoingState extends State<EventTabViewOngoing> {
                 onRefresh: () async {
                   await landingEventProvider.getEventOngoing(
                     token: authProvider.authorization?.token ?? '',
-                    userId: authProvider.userProfile!.id,
+                    userId: authProvider.userProfile?.id ?? 0,
                   );
                 },
                 child:
@@ -78,10 +78,24 @@ class _EventTabViewOngoingState extends State<EventTabViewOngoing> {
                             ResponseStatus.error
                         ? EventEmptyState(
                           text: "Something went wrong, please\ntry again later",
+                          onRefresh: () async {
+                            await landingEventProvider.getEventUpcoming(
+                              token: authProvider.authorization?.token ?? '',
+                              userId: authProvider.userProfile!.id,
+                            );
+                          },
                         )
                         : (landingEventProvider.landingEventOngoing?.isEmpty ??
                             true)
-                        ? EventEmptyState(text: "No upcoming events found")
+                        ? EventEmptyState(
+                          text: "No ongoing events found",
+                          onRefresh: () async {
+                            await landingEventProvider.getEventUpcoming(
+                              token: authProvider.authorization?.token ?? '',
+                              userId: authProvider.userProfile!.id,
+                            );
+                          },
+                        )
                         : ListView.builder(
                           shrinkWrap: true,
                           controller: _scrollController,

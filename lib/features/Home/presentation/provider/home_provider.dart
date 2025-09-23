@@ -23,12 +23,14 @@ class HomeProvider extends ChangeNotifier {
 
   //? HomeSummary
   HomeStatus _homeSummaryStatus = HomeStatus.initial;
+  HomeStatus _homeStatus = HomeStatus.initial;
   HomeSummaryEntity? _homeSummary;
 
   Timer? _autoTimer;
   bool _disposed = false;
   // getter
   HomeStatus get homeSummaryStatus => _homeSummaryStatus;
+  HomeStatus get homeStatus => _homeStatus;
   // getter data location
   HomeSummaryEntity? get homeSummary => _homeSummary;
 
@@ -37,6 +39,10 @@ class HomeProvider extends ChangeNotifier {
   // setter
   void _setHomeSummaryStatus(HomeStatus status) {
     _homeSummaryStatus = status;
+    notifyListeners();
+  }
+  void _setHomeStatus(HomeStatus status) {
+    _homeStatus = status;
     notifyListeners();
   }
 
@@ -136,7 +142,7 @@ class HomeProvider extends ChangeNotifier {
    
   }) async {
     try {
-      _setHomeSummaryStatus(HomeStatus.loading);
+      _setHomeEventHistoryStatus(HomeStatus.loading);
 
       final result = await homeEventHistoryUsecase.execute(token);
 
@@ -155,7 +161,7 @@ class HomeProvider extends ChangeNotifier {
         },
       );
     } catch (e) {
-      _setHomeSummaryStatus(HomeStatus.error);
+      _setHomeEventHistoryStatus(HomeStatus.error);
       _errorMessage = e.toString();
       notifyListeners();
 
@@ -183,7 +189,7 @@ class HomeProvider extends ChangeNotifier {
   
   // start auto refresh setiap interval (default 5 detik)
   void startAutoRefresh({
-    Duration interval = const Duration(seconds: 5),
+    Duration interval = const Duration(seconds: 1000),
     required String token,
    
   }) {

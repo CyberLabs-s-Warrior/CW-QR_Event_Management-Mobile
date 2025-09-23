@@ -9,7 +9,12 @@ class EventEntity extends Equatable {
   final String createdBy;
   final String status;
   final String startDate;
+
+  final bool isOngoing;
+
   final String endDate;
+  final String rawStartDate;
+  final String rawEndDate;
   final String banner;
   final String createdAt;
 
@@ -28,6 +33,9 @@ class EventEntity extends Equatable {
     required this.status,
     required this.startDate,
     required this.endDate,
+    required this.rawStartDate,
+    required this.rawEndDate,
+    required this.isOngoing,
     required this.banner,
     required this.createdAt,
     required this.attendancePercentage,
@@ -46,7 +54,10 @@ class EventEntity extends Equatable {
     createdBy,
     status,
     startDate,
+    isOngoing,
     endDate,
+    rawEndDate,
+    rawStartDate,
     banner,
     createdAt,
     attendancePercentage,
