@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:qr_event_management/features/EventDashboard/data/models/check_identity_model.dart';
+import 'package:qr_event_management/features/EventDashboard/domain/entities/check_identity_entity.dart';
 
 import '../../../../core/error/failure.dart';
 import '../entities/attendance_data_entity.dart';
@@ -12,7 +14,7 @@ abstract class EventDashboardRepository {
     eventId,
     code,
   );
-  Future<Either<Failure, AttendanceDataEntity>> scanIdentityCheck(
+  Future<Either<Failure, CheckIdentityEntity>> scanIdentityCheck(
     token,
     eventId,
     code,

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
@@ -5,23 +6,24 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
+import 'package:iconify_flutter/icons/ph.dart';
 import 'package:iconify_flutter/icons/ri.dart';
 import 'package:iconify_flutter/icons/uil.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
-import '../../../../gen/loading/wave_loading.dart';
-import '../../../../core/constant/enum_status.dart';
-import '../../../Authentication/presentation/provider/authentication_provider.dart';
-import 'event_dashboard_attendance_result_page.dart';
-import '../provider/event_dashboard_provider.dart';
-import '../../../../gen/loading/dialog_screen.dart';
-import '../../../../gen/alert/toastification.dart';
-import '../widgets/event_dashboard_result_item.dart';
+import 'package:qr_event_management/features/EventDashboard/presentation/pages/event_dashboard_attendee_identity_page.dart';
 
+import '../../../../core/constant/enum_status.dart';
 import '../../../../core/theme/app_colors.dart';
-import 'package:iconify_flutter/icons/ph.dart';
+import '../../../../gen/alert/toastification.dart';
+import '../../../../gen/loading/dialog_screen.dart';
+import '../../../../gen/loading/wave_loading.dart';
 import '../../../../widgets/general_back_button.dart';
+import '../../../Authentication/presentation/provider/authentication_provider.dart';
+import '../provider/event_dashboard_provider.dart';
+import '../widgets/event_dashboard_result_item.dart';
 import '../widgets/event_dashboard_scan_attendance_result.dart';
+import 'event_dashboard_attendance_result_page.dart';
 
 class QRViewTest extends StatefulWidget {
   final int eventId;
@@ -236,7 +238,14 @@ class _QRViewTestState extends State<QRViewTest>
                   Navigator.of(context, rootNavigator: true).pop();
                   showCustomToast(
                     context: context,
-                    message: eventDashboardProvider.attendanceData!.message,
+                    message:
+                        eventDashboardProvider.attendeeIdentity != null
+                            ? (eventDashboardProvider
+                                    .attendeeIdentity
+                                    ?.message ??
+                                '')
+                            : (eventDashboardProvider.attendanceData?.message ??
+                                ''),
                     backgroundColor: AppColors.primary,
                     foregroundColor: AppColors.white,
                     primaryColor: AppColors.white,
@@ -290,7 +299,9 @@ class _QRViewTestState extends State<QRViewTest>
                           )
                           : eventDashboardProvider.attendanceStatus ==
                                   ResponseStatus.loading ||
-                              eventDashboardProvider.attendanceData == null
+                              (eventDashboardProvider.attendanceData == null &&
+                                  eventDashboardProvider.attendeeIdentity ==
+                                      null)
                           ? Center(child: WaveLoading())
                           : _currentScanMode == ScanMode.attendance
                           ? EventDashboardScanAttendanceResult(
@@ -465,26 +476,40 @@ class _QRViewTestState extends State<QRViewTest>
             result = scanData;
           });
 
-          // Extract attendee ID from QR code
-          String? attendeeId = result!.code;
-
-          if (attendeeId == null || attendeeId.isEmpty) {
-            // Handle invalid QR code here
+          if (result == null || result!.code == null) {
             eventDashboardProvider.errorMessage = "Invalid QR code format";
             eventDashboardProvider.setAttendanceStatus(ResponseStatus.error);
             return;
           }
 
+          String attendeeId;
+
+          try {
+            // Try to parse as JSON if the QR contains JSON data
+            final data = jsonDecode(result!.code!);
+            attendeeId = data["qrcode_data"]?.toString() ?? "";
+
+            if (attendeeId.isEmpty) {
+              eventDashboardProvider.errorMessage =
+                  "Missing attendee data in QR";
+              eventDashboardProvider.setAttendanceStatus(ResponseStatus.error);
+              return;
+            }
+          } catch (e) {
+            // If not JSON or doesn't have qrcode_data, use the raw code
+            attendeeId = result!.code!;
+          }
+
           try {
             if (_currentScanMode == ScanMode.attendance) {
               await eventDashboardProvider.scanAttendance(
-                authProvider.authorization!.token,
+                authProvider.authorization?.token ?? '',
                 widget.eventId,
                 attendeeId,
               );
             } else {
               await eventDashboardProvider.scanIdentityCheck(
-                authProvider.authorization!.token,
+                authProvider.authorization?.token ?? '',
                 widget.eventId,
                 attendeeId,
               );
@@ -524,9 +549,10 @@ class EventDashboardScanIdentityCheckResult extends StatelessWidget {
                   icon: Iconify(Uil.user, color: AppColors.primary),
                   textContent:
                       eventDashboardProvider
-                          .attendanceData!
-                          .attendeeEntity
-                          .fullName,
+                          .attendeeIdentity
+                          ?.attendee
+                          .fullName ??
+                      '',
                 ),
                 Gap(15),
                 EventDashboardResultItem(
@@ -537,7 +563,8 @@ class EventDashboardScanIdentityCheckResult extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => EventDashboardResultPage(),
+                        barrierDismissible: false,
+                        builder: (_) => EventDashboardAttendeeIdentityPage(),
                       ),
                     );
                   },
@@ -557,27 +584,28 @@ class EventDashboardScanIdentityCheckResult extends StatelessWidget {
                   isBadge: true,
                   icon: Iconify(Ph.check_circle, color: AppColors.primary),
                   isScannedStatus:
-                      eventDashboardProvider.attendanceData != null &&
                       eventDashboardProvider
-                          .attendanceData!
-                          .attendanceEntity
-                          .status
-                          .isNotEmpty &&
+                              .attendeeIdentity
+                              ?.attendances
+                              .status
+                              .isNotEmpty ==
+                          true &&
                       eventDashboardProvider
-                              .attendanceData!
-                              .attendanceEntity
+                              .attendeeIdentity
+                              ?.attendances
                               .status !=
                           'absent' &&
                       eventDashboardProvider
-                              .attendanceData!
-                              .attendanceEntity
+                              .attendeeIdentity
+                              ?.attendances
                               .status !=
                           'invalid',
                   textContent:
                       eventDashboardProvider
-                          .attendanceData!
-                          .attendanceEntity
-                          .status,
+                          .attendeeIdentity
+                          ?.attendances
+                          .status ??
+                      'Unknown',
                 ),
               ],
             ),

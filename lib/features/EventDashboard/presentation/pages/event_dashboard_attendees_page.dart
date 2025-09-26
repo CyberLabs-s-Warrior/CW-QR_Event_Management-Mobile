@@ -3,18 +3,19 @@ import 'package:gap/gap.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/constant/enum_status.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../gen/alert/toastification.dart';
+import '../../../../gen/loading/dialog_screen.dart';
+import '../../../../gen/loading/wave_loading.dart';
+import '../../../../widgets/general_back_button.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../../domain/entities/attendee_with_attendance_entity.dart';
 import '../provider/event_dashboard_provider.dart';
 import '../widgets/attendees/event_dashboard_attendees_action_row.dart';
 import '../widgets/attendees/event_dashboard_attendees_attendee_list.dart';
 import '../widgets/attendees/event_dashboard_attendees_search_filter.dart';
-import '../../../../gen/alert/toastification.dart';
-import '../../../../gen/loading/dialog_screen.dart';
-import '../../../../gen/loading/wave_loading.dart';
-import '../../../../widgets/general_back_button.dart';
 
 enum AttendeeFilter { none, present, absent, azAsc, azDesc }
 

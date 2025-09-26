@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
-import 'event_dashboard_attendees_page.dart';
-import '../widgets/event_dashboard_floating_button.dart';
-import '../widgets/event_dashboard_head.dart';
-import '../widgets/event_dashboard_item.dart';
-import '../../../../gen/alert/toastification.dart';
 
 import '../../../../core/constant/enum_status.dart';
 import '../../../../core/provider/network_status_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../gen/alert/toastification.dart';
 import '../../../../widgets/general_back_button.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 import '../provider/event_dashboard_provider.dart';
 import '../widgets/check_in_and_not_check_in.dart';
 import '../widgets/event_dashboard_error.dart';
+import '../widgets/event_dashboard_floating_button.dart';
+import '../widgets/event_dashboard_head.dart';
+import '../widgets/event_dashboard_item.dart';
 import '../widgets/event_dashboard_loading.dart';
 import '../widgets/event_registration_percentage.dart';
+import 'event_dashboard_attendees_page.dart';
 import 'event_dashboard_qr_scanner.dart';
 
 class EventDashboardPage extends StatefulWidget {
@@ -123,6 +123,7 @@ class _EventDashboardPageState extends State<EventDashboardPage>
                   RefreshIndicator(
                     onRefresh: _onRefresh,
                     child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

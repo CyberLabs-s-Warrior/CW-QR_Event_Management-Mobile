@@ -20,10 +20,14 @@ class EventModel extends EventEntity {
       id: data['id'],
       title: data['title'],
       location: data['location'],
-      startDate: DateFormat('d MMMM yyyy HH:mm').format(DateTime.parse(data['start_date'])),
-      endDate: DateFormat('d MMMM yyyy HH:mm').format(DateTime.parse(data['end_date'])),
+      startDate: DateFormat(
+        'd MMMM yyyy HH:mm',
+      ).format(DateTime.parse(data['start_date'])),
+      endDate: DateFormat(
+        'd MMMM yyyy HH:mm',
+      ).format(DateTime.parse(data['end_date'])),
       banner: data['banner'],
-      createdBy: data['created_by'],
+      createdBy: data['created_by'] ?? '',
     );
   }
 

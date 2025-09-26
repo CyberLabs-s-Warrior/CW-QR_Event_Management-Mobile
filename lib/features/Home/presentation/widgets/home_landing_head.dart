@@ -19,6 +19,11 @@ class HomeLandingHead extends StatefulWidget {
 class _HomeLandingHeadState extends State<HomeLandingHead> {
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthenticationProvider>(
+      context,
+      listen: false,
+    );
+
     return Padding(
       padding: const EdgeInsets.only(
         top: 20.0,
@@ -32,7 +37,10 @@ class _HomeLandingHeadState extends State<HomeLandingHead> {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileDataPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => ProfileDataPage()),
+                );
               },
               child: Row(
                 children: [
@@ -40,7 +48,7 @@ class _HomeLandingHeadState extends State<HomeLandingHead> {
                     borderRadius: BorderRadius.circular(50),
                     child: CachedNetworkImage(
                       imageUrl:
-                          "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg",
+                          "https://ui-avatars.com/api/?name=${authProvider.userProfile?.name ?? ''}&background=7F9CF5&color=ffffff&size=128&rounded=true&bold=true",
                       width: 70,
                       height: 70,
                       fit: BoxFit.cover,
@@ -89,18 +97,14 @@ class _HomeLandingHeadState extends State<HomeLandingHead> {
                             fontSize: 20,
                           ),
                         ),
-                        Consumer<AuthenticationProvider>(
-                          builder: (context, authProvider, child) {
-                            return Text(
-                              authProvider.userProfile?.name ?? '',
-                              textAlign: TextAlign.start,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 23,
-                              ),
-                              softWrap: true,
-                            );
-                          },
+                        Text(
+                          authProvider.userProfile?.name ?? '',
+                          textAlign: TextAlign.start,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 23,
+                          ),
+                          softWrap: true,
                         ),
                       ],
                     ),

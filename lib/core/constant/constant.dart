@@ -1,8 +1,8 @@
 class Constant {
-  static String api = "https://motels-release-knew-few.trycloudflare.com/api";
-  static String domain = "https://motels-release-knew-few.trycloudflare.com";
+  static String api = "http://10.0.2.2:8000/api";
+  static String domain = "http://10.0.2.2:8000";
 
   static String endpoint(final String destination) {
-    return "https://motels-release-knew-few.trycloudflare.com/api$destination";
+    return "http://10.0.2.2:8000/api$destination";
   }
 }

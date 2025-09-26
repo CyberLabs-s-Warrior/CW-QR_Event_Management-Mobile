@@ -36,7 +36,7 @@ class _SettingLandingHeadState extends State<SettingLandingHead> {
                   borderRadius: BorderRadius.circular(50),
                   child: CachedNetworkImage(
                     imageUrl:
-                       "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg",
+                        "https://ui-avatars.com/api/?name=${authProvider.userProfile?.name ?? ''}&background=7F9CF5&color=ffffff&size=128&rounded=true&bold=true",
                     width: 70,
                     height: 70,
                     fit: BoxFit.cover,

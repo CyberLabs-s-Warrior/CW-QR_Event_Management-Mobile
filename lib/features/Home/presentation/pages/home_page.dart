@@ -32,9 +32,7 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final homeProvider = context.read<HomeProvider>();
       if (homeProvider.homeSummaryStatus == HomeStatus.initial) {
-        homeProvider.startAutoRefresh(
-          token: authProvider.authorization!.token,
-        );
+        homeProvider.startAutoRefresh(token: authProvider.authorization!.token);
       }
     });
   }
@@ -46,12 +44,11 @@ class _HomePageState extends State<HomePage> {
 
     await user.getUser();
 
-   await homeProvider.getHomeSummaryRefresh(
+    await homeProvider.getHomeSummaryRefresh(
       token: user.authorization?.token ?? '',
     );
 
-
-   await homeProvider.getHomeEventHistoryRefresh(
+    await homeProvider.getHomeEventHistoryRefresh(
       token: user.authorization?.token ?? '',
     );
   }

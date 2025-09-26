@@ -124,12 +124,11 @@ class _ChangePasswordInProfilePageState
 
             if (changePasswordProvider.errorEntity != null) {
               setState(() {
-
-              _currentPasswordErrors =
-                  changePasswordProvider.currentPasswordErrors;
-              _newPasswordErrors = changePasswordProvider.newPasswordErrors;
-              _confirmPasswordErrors =
-                  changePasswordProvider.newPasswordConfirmationErrors;
+                _currentPasswordErrors =
+                    changePasswordProvider.currentPasswordErrors;
+                _newPasswordErrors = changePasswordProvider.newPasswordErrors;
+                _confirmPasswordErrors =
+                    changePasswordProvider.newPasswordConfirmationErrors;
               });
             }
 
@@ -143,6 +142,8 @@ class _ChangePasswordInProfilePageState
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+
                     child: Column(
                       children: [
                         Gap(20),
@@ -236,7 +237,7 @@ class _ChangePasswordInProfilePageState
                     ),
                     child: SizedBox(
                       width: double.infinity,
-                  
+
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
