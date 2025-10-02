@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:iconify_flutter/icons/bi.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:iconify_flutter/icons/octicon.dart';
 import 'package:iconify_flutter/icons/ri.dart';
 import 'package:iconify_flutter/icons/uil.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_event_management/features/Setting/presentation/pages/version_page.dart';
 
 import '../../../../core/provider/network_status_provider.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -120,7 +122,6 @@ class SettingView extends StatelessWidget {
                     SettingItem(
                       icon: Carbon.password,
                       title: 'Change Password',
-                      isLast: true,
                       onTap: () {
                         if (!isOnline) {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -140,6 +141,17 @@ class SettingView extends StatelessWidget {
                             ),
                           );
                         }
+                      },
+                    ),
+                    SettingItem(
+                      icon: Bi.info_circle,
+                      title: 'Version Information',
+                      isLast: true,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => VersionPage()),
+                        );
                       },
                     ),
                   ],

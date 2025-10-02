@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/ri.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_event_management/features/LandingEvent/presentation/provider/landing_event_provider.dart';
 import '../../../Authentication/presentation/provider/authentication_provider.dart';
 
 import '../../../../core/scope/landing_tabs_scope.dart';
@@ -153,7 +155,42 @@ class _LandingPageState extends State<LandingPage>
             dividerColor: Colors.transparent,
             unselectedLabelColor: Color(0xFF3F7CFF),
             labelColor: Colors.white,
-            onTap: (value) {
+            onTap: (value) async {
+              final authProvider = context.read<AuthenticationProvider>();
+              final lEventProvider = context.read<LandingEventProvider>();
+              final lHomeProvider = context.read<HomeProvider>();
+
+              if (value == 0) {
+                await lHomeProvider.getHomeSummaryRefresh(
+                  token: authProvider.authorization?.token ?? '',
+                );
+                await lHomeProvider.getHomeEventHistoryRefresh(
+                  token: authProvider.authorization?.token ?? '',
+                );
+              }
+
+              if (value == 1) {
+                if (authProvider.userProfile != null) {
+                  await lEventProvider.getEventUpcoming(
+                    token: authProvider.authorization?.token ?? '',
+                    userId: authProvider.userProfile!.id,
+                  );
+                  await lEventProvider.getEventOngoing(
+                    token: authProvider.authorization?.token ?? '',
+                    userId: authProvider.userProfile!.id,
+                  );
+                  await lEventProvider.getEventPast(
+                    token: authProvider.authorization?.token ?? '',
+                    userId: authProvider.userProfile!.id,
+                  );
+                } else {
+                  // Handle case where user profile is null
+                  print("User profile is null, skipping event fetching");
+                  // Optionally try to fetch the user profile
+                  await authProvider.getUser();
+                }
+              }
+
               setState(() {});
             },
             tabs: [

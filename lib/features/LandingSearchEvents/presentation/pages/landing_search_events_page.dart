@@ -142,7 +142,7 @@ class _LandingSearchEventsPageState extends State<LandingSearchEventsPage> {
                                 ),
                                 Gap(25),
                                 Text(
-                                  'No events fouond matching\nyour search',
+                                  'No event found matching\nyour search',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 20,

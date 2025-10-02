@@ -26,32 +26,38 @@ class EventModel extends EventEntity {
 
   factory EventModel.fromJson(Map<String, dynamic> data) {
     return EventModel(
-      id: data['id'],
-      title: data['title'],
-      description: data['description'],
-      location: data['location'],
-      eventCategory: data['event_category']['name'],
-      createdBy: data['created_by']['name'],
-      status: data['status'],
-      rawStartDate: data['start_date'],
-      rawEndDate: data['end_date'],
+      id: data['id'] ?? 0,
+      title: data['title'] ?? '',
+      description: data['description'] ?? '',
+      location: data['location'] ?? '',
+      eventCategory: data['event_category']?['name'] ?? '',
+      createdBy: data['created_by']?['name'] ?? '',
+      status: data['status'] ?? '',
+      rawStartDate: data['start_date'] ?? '',
+      rawEndDate: data['end_date'] ?? '',
 
-      startDate: DateFormat(
-        'd MMMM yyyy HH:mm',
-      ).format(DateTime.parse(data['start_date'])),
-      endDate: DateFormat(
-        'd MMMM yyyy HH:mm',
-      ).format(DateTime.parse(data['end_date'])),
-      banner: data['banner'],
-      createdAt: data['created_at'],
-      attendancePercentage: data['attendance_percentage'],
-      attendeeCount: data['attendee_count'],
-      presentOrLateCount: data['present_or_late_count'],
-      absentCount: data['absent_count'],
+      startDate:
+          data['start_date'] != null
+              ? DateFormat(
+                'd MMMM yyyy HH:mm',
+              ).format(DateTime.parse(data['start_date']))
+              : '',
+      endDate:
+          data['end_date'] != null
+              ? DateFormat(
+                'd MMMM yyyy HH:mm',
+              ).format(DateTime.parse(data['end_date']))
+              : '',
+      banner: data['banner'] ?? '',
+      createdAt: data['created_at'] ?? '',
+      attendancePercentage: data['attendance_percentage'] ?? 0,
+      attendeeCount: data['attendee_count'] ?? 0,
+      presentOrLateCount: data['present_or_late_count'] ?? 0,
+      absentCount: data['absent_count'] ?? 0,
       isOngoing: _isEventOngoing(
-        data['start_date'],
-        data['end_date'],
-        data['status'],
+        data['start_date'] ?? '',
+        data['end_date'] ?? '',
+        data['status'] ?? '',
       ),
     );
   }

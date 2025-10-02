@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:qr_event_management/features/EventDashboard/data/models/check_identity_model.dart';
 
 import '../../../../core/constant/constant.dart';
 import '../../../../core/error/exceptions.dart';
@@ -11,7 +12,7 @@ import '../models/list_attendees_model.dart';
 abstract class EventDashboardRemoteDatasource {
   Future<EventModel> getEventById(token, eventId);
   Future<AttendanceDataModel> scanAttendance(token, eventId, code);
-  Future<AttendanceDataModel> scanIdentityCheck(token, eventId, code);
+  Future<CheckIdentityModel> scanIdentityCheck(token, eventId, code);
   Future<ListAttendeesModel> getEventAttendees(token, eventId);
 
   Future<bool> updateAttendeesStatus(
@@ -103,7 +104,7 @@ class EventDashboardRemoteDatasourceImplementation
   }
 
   @override
-  Future<AttendanceDataModel> scanIdentityCheck(token, eventId, code) async {
+  Future<CheckIdentityModel> scanIdentityCheck(token, eventId, code) async {
     final response = await client.post(
       Uri.parse(Constant.endpoint('/event/$eventId/scan-identity')),
       headers: {
@@ -122,7 +123,7 @@ class EventDashboardRemoteDatasourceImplementation
 
       print(body);
 
-      return AttendanceDataModel.fromJson(body);
+      return CheckIdentityModel.fromJson(body);
     } else if (response.statusCode == 400) {
       final body = jsonDecode(response.body);
 

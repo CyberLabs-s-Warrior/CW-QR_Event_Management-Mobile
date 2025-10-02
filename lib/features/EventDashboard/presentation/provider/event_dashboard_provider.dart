@@ -1,4 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:qr_event_management/features/EventDashboard/data/models/check_identity_model.dart';
+import 'package:qr_event_management/features/EventDashboard/domain/entities/check_identity_entity.dart';
 
 import '../../../../core/constant/enum_status.dart';
 import '../../../../core/error/clean_error_message_cleaner.dart';
@@ -34,6 +36,7 @@ class EventDashboardProvider extends ChangeNotifier {
 
   // attendance
   AttendanceDataEntity? _attendanceData;
+  CheckIdentityEntity? _attendeeIdentity;
   ListAttendeesEntity? _listAttendees;
 
   ResponseStatus _eventStatus = ResponseStatus.initial;
@@ -45,6 +48,7 @@ class EventDashboardProvider extends ChangeNotifier {
   String get cleanErrorMessage => errorMessage.cleanErrorMessage;
   EventEntity? get event => _event;
   AttendanceDataEntity? get attendanceData => _attendanceData;
+  CheckIdentityEntity? get attendeeIdentity => _attendeeIdentity;
   ListAttendeesEntity? get listAttendee => _listAttendees;
   ResponseStatus get eventStatus => _eventStatus;
   ResponseStatus get attendanceStatus => _attendanceStatus;
@@ -164,6 +168,8 @@ class EventDashboardProvider extends ChangeNotifier {
         setAttendanceStatus(ResponseStatus.error);
       },
       (attendanceData) {
+        _attendeeIdentity = null;
+
         _attendanceData = attendanceData;
         setAttendanceStatus(ResponseStatus.success);
       },
@@ -178,10 +184,13 @@ class EventDashboardProvider extends ChangeNotifier {
     result.fold(
       (failure) {
         errorMessage = failure.message;
+        print('error scan-identity: $errorMessage');
         setAttendanceStatus(ResponseStatus.error);
       },
       (attendance) {
-        _attendanceData = attendance;
+        _attendanceData = null;
+        _attendeeIdentity = attendance;
+        print('success scan-identity: $_attendeeIdentity');
         setAttendanceStatus(ResponseStatus.success);
       },
     );

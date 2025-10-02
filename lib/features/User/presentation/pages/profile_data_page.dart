@@ -51,6 +51,8 @@ class _ProfileDataPageState extends State<ProfileDataPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.read<AuthenticationProvider>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -76,7 +78,7 @@ class _ProfileDataPageState extends State<ProfileDataPage> {
                   borderRadius: BorderRadius.circular(9999),
                   child: CachedNetworkImage(
                     imageUrl:
-                        "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg",
+                       "https://ui-avatars.com/api/?name=${authProvider.userProfile?.name ?? ''}&background=7F9CF5&color=ffffff&size=128&rounded=true&bold=true",
                     width: 200,
                     height: 200,
                     fit: BoxFit.cover,

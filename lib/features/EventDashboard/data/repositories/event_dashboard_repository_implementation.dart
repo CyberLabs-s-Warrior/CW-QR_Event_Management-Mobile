@@ -1,5 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
+import 'package:qr_event_management/features/EventDashboard/data/models/check_identity_model.dart';
+import 'package:qr_event_management/features/EventDashboard/domain/entities/check_identity_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/error/failure.dart';
@@ -69,7 +71,7 @@ class EventDashboardRepositoryImplementation
   }
 
   @override
-  Future<Either<Failure, AttendanceDataEntity>> scanIdentityCheck(
+  Future<Either<Failure, CheckIdentityEntity>> scanIdentityCheck(
     token,
     eventId,
     code,
@@ -81,7 +83,7 @@ class EventDashboardRepositoryImplementation
       if (connectivityResult.contains(ConnectivityResult.none)) {
         return Left(ConnectionFailure('No connection available.'));
       } else {
-        AttendanceDataEntity result = await eventDashboardRemoteDatasource
+        CheckIdentityEntity result = await eventDashboardRemoteDatasource
             .scanIdentityCheck(token, eventId, code);
 
         return Right(result);

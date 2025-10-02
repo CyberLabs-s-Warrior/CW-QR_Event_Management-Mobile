@@ -64,9 +64,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 3));
-
-    checkToken();
+    Future.delayed(const Duration(seconds: 5), () {
+      checkToken();
+    });
   }
 
   @override
@@ -74,10 +74,25 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: AppColors.secondary,
       body: Center(
-        child: Image.asset(
-          'assets/images/logo/cyberlabs.png',
-          width: 150,
-          height: 150,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Q-Vent',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(height: 24),
+            const CircularProgressIndicator(color: AppColors.primary),
+            const SizedBox(height: 48),
+            const Text(
+              'Created by Nabildzr & Nazriel',
+              style: TextStyle(fontSize: 14, color: AppColors.primary),
+            ),
+          ],
         ),
       ),
     );
