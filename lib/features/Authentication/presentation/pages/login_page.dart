@@ -357,7 +357,7 @@ class _LoginPageState extends State<LoginPage>
 
         Text.rich(
           TextSpan(
-            text: 'By Using Gamma you agree to our\n',
+            text: 'By Using Q-Vent you agree to our\n',
             style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600),
 
             children: [

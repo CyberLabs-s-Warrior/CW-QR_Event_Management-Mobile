@@ -81,7 +81,7 @@ class _EventDashboardPageState extends State<EventDashboardPage>
         backgroundColor: AppColors.eventDashboard,
         centerTitle: true,
         title: Text(
-          'Event Dashboard ${widget.eventId}',
+          'Event Dashboard ',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: AppColors.secondary,
@@ -129,7 +129,8 @@ class _EventDashboardPageState extends State<EventDashboardPage>
                         children: [
                           Container(
                             width: double.infinity,
-                            height: MediaQuery.of(context).size.height,
+                            // height: MediaQuery.of(context).size.height,
+                            height:625,
 
                             // height: 625,
                             decoration: BoxDecoration(
